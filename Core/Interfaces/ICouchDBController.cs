@@ -6,11 +6,11 @@ using LoveSeat;
 using MindTouch.Tasking;
 using Newtonsoft.Json.Linq;
 
-namespace Core.Interfaces
+namespace FoireMuses.Core.Interfaces
 {
 	internal interface ICouchDBController
 	{
-		CouchDatabase MyCouchDatabase { get;}
+		CouchDatabase CouchDatabase { get;}
 		
 		/*Result<JDocument> CreateDocument (JDocument aDocument, Result<JDocument> aResult);
 		Result<JDocument> GetDocument (JDocument aDocument, Result<JDocument> aResult);

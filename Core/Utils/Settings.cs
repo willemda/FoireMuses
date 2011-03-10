@@ -19,15 +19,15 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System;
-namespace Core.Settings
+namespace FoireMuses.Core.Utils
 {
-	internal class TheSettings
+	internal class Settings
 	{
 		public static string Host = "localhost";
 		public static int Port = 5984;
 		public static string Username = "";
 		public static string Password = "";
-		public static string DatabaseName = "FoireMuses";
+		public static string DatabaseName = "foiremuses";
 	}
 }
 

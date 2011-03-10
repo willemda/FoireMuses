@@ -3,32 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MindTouch.Dream;
+using MindTouch.Tasking;
 
-namespace Core
+namespace FoireMuses.Core
 {
-	public class Context
+	public class Context : ITaskLifespan
 	{
 		public static Context Current
 		{
 			get
 			{
-				Context dc = CurrentOrNull;
-				if (dc == null)
+				TaskEnv current = TaskEnv.CurrentOrNull;
+				if (current == null)
 				{
-					throw new InvalidOperationException("A247Context.Current is not set");
+					throw new DreamContextAccessException("DreamContext.Current is not set because there is no task environment.");
 				}
-				return dc;
-			}
-		}
-		public static Context CurrentOrNull
-		{
-			get
-			{
-				DreamContext dreamContext = DreamContext.Current;
-				var context = dreamContext.GetState<Context>();
+
+				Context context = current.GetState<Context>();
 				if (context == null)
 				{
-					throw new Exception("Invalid context");
+					throw new DreamContextAccessException("DreamContext.Current is not set because the current task environment does not contain a reference.");
+				}
+				if (context.isTaskDisposed)
+				{
+					throw new DreamContextAccessException("DreamContext.Current is not set because the current context is already disposed.");
 				}
 				return context;
 			}
@@ -38,9 +36,49 @@ namespace Core
 		public object User { get; set; }
 		public Instance Instance { get; private set; }
 
+		private TaskEnv theOwnerEnv;
+		private bool isTaskDisposed;
+
 		public Context(Instance anInstance)
 		{
 			Instance = anInstance;
+		}
+
+		public void AttachToCurrentTaskEnv()
+		{
+			lock (this)
+			{
+				var env = TaskEnv.Current;
+				if (env.GetState<DreamContext>() != null)
+				{
+					throw new DreamContextAccessException("tried to attach context to env that already has a dreamcontext");
+				}
+				if (theOwnerEnv != null && theOwnerEnv == env)
+				{
+					throw new DreamContextAccessException("tried to re-attach dreamcontext to env it is already attached to");
+				}
+				if (theOwnerEnv != null)
+				{
+					throw new DreamContextAccessException("tried to attach dreamcontext to an env, when it already is attached to another");
+				}
+				theOwnerEnv = env;
+				env.SetState(this);
+			}
+		}
+
+		public object Clone()
+		{
+			return new Context(Instance) {User = User};
+		}
+
+		public void Dispose()
+		{
+			if (isTaskDisposed)
+			{
+				Console.WriteLine("disposing already disposed context");
+			}
+
+			isTaskDisposed = true;
 		}
 	}
 }

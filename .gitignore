@@ -1,4 +1,3 @@
-
 _ReSharper*
-obj/*
-bin/*
+*/obj/*
+*/bin/*

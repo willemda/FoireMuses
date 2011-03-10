@@ -22,110 +22,130 @@ using System;
 using MindTouch.Tasking;
 using LoveSeat;
 using Newtonsoft.Json.Linq;
-using Core.Interfaces;
+using FoireMuses.Core.Interfaces;
+using FoireMuses.Core.Utils;
+using FoireMuses.Core.Business;
 
-
-namespace Core.Controllers
+namespace FoireMuses.Core.Controllers
 {
-	using Context;
-	using Core.Utils;
-
 	public class ScoreController : IScoreController
 	{
-		public ScoreController ()
+		public Result<JDocument> CreateDocument(JDocument aDocument, Result<JDocument> aResult)
 		{
+			ArgCheck.NotNull("aDocument", aDocument);
+			ArgCheck.NotNull("aResult", aResult);
+
+			Result<JDocument> res = new Result<JDocument>();
+
+			Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(aDocument, res).WhenDone(
+				 res.Return,
+				 res.Throw
+				 );
+			return res;
 		}
 
-		public Result<JDocument> CreateDocument (JDocument aDocument, Result<JDocument> aResult)
+		public Result<JDocument> UpdateDocument(JDocument aDocument, Result<JDocument> aResult)
 		{
-			Utils.CheckObject ("aResult", aResult);
+			ArgCheck.NotNull("aResult", aResult);
 
-            Result<JDocument> res = new Result<JDocument>();
+			Result<JDocument> res = new Result<JDocument>();
 
-           Context.Current.CreateDocument(aDocument, res).WhenDone(
-                res.Return,
-                res.Throw
-                );
-            return res;
-        }
+			Context.Current.Instance.CouchDbController.CouchDatabase.UpdateDocument(aDocument, res).WhenDone(
+				res.Return,
+				res.Throw
+				);
+			return res;
+		}
 
-        public Result<JDocument> UpdateDocument(JDocument aDocument, Result<JDocument> aResult)
-        {
+		public Result<JDocument> GetDocument(string id, Result<JDocument> aResult)
+		{
+			ArgCheck.NotNull("aResult", aResult);
+			ArgCheck.NotNullNorEmpty("id", id);
 
-            Utils.CheckObject ("aResult", aResult);
+			Result<JDocument> res = new Result<JDocument>();
 
-            Result<JDocument> res = new Result<JDocument>();
+			Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(id, res).WhenDone(
+				res.Return,
+				res.Throw
+				);
+			return res;
+		}
 
-            theDatabase.UpdateDocument(aDocument, res).WhenDone(
-                res.Return,
-                res.Throw
-                );
-            return res;
-        }
+		public Result<JObject> DeleteDocument(JDocument aDocument, Result<JObject> aResult)
+		{
+			ArgCheck.NotNull("aResult",aResult);
 
-        public Result<JDocument> GetDocument (string id, Result<JDocument> aResult)
-        {
+			Result<JObject> res = new Result<JObject>();
 
-            Utils.CheckObject ("aResult", aResult);
-        	Utils.CheckString ("id", id);
+			Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(aDocument, res)
+				.WhenDone(
+				res.Return,
+				res.Throw
+				);
+			return res;
+		}
 
-            Result<JDocument> res = new Result<JDocument>();
+		public Result<ViewResult<string, string, JDocument>> GetViewDocument(string aViewId, string aViewName, Result<ViewResult<string, string, JDocument>> aResult)
+		{
+			ArgCheck.NotNull("aResult", aResult);
+			ArgCheck.NotNullNorEmpty("aViewId", aViewId);
+			ArgCheck.NotNullNorEmpty("aViewName", aViewName);
 
-            theDatabase.GetDocument(id, res).WhenDone(
-                res.Return,
-                res.Throw
-                );
-            return res;
-        }
+			var aRes = new Result<ViewResult<string, string, JDocument>>();
 
-        public Result<JObject> DeleteDocument(JDocument aDocument, Result<JObject> aResult)
-        {
+			Context.Current.Instance.CouchDbController.CouchDatabase.GetView(aViewId, aViewName, aRes).WhenDone(
+				aRes.Return,
+				aRes.Throw
+				);
+			return aRes;
+		}
 
-            Utils.CheckObject (aResult);
+		public Result<ViewResult<string[], string, JDocument>> GetViewDocument(string aViewId, string aViewName, Result<ViewResult<string[], string, JDocument>> aResult)
+		{
 
-            Result<JObject> res = new Result<JObject>();
+			ArgCheck.NotNull("aResult", aResult);
+			ArgCheck.NotNullNorEmpty("aViewId", aViewId);
+			ArgCheck.NotNullNorEmpty("aViewName", aViewName);
 
-            theDatabase.DeleteDocument(aDocument,res)
-                .WhenDone(
-                res.Return,
-                res.Throw
-                );
-            return res;
-        }
+			var aRes = new Result<ViewResult<string[], string, JDocument>>();
 
+			Context.Current.Instance.CouchDbController.CouchDatabase.GetView(aViewId, aViewName, aRes).WhenDone(
+				aRes.Return,
+				aRes.Throw
+				);
+			return aRes;
+		}
 
+		public Result<JScore> CreateDocument(JDocument aDocument, Result<JScore> aResult)
+		{
+			ArgCheck.NotNull("aResult", aResult);
 
-        public Result<ViewResult<string, string, JDocument>> getViewDocument (string aViewId, string aViewName, Result<ViewResult<string, string, JDocument>> aResult)
-        {
+			//Result<JScore> res = new Result<JScore>();
 
-            Utils.CheckObject ("aResult", aResult);
-			Utils.CheckString ("aViewId", aViewId);
-			Utils.CheckString ("aViewName", aViewName);
+			//Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(aDocument, res).WhenDone(
+			//     res.Return,
+			//     res.Throw
+			//     );
+			return aResult;
+		}
 
-            var aRes = new Result<ViewResult<string, string, JDocument>>();
+		public Result<Business.JScore> GetDocument(JDocument aDocument, Result<Business.JScore> aResult)
+		{
+			if(Context.Current.User == null)
+			{
+				aResult.Throw(new Exception("No User specified"));
+			}
+			else
+			{
+				aResult.Return(new JScore());
+			}
+			return aResult;
+		}
 
-            theDatabase.GetView(aViewId, aViewName, aRes).WhenDone(
-                aRes.Return,
-                aRes.Throw
-                );
-            return aRes;
-        }
-
-        public Result<ViewResult<string[], string, JDocument>> getViewDocument (string aViewId, string aViewName, Result<ViewResult<string[], string, JDocument>> aResult)
-        {
-
-            Utils.CheckObject ("aResult", aResult);
-        	Utils.CheckString ("aViewId", aViewId);
-        	Utils.CheckString ("aViewName", aViewName);
-
-            var aRes = new Result<ViewResult<string[], string, JDocument>>();
-
-            theDatabase.GetView(aViewId, aViewName, aRes).WhenDone(
-                aRes.Return,
-                aRes.Throw
-                );
-            return aRes;
-        }
+		public Result<Business.JScore> UpdateDocument(JDocument aDocument, Result<Business.JScore> aResult)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
 

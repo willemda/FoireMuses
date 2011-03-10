@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 
-namespace Core.Business
+namespace FoireMuses.Core.Business
 {
     public class JScore
     {
