@@ -4,24 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Core.Exceptions
+namespace Core.Utils
 {
     class Utils
     {
-        public static void CheckObject(object o)
+        public static void CheckObject(string paramName,object o)
         {
             if (o == null)
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(paramName);
         }
 
 
-        public static void CheckString(string str)
+        public static void CheckString(string paramName, string str)
         {
-            CheckObject(str);
-            Regex aRegex = new Regex("^.*$");
-            if (!aRegex.Match(str).Success)
+            if(String.IsNullOrEmpty(str))
             {
-                throw new ArgumentInvalideException();
+                throw new ArgumentException(paramName);
             }
         }
     }

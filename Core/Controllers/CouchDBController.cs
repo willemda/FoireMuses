@@ -5,117 +5,27 @@ using System.Text;
 using LoveSeat;
 using MindTouch.Tasking;
 using Newtonsoft.Json.Linq;
-using Core.IControllers;
+using Core.Interfaces;
+using Core.Settings;
 
 namespace Core.Controllers
 {
-    class CouchDBController : ICouchDBController
+	/// <summary>
+	///  
+	/// </summary>
+    internal class CouchDBController : ICouchDBController
     {
-        private CouchDatabase theDatabase { get; private set; }
-
-        Result<JDocument> CreateDocument(JDocument aDocument, Result<JDocument> aResult)
-        {
-
-            if (aResult == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            Result<JDocument> res = new Result<JDocument>();
-            
-            theDatabase.CreateDocument(aDocument, res).WhenDone(
-                res.Return,
-                res.Throw
-                );
-            return res;
-        }
-
-        Result<JDocument> UpdateDocument(JDocument aDocument, Result<JDocument> aResult)
-        {
-
-            if (aResult == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            Result<JDocument> res = new Result<JDocument>();
-
-            theDatabase.UpdateDocument(aDocument, res).WhenDone(
-                res.Return,
-                res.Throw
-                );
-            return res;
-        }
-
-        Result<JDocument> GetDocument(string id, Result<JDocument> aResult)
-        {
-
-            if (aResult == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            Result<JDocument> res = new Result<JDocument>();
-
-            theDatabase.GetDocument(id, res).WhenDone(
-                res.Return,
-                res.Throw
-                );
-            return res;
-        }
-
-        Result<JObject> DeleteDocument(JDocument aDocument, Result<JObject> aResult)
-        {
-
-            if (aResult == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            Result<JObject> res = new Result<JObject>();
-
-            theDatabase.DeleteDocument(aDocument,res)
-                .WhenDone(
-                res.Return,
-                res.Throw
-                );
-            return res;
-        }
-
-
-
-        Result<ViewResult<string, string, JDocument>> getViewDocument(string aViewId, string aViewName, Result<ViewResult<string, string, JDocument>> aResult)
-        {
-
-            if (aResult == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            var aRes = new Result<ViewResult<string, string, JDocument>>();
-
-            theDatabase.GetView(aViewId, aViewName, aRes).WhenDone(
-                aRes.Return,
-                aRes.Throw
-                );
-            return aRes;
-        }
-
-        Result<ViewResult<string[], string, JDocument>> getViewDocument(string aViewId, string aViewName, Result<ViewResult<string[], string, JDocument>> aResult)
-        {
-
-            if (aResult == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            var aRes = new Result<ViewResult<string[], string, JDocument>>();
-
-            theDatabase.GetView(aViewId, aViewName, aRes).WhenDone(
-                aRes.Return,
-                aRes.Throw
-                );
-            return aRes;
-        }
+         public CouchDatabase MyCouchDatabase { get;private set;}
+		
+		
+		public CouchDBController ()
+		{
+			CouchClient theClient = new CouchClient (TheSettings.Host, TheSettings.Port, TheSettings.Username, TheSettings.Password);
+			/*Result<CouchDatabase> res = new Result<CouchDatabase>();
+			theClient.GetDatabase(TheSettings.DatabaseName, res).WhenDone(
+				a=>{theDatabase=a},*/
+			MyCouchDatabase = theClient.GetDatabase(TheSettings.DatabaseName);
+		}
+		
     }
 }
