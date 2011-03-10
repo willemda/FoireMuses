@@ -9,6 +9,8 @@ namespace FoireMuses.Core
 {
 	public class Context : ITaskLifespan
 	{
+		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(Context));
+
 		public static Context Current
 		{
 			get
@@ -16,17 +18,17 @@ namespace FoireMuses.Core
 				TaskEnv current = TaskEnv.CurrentOrNull;
 				if (current == null)
 				{
-					throw new DreamContextAccessException("DreamContext.Current is not set because there is no task environment.");
+					throw new DreamContextAccessException("Context.Current is not set because there is no task environment.");
 				}
 
 				Context context = current.GetState<Context>();
 				if (context == null)
 				{
-					throw new DreamContextAccessException("DreamContext.Current is not set because the current task environment does not contain a reference.");
+					throw new DreamContextAccessException("Context.Current is not set because the current task environment does not contain a reference.");
 				}
 				if (context.isTaskDisposed)
 				{
-					throw new DreamContextAccessException("DreamContext.Current is not set because the current context is already disposed.");
+					throw new DreamContextAccessException("Context.Current is not set because the current context is already disposed.");
 				}
 				return context;
 			}
@@ -41,15 +43,17 @@ namespace FoireMuses.Core
 
 		public Context(Instance anInstance)
 		{
+			theLogger.Debug("Creating Context");
 			Instance = anInstance;
 		}
 
 		public void AttachToCurrentTaskEnv()
 		{
+			theLogger.Debug("Attaching Context to current TaskEnv");
 			lock (this)
 			{
 				var env = TaskEnv.Current;
-				if (env.GetState<DreamContext>() != null)
+				if (env.GetState<Context>() != null)
 				{
 					throw new DreamContextAccessException("tried to attach context to env that already has a dreamcontext");
 				}
