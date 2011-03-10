@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Core.IControllers
+namespace Core.Interfaces
 {
-    interface IScoreController
+    interface ITagController
     {
-
     }
 }

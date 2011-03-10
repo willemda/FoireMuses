@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Core.Bizness
+namespace Core.Interfaces
 {
-    class JScore
+    interface ISourceController
     {
     }
 }
