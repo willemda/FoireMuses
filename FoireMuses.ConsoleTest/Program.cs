@@ -21,7 +21,7 @@ namespace FoireMuses.ConsoleTest
 		{
 			context.AttachToCurrentTaskEnv();
 
-			context.Instance.ScoreController.GetDocument(null, new Result<JScore>()).Wait();
+			context.Instance.ScoreController.GetDocument((string)null, new Result<JScore>()).Wait();
 		}
 
 		

@@ -30,106 +30,161 @@ namespace FoireMuses.Core.Controllers
 {
 	public class ScoreController : IScoreController
 	{
-		public Result<JDocument> CreateDocument(JDocument aDocument, Result<JDocument> aResult)
+		public Result<JScore> CreateDocument(JScore aJScore, Result<JScore> aResult)
 		{
-			ArgCheck.NotNull("aDocument", aDocument);
-			ArgCheck.NotNull("aResult", aResult);
+            try
+            {
+                ArgCheck.NotNull("aJScore", aJScore);
+                ArgCheck.NotNull("aResult", aResult);
 
-			Result<JDocument> res = new Result<JDocument>();
-
-			Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(aDocument, res).WhenDone(
-				 res.Return,
-				 res.Throw
-				 );
-			return res;
+                Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(aJScore, new Result<JScore>()).WhenDone(
+                     aResult.Return,
+                     aResult.Throw
+                     );
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
+            return aResult;
 		}
 
-		public Result<JDocument> UpdateDocument(JDocument aDocument, Result<JDocument> aResult)
+		public Result<JScore> UpdateDocument(JScore aJScore, Result<JScore> aResult)
 		{
-			ArgCheck.NotNull("aResult", aResult);
+            try
+            {
+                ArgCheck.NotNull("aResult", aResult);
+                ArgCheck.NotNull("aJScore", aJScore);
 
-			Result<JDocument> res = new Result<JDocument>();
-
-			Context.Current.Instance.CouchDbController.CouchDatabase.UpdateDocument(aDocument, res).WhenDone(
-				res.Return,
-				res.Throw
-				);
-			return res;
-		}
-
-		public Result<JDocument> GetDocument(string id, Result<JDocument> aResult)
-		{
-			ArgCheck.NotNull("aResult", aResult);
-			ArgCheck.NotNullNorEmpty("id", id);
-
-			Result<JDocument> res = new Result<JDocument>();
-
-			Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(id, res).WhenDone(
-				res.Return,
-				res.Throw
-				);
-			return res;
-		}
-
-		public Result<JObject> DeleteDocument(JDocument aDocument, Result<JObject> aResult)
-		{
-			ArgCheck.NotNull("aResult",aResult);
-
-			Result<JObject> res = new Result<JObject>();
-
-			Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(aDocument, res)
-				.WhenDone(
-				res.Return,
-				res.Throw
-				);
-			return res;
-		}
-
-		public Result<ViewResult<string, string, JDocument>> GetViewDocument(string aViewId, string aViewName, Result<ViewResult<string, string, JDocument>> aResult)
-		{
-			ArgCheck.NotNull("aResult", aResult);
-			ArgCheck.NotNullNorEmpty("aViewId", aViewId);
-			ArgCheck.NotNullNorEmpty("aViewName", aViewName);
-
-			var aRes = new Result<ViewResult<string, string, JDocument>>();
-
-			Context.Current.Instance.CouchDbController.CouchDatabase.GetView(aViewId, aViewName, aRes).WhenDone(
-				aRes.Return,
-				aRes.Throw
-				);
-			return aRes;
-		}
-
-		public Result<ViewResult<string[], string, JDocument>> GetViewDocument(string aViewId, string aViewName, Result<ViewResult<string[], string, JDocument>> aResult)
-		{
-
-			ArgCheck.NotNull("aResult", aResult);
-			ArgCheck.NotNullNorEmpty("aViewId", aViewId);
-			ArgCheck.NotNullNorEmpty("aViewName", aViewName);
-
-			var aRes = new Result<ViewResult<string[], string, JDocument>>();
-
-			Context.Current.Instance.CouchDbController.CouchDatabase.GetView(aViewId, aViewName, aRes).WhenDone(
-				aRes.Return,
-				aRes.Throw
-				);
-			return aRes;
-		}
-
-		public Result<JScore> CreateDocument(JDocument aDocument, Result<JScore> aResult)
-		{
-			ArgCheck.NotNull("aResult", aResult);
-
-			//Result<JScore> res = new Result<JScore>();
-
-			//Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(aDocument, res).WhenDone(
-			//     res.Return,
-			//     res.Throw
-			//     );
+                Context.Current.Instance.CouchDbController.CouchDatabase.UpdateDocument(aJScore, new Result<JScore>()).WhenDone(
+                    aResult.Return,
+                    aResult.Throw
+                    );
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
 			return aResult;
 		}
 
-		public Result<Business.JScore> GetDocument(JDocument aDocument, Result<Business.JScore> aResult)
+		public Result<JScore> GetDocument(string id, Result<JScore> aResult)
+		{
+            try
+            {
+                ArgCheck.NotNull("aResult", aResult);
+                ArgCheck.NotNullNorEmpty("id", id);
+
+                Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(id, new Result<JScore>()).WhenDone(
+                    aResult.Return,
+                    aResult.Throw
+                    );
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
+
+            return aResult;
+		}
+
+        public Result<JScore> GetDocument(JScore aJScore, Result<JScore> aResult)
+        {
+            try
+            {
+                ArgCheck.NotNull("aResult", aResult);
+                ArgCheck.NotNull("aJScore", aJScore);
+
+                Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(aJScore.Id, new Result<JScore>()).WhenDone(
+                    aResult.Return,
+                    aResult.Throw
+                    );
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
+
+            return aResult;
+        }
+
+		public Result<JObject> DeleteDocument(JScore aJScore, Result<JObject> aResult)
+		{
+            try
+            {
+                ArgCheck.NotNull("aResult", aResult);
+                ArgCheck.NotNull("aJScore", aJScore);
+
+                Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(aJScore, new Result<JObject>())
+                    .WhenDone(
+                    aResult.Return,
+                    aResult.Throw
+                    );
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
+			return aResult;
+		}
+
+        string VIEW_SCORES_FROM_SOURCE_ID = "";
+        string VIEW_SCORES_FROM_SOURCE_NAME = "";
+
+		public Result<ViewResult<string, string, JScore>> GetScoresFromSource(JSource aJSource, Result<ViewResult<string, string, JScore>> aResult)
+		{
+            try
+            {
+                ArgCheck.NotNull("aResult", aResult);
+                ArgCheck.NotNull("aJSource", aJSource);
+
+                Context.Current.Instance.CouchDbController.CouchDatabase.GetView
+                (
+                    VIEW_SCORES_FROM_SOURCE_ID,
+                    VIEW_SCORES_FROM_SOURCE_NAME,
+                    new Result<ViewResult<string, string, JScore>>()
+                ).WhenDone(
+                        aResult.Return,
+                        aResult.Throw
+                    );
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
+			return aResult;
+		}
+
+        string VIEW_SCORES_FROM_PLAY_ID = "";
+        string VIEW_SCORES_FROM_PLAY_NAME = "";
+
+		public Result<ViewResult<string[], string, JScore>> GetScoresFromPlay(JPlay aJPlay, Result<ViewResult<string[], string, JScore>> aResult)
+		{
+
+            try
+            {
+                ArgCheck.NotNull("aResult", aResult);
+                ArgCheck.NotNull("aJPlay", aJPlay);
+
+                Context.Current.Instance.CouchDbController.CouchDatabase.GetView
+                (
+                    VIEW_SCORES_FROM_PLAY_ID,
+                    VIEW_SCORES_FROM_PLAY_NAME,
+                    new Result<ViewResult<string[], string, JScore>>()
+                ).WhenDone(
+                        aResult.Return,
+                        aResult.Throw
+                    );
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
+            return aResult;
+		}
+
+
+		/*public Result<Business.JScore> GetDocument(JScore aJScore, Result<Business.JScore> aResult)
 		{
 			if(Context.Current.User == null)
 			{
@@ -142,10 +197,10 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		public Result<Business.JScore> UpdateDocument(JDocument aDocument, Result<Business.JScore> aResult)
+		public Result<Business.JScore> UpdateDocument(JScore aJScore, Result<Business.JScore> aResult)
 		{
 			throw new NotImplementedException();
-		}
+		}*/
 	}
 }
 

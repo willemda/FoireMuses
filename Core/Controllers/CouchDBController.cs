@@ -23,6 +23,7 @@ namespace FoireMuses.Core.Controllers
 			/*Result<CouchDatabase> res = new Result<CouchDatabase>();
 			theClient.GetDatabase(TheSettings.DatabaseName, res).WhenDone(
 				a=>{theDatabase=a},*/
+            // async needed? it's only done one time I think so it's not very usefull.
 			CouchDatabase = theClient.GetDatabase(Settings.DatabaseName);
 		}
 

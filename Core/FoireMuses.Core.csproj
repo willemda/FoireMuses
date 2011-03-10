@@ -63,6 +63,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\JAct.cs" />
+    <Compile Include="Business\JCharacter.cs" />
+    <Compile Include="Business\JPlay.cs" />
+    <Compile Include="Business\JSource.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Controllers\CouchDBController.cs" />
     <Compile Include="Instance.cs" />
