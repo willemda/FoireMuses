@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using LoveSeat;
+using FoireMuses.Core.Interfaces;
 
 namespace FoireMuses.Core.Business
 {
     /// <summary>
     /// represent a scene(une scene) object in json
     /// </summary>
-    class JScene : JDocument
+    class JScene : Document
     {
         public JScene ()
 		{
@@ -18,5 +19,10 @@ namespace FoireMuses.Core.Business
 		}
 
         public JScene(JObject jobject) : base(jobject) { }
+
+        public override void Validate()
+        {
+            //TODO 
+        }
     }
 }

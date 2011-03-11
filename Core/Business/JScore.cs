@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using LoveSeat;
+using FoireMuses.Core.Interfaces;
 
 namespace FoireMuses.Core.Business
 {
     /// <summary>
     /// represent a Score(un air) object in json
     /// </summary>
-    public class JScore : JDocument
+    public class JScore : Document
     {
 		
 		public JScore ()
@@ -19,5 +20,10 @@ namespace FoireMuses.Core.Business
 		}
 
         public JScore(JObject jobject) : base(jobject) { }
+
+        public override void Validate()
+        {
+            //TODO 
+        }
     }
 }

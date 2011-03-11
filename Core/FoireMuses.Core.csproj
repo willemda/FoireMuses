@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Business\Document.cs" />
     <Compile Include="Business\JAct.cs" />
     <Compile Include="Business\JCharacter.cs" />
     <Compile Include="Business\JIntervene.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Controllers\ViewController.cs" />
     <Compile Include="Instance.cs" />
     <Compile Include="Interfaces\IBaseController.cs" />
+    <Compile Include="Interfaces\IDocument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\ArgCheck.cs" />
     <Compile Include="Business\JScore.cs" />

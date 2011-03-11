@@ -7,17 +7,20 @@ using FoireMuses.Core.Utils;
 using MindTouch.Tasking;
 using LoveSeat;
 using Newtonsoft.Json.Linq;
+using FoireMuses.Core.Business;
 
 namespace FoireMuses.Core.Controllers
 {
-    public class BaseController<T> : IBaseController<T> where T : JDocument
+    public class BaseController<T> : IBaseController<T> where T : Document
     {
+
         public Result<T> Create(T aDoc, Result<T> aResult)
         {
             try
             {
                 ArgCheck.NotNull("aDoc", aDoc);
                 ArgCheck.NotNull("aResult", aResult);
+                aDoc.Validate();
 
                 Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(aDoc, new Result<T>()).WhenDone(
                      aResult.Return,
@@ -37,6 +40,7 @@ namespace FoireMuses.Core.Controllers
             {
                 ArgCheck.NotNull("aResult", aResult);
                 ArgCheck.NotNull("aDoc", aDoc);
+                aDoc.Validate();
 
                 Context.Current.Instance.CouchDbController.CouchDatabase.UpdateDocument(aDoc, new Result<T>()).WhenDone(
                     aResult.Return,

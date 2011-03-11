@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using LoveSeat;
 using Newtonsoft.Json.Linq;
+using FoireMuses.Core.Interfaces;
 
 namespace FoireMuses.Core.Business
 {
     /// <summary>
     /// represent a Source(une source) object in json
     /// </summary>
-    public class JSource : JDocument
+    public class JSource : Document
     {
         public JSource ()
 		{
@@ -18,5 +19,10 @@ namespace FoireMuses.Core.Business
 		}
 
         public JSource(JObject jobject) : base(jobject) { }
+
+        public override void Validate()
+        {
+            //TODO 
+        }
     }
 }

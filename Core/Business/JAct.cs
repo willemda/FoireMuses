@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using LoveSeat;
+using FoireMuses.Core.Interfaces;
 
 namespace FoireMuses.Core.Business
 {
     /// <summary>
     /// represent a Act(un acte) object in json
     /// </summary>
-    public class JAct : JDocument
+    public class JAct : Document
     {
         public JAct ()
 		{
@@ -18,5 +19,10 @@ namespace FoireMuses.Core.Business
 		}
 
         public JAct(JObject jobject) : base(jobject) { }
+
+        public override void Validate() 
+        {
+            //TODO 
+        }
     }
 }

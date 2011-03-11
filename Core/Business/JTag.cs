@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using LoveSeat;
+using FoireMuses.Core.Interfaces;
 
 namespace FoireMuses.Core.Business
 {
-    class JTag : JDocument
+    class JTag : Document
     {
          public JTag ()
 		{
@@ -15,5 +16,10 @@ namespace FoireMuses.Core.Business
 		}
 
          public JTag(JObject jobject) : base(jobject) { }
+
+         public override void Validate()
+         {
+             //TODO 
+         }
     }
 }

@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using LoveSeat;
 using Newtonsoft.Json.Linq;
+using FoireMuses.Core.Interfaces;
 
 namespace FoireMuses.Core.Business
 {
     /// <summary>
     /// represent a Character(un personnage) object in json
     /// </summary>
-    public class JCharacter : JDocument
+    public class JCharacter : Document
 
     {
         public JCharacter ()
@@ -19,5 +20,10 @@ namespace FoireMuses.Core.Business
 		}
 
         public JCharacter(JObject jobject) : base(jobject) { }
+
+        public override void Validate()
+        {
+            //TODO 
+        }
     }
 }

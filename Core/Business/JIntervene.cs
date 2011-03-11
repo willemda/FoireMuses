@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using LoveSeat;
 using Newtonsoft.Json.Linq;
+using FoireMuses.Core.Interfaces;
 
 namespace FoireMuses.Core.Business
 {
-    class JIntervene : JDocument
+    class JIntervene : Document
     {
          public JIntervene ()
 		{
@@ -15,5 +16,10 @@ namespace FoireMuses.Core.Business
 		}
 
          public JIntervene(JObject jobject) : base(jobject) { }
+
+         public override void Validate()
+         {
+             //TODO 
+         }
     }
 }

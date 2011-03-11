@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using LoveSeat;
 using Newtonsoft.Json.Linq;
+using FoireMuses.Core.Interfaces;
 
 namespace FoireMuses.Core.Business
 {
     /// <summary>
     /// represent a Play(une pièce) object in json
     /// </summary>
-    public class JPlay : JDocument
+    public class JPlay : Document
     {
        public JPlay ()
 		{
@@ -18,5 +19,10 @@ namespace FoireMuses.Core.Business
 		}
 
        public JPlay(JObject jobject) : base(jobject) { }
+
+       public override void Validate()
+       {
+           //TODO 
+       }
     }
 }
