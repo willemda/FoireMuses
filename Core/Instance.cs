@@ -15,11 +15,15 @@ namespace FoireMuses.Core
 	{
 		internal ICouchDBController CouchDbController { get; private set; }
 		public IScoreController ScoreController { get; private set; }
+        public ISourceController SourceController { get; private set; }
+        public ViewController ViewController { get; private set; }
 
 		public  Instance()
 		{
 			CouchDbController = new CouchDBController();
 			ScoreController = new ScoreController();
+            SourceController = new SourceController();
+            ViewController = new ViewController();
 
 		}
 	}

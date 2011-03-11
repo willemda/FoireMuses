@@ -25,111 +25,17 @@ using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Interfaces;
 using FoireMuses.Core.Utils;
 using FoireMuses.Core.Business;
+using LoveSeat.Support;
 
 namespace FoireMuses.Core.Controllers
 {
-	public class ScoreController : IScoreController
+
+	public class ScoreController : BaseController<JScore>,IScoreController 
 	{
-		public Result<JScore> CreateDocument(JScore aJScore, Result<JScore> aResult)
-		{
-            try
-            {
-                ArgCheck.NotNull("aJScore", aJScore);
-                ArgCheck.NotNull("aResult", aResult);
+        private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
 
-                Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(aJScore, new Result<JScore>()).WhenDone(
-                     aResult.Return,
-                     aResult.Throw
-                     );
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
-            return aResult;
-		}
-
-		public Result<JScore> UpdateDocument(JScore aJScore, Result<JScore> aResult)
-		{
-            try
-            {
-                ArgCheck.NotNull("aResult", aResult);
-                ArgCheck.NotNull("aJScore", aJScore);
-
-                Context.Current.Instance.CouchDbController.CouchDatabase.UpdateDocument(aJScore, new Result<JScore>()).WhenDone(
-                    aResult.Return,
-                    aResult.Throw
-                    );
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
-			return aResult;
-		}
-
-		public Result<JScore> GetDocument(string id, Result<JScore> aResult)
-		{
-            try
-            {
-                ArgCheck.NotNull("aResult", aResult);
-                ArgCheck.NotNullNorEmpty("id", id);
-
-                Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(id, new Result<JScore>()).WhenDone(
-                    aResult.Return,
-                    aResult.Throw
-                    );
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
-
-            return aResult;
-		}
-
-        public Result<JScore> GetDocument(JScore aJScore, Result<JScore> aResult)
-        {
-            try
-            {
-                ArgCheck.NotNull("aResult", aResult);
-                ArgCheck.NotNull("aJScore", aJScore);
-
-                Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(aJScore.Id, new Result<JScore>()).WhenDone(
-                    aResult.Return,
-                    aResult.Throw
-                    );
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
-
-            return aResult;
-        }
-
-		public Result<JObject> DeleteDocument(JScore aJScore, Result<JObject> aResult)
-		{
-            try
-            {
-                ArgCheck.NotNull("aResult", aResult);
-                ArgCheck.NotNull("aJScore", aJScore);
-
-                Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(aJScore, new Result<JObject>())
-                    .WhenDone(
-                    aResult.Return,
-                    aResult.Throw
-                    );
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
-			return aResult;
-		}
-
-        string VIEW_SCORES_FROM_SOURCE_ID = "";
-        string VIEW_SCORES_FROM_SOURCE_NAME = "";
+        string VIEW_SCORES_FROM_SOURCE_ID = "scoresfromsource";
+        string VIEW_SCORES_FROM_SOURCE_NAME = "all";
 
 		public Result<ViewResult<string, string, JScore>> GetScoresFromSource(JSource aJSource, Result<ViewResult<string, string, JScore>> aResult)
 		{
@@ -138,10 +44,18 @@ namespace FoireMuses.Core.Controllers
                 ArgCheck.NotNull("aResult", aResult);
                 ArgCheck.NotNull("aJSource", aJSource);
 
+                ViewOptions voptions = new ViewOptions();
+                KeyOptions koptions = new KeyOptions();
+                koptions.Add(aJSource.Id);
+                theLogger.Debug(koptions.ToString());
+
+                voptions.Key = koptions;
+
                 Context.Current.Instance.CouchDbController.CouchDatabase.GetView
                 (
                     VIEW_SCORES_FROM_SOURCE_ID,
                     VIEW_SCORES_FROM_SOURCE_NAME,
+                    voptions,
                     new Result<ViewResult<string, string, JScore>>()
                 ).WhenDone(
                         aResult.Return,
