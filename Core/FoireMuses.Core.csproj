@@ -67,12 +67,21 @@
   <ItemGroup>
     <Compile Include="Business\JAct.cs" />
     <Compile Include="Business\JCharacter.cs" />
+    <Compile Include="Business\JIntervene.cs" />
     <Compile Include="Business\JPlay.cs" />
+    <Compile Include="Business\JScene.cs" />
     <Compile Include="Business\JSource.cs" />
+    <Compile Include="Business\JTag.cs" />
     <Compile Include="Context.cs" />
+    <Compile Include="Controllers\ActController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CharacterController.cs" />
     <Compile Include="Controllers\CouchDBController.cs" />
+    <Compile Include="Controllers\InterveneController.cs" />
+    <Compile Include="Controllers\PlayController.cs" />
+    <Compile Include="Controllers\SceneController.cs" />
     <Compile Include="Controllers\SourceController.cs" />
+    <Compile Include="Controllers\TagController.cs" />
     <Compile Include="Controllers\ViewController.cs" />
     <Compile Include="Instance.cs" />
     <Compile Include="Interfaces\IBaseController.cs" />

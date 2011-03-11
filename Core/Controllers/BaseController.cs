@@ -109,5 +109,33 @@ namespace FoireMuses.Core.Controllers
             }
             return aResult;
         }
+
+
+
+        string VIEW_ALL_ID = "alldoc";
+        string VIEW_ALL_NAME = "all";
+
+        public Result<ViewResult<string,string,T>> GetAll(Result<ViewResult<string,string,T>> aResult){
+            try
+            {
+                ArgCheck.NotNull("aResult", aResult);
+
+                Context.Current.Instance.CouchDbController.CouchDatabase.GetView
+                (
+                    VIEW_ALL_ID,
+                    VIEW_ALL_NAME,
+                    new Result<ViewResult<string, string, T>>()
+                ).WhenDone(
+                        aResult.Return,
+                        aResult.Throw
+                    );
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
+			return aResult;
+        }
+
     }
 }

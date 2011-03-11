@@ -34,8 +34,8 @@ namespace FoireMuses.Core.Controllers
 	{
         private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
 
-        string VIEW_SCORES_FROM_SOURCE_ID = "scoresfromsource";
-        string VIEW_SCORES_FROM_SOURCE_NAME = "all";
+        string VIEW_SCORES_FROM_SOURCE_ID = "scores";
+        string VIEW_SCORES_FROM_SOURCE_NAME = "fromsource";
 
 		public Result<ViewResult<string, string, JScore>> GetScoresFromSource(JSource aJSource, Result<ViewResult<string, string, JScore>> aResult)
 		{

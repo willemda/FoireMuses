@@ -14,12 +14,44 @@ namespace FoireMuses.Core.Controllers
     {
         public void createScoresFromSourceView()
         {
-            CouchDesignDocument view = new CouchDesignDocument("scoresfromsource");
+            if (Context.Current.Instance.CouchDbController.CouchDatabase.DocumentExists("_design/scores"))
+            {
+                
+                CouchDesignDocument mavue = Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument("_design/scores",new Result<CouchDesignDocument>()).Wait();
+                Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(mavue);
+            }
+            CouchDesignDocument view = new CouchDesignDocument("scores");
             view.Views.Add("all",
+                          new CouchView(
+                             @"function(doc){
+				                       if(doc.type && doc.type == 'score'){
+				                          emit(doc.title, doc._id)
+				                       }
+				                    }"));
+            view.Views.Add("fromsource",
                            new CouchView(
                               @"function(doc){
 				                       if(doc.type && doc.type == 'score' && doc.source_id){
-				                          emit(doc.source_id, doc.titre)
+				                          emit(doc.source_id, doc.title)
+				                       }
+				                    }"));
+            Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
+        }
+
+        public void createGetAllView()
+        {
+            if (Context.Current.Instance.CouchDbController.CouchDatabase.DocumentExists("_design/alldoc"))
+            {
+
+                CouchDesignDocument mavue = Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument("_design/alldoc", new Result<CouchDesignDocument>()).Wait();
+                Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(mavue);
+            }
+            CouchDesignDocument view = new CouchDesignDocument("alldoc");
+            view.Views.Add("all",
+                          new CouchView(
+                             @"function(doc){
+				                       if(doc.type){
+				                          emit(doc.type, doc._id)
 				                       }
 				                    }"));
             Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
