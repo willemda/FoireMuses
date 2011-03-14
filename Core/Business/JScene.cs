@@ -20,9 +20,5 @@ namespace FoireMuses.Core.Business
 
         public JScene(JObject jobject) : base(jobject) { }
 
-        public override void Validate()
-        {
-            //TODO 
-        }
     }
 }

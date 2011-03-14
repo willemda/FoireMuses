@@ -21,9 +21,5 @@ namespace FoireMuses.Core.Business
 
         public JScore(JObject jobject) : base(jobject) { }
 
-        public override void Validate()
-        {
-            //TODO 
-        }
     }
 }

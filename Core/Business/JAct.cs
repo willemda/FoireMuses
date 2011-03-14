@@ -20,9 +20,7 @@ namespace FoireMuses.Core.Business
 
         public JAct(JObject jobject) : base(jobject) { }
 
-        public override void Validate() 
-        {
-            //TODO 
-        }
+
+        
     }
 }

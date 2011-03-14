@@ -9,5 +9,6 @@ namespace FoireMuses.Core.Controllers
 {
     class InterveneController : BaseController<JIntervene>, IInterveneController
     {
+   
     }
 }

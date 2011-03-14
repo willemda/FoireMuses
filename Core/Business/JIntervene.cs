@@ -17,9 +17,6 @@ namespace FoireMuses.Core.Business
 
          public JIntervene(JObject jobject) : base(jobject) { }
 
-         public override void Validate()
-         {
-             //TODO 
-         }
+
     }
 }

@@ -20,9 +20,5 @@ namespace FoireMuses.Core.Business
 
        public JPlay(JObject jobject) : base(jobject) { }
 
-       public override void Validate()
-       {
-           //TODO 
-       }
     }
 }

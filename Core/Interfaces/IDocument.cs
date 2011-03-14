@@ -7,6 +7,9 @@ namespace FoireMuses.Core.Interfaces
 {
     public interface IDocument
     {
-        void Validate();
+        void BeforeCreate();
+        void AfterCreate();
+        void BeforeUpdate();
+        void AfterUpdate();
     }
 }

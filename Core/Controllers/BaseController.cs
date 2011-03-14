@@ -11,8 +11,24 @@ using FoireMuses.Core.Business;
 
 namespace FoireMuses.Core.Controllers
 {
-    public class BaseController<T> : IBaseController<T> where T : Document
+    /// <summary>
+    /// Generic class for CRUD operations on Business objects
+    /// Create and update method calls beforeCreate, afterCreate, beforeUpdate, afterUpdate on business object (validation is easyer this way)
+    /// </summary>
+    /// <typeparam name="T">T param is business object class that is or inherits Document</typeparam>
+    public abstract class BaseController<T> : IBaseController<T> where T : Document
     {
+
+        //eventually override these methods if they are needed in the subclasses
+        //exemple: in playController, after each creation, I want to credit the user who created the play 100 pts
+        //called whenever a document is created
+        public void Created() { }
+        //called whenever a document is updated
+        public void Updated() { }
+        //called whenever a document is deleted
+        public void Deleted() { }
+        //called whenever a document is read/get
+        public void Readed() { }
 
         public Result<T> Create(T aDoc, Result<T> aResult)
         {
@@ -20,12 +36,14 @@ namespace FoireMuses.Core.Controllers
             {
                 ArgCheck.NotNull("aDoc", aDoc);
                 ArgCheck.NotNull("aResult", aResult);
-                aDoc.Validate();
+                aDoc.BeforeCreate();
 
                 Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(aDoc, new Result<T>()).WhenDone(
                      aResult.Return,
                      aResult.Throw
                      );
+                aDoc.AfterCreate();
+                this.Created();
             }
             catch (Exception e)
             {
@@ -40,12 +58,14 @@ namespace FoireMuses.Core.Controllers
             {
                 ArgCheck.NotNull("aResult", aResult);
                 ArgCheck.NotNull("aDoc", aDoc);
-                aDoc.Validate();
+                aDoc.BeforeUpdate();
 
                 Context.Current.Instance.CouchDbController.CouchDatabase.UpdateDocument(aDoc, new Result<T>()).WhenDone(
                     aResult.Return,
                     aResult.Throw
                     );
+                aDoc.AfterUpdate();
+                this.Updated();
             }
             catch (Exception e)
             {
@@ -65,6 +85,7 @@ namespace FoireMuses.Core.Controllers
                     aResult.Return,
                     aResult.Throw
                     );
+                this.Readed();
             }
             catch (Exception e)
             {
@@ -85,6 +106,7 @@ namespace FoireMuses.Core.Controllers
                     aResult.Return,
                     aResult.Throw
                     );
+                this.Readed();
             }
             catch (Exception e)
             {
@@ -106,6 +128,7 @@ namespace FoireMuses.Core.Controllers
                     aResult.Return,
                     aResult.Throw
                     );
+                this.Deleted();
             }
             catch (Exception e)
             {

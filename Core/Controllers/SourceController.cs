@@ -9,6 +9,5 @@ namespace FoireMuses.Core.Controllers
 {
     class SourceController : BaseController<JSource>, ISourceController 
     {
-
     }
 }

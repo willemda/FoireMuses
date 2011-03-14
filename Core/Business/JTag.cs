@@ -17,9 +17,5 @@ namespace FoireMuses.Core.Business
 
          public JTag(JObject jobject) : base(jobject) { }
 
-         public override void Validate()
-         {
-             //TODO 
-         }
     }
 }
