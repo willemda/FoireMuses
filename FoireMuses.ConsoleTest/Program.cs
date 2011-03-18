@@ -24,7 +24,8 @@ namespace FoireMuses.ConsoleTest
 		{
 			context.AttachToCurrentTaskEnv();
 
-
+            context.Instance.ViewController.createGetHeadScoresView();
+            return;
             
 
 			//context.Instance.ScoreController.GetDocument((string)null, new Result<JScore>()).Wait();

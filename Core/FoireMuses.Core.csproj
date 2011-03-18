@@ -66,23 +66,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Document.cs" />
-    <Compile Include="Business\JAct.cs" />
-    <Compile Include="Business\JCharacter.cs" />
-    <Compile Include="Business\JIntervene.cs" />
     <Compile Include="Business\JPlay.cs" />
-    <Compile Include="Business\JScene.cs" />
     <Compile Include="Business\JSource.cs" />
-    <Compile Include="Business\JTag.cs" />
     <Compile Include="Context.cs" />
-    <Compile Include="Controllers\ActController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\CharacterController.cs" />
     <Compile Include="Controllers\CouchDBController.cs" />
-    <Compile Include="Controllers\InterveneController.cs" />
     <Compile Include="Controllers\PlayController.cs" />
-    <Compile Include="Controllers\SceneController.cs" />
     <Compile Include="Controllers\SourceController.cs" />
-    <Compile Include="Controllers\TagController.cs" />
     <Compile Include="Controllers\ViewController.cs" />
     <Compile Include="Instance.cs" />
     <Compile Include="Interfaces\IBaseController.cs" />
@@ -92,15 +82,10 @@
     <Compile Include="Business\JScore.cs" />
     <Compile Include="Utils\Settings.cs" />
     <Compile Include="Controllers\ScoreController.cs" />
-    <Compile Include="Interfaces\IActController.cs" />
-    <Compile Include="Interfaces\ICharacterController.cs" />
     <Compile Include="Interfaces\ICouchDBController.cs" />
-    <Compile Include="Interfaces\IInterveneController.cs" />
     <Compile Include="Interfaces\IPlayController.cs" />
-    <Compile Include="Interfaces\ISceneController.cs" />
     <Compile Include="Interfaces\IScoreController.cs" />
     <Compile Include="Interfaces\ISourceController.cs" />
-    <Compile Include="Interfaces\ITagController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Exceptions\" />

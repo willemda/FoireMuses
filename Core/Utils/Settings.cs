@@ -27,7 +27,7 @@ namespace FoireMuses.Core.Utils
 		public static int Port = 5984;
 		public static string Username = "";
 		public static string Password = "";
-		public static string DatabaseName = "foiremuses";
+		public static string DatabaseName = "musicdatabasexml";
 	}
 }
 

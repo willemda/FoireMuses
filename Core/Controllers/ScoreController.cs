@@ -98,6 +98,34 @@ namespace FoireMuses.Core.Controllers
 		}
 
 
+        string VIEW_SCORES_ID = "scores";
+        string VIEW_SCORES_HEAD = "head";
+
+        public Result<ViewResult<string, string>> GetHead(Result<ViewResult<string, string>> aResult)
+        {
+
+            try
+            {
+                ArgCheck.NotNull("aResult", aResult);
+
+                Context.Current.Instance.CouchDbController.CouchDatabase.GetView
+                (
+                    VIEW_SCORES_ID,
+                    VIEW_SCORES_HEAD,
+                    new Result<ViewResult<string, string>>()
+                ).WhenDone(
+                        aResult.Return,
+                        aResult.Throw
+                    );
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
+            return aResult;
+        }
+
+
 		/*public Result<Business.JScore> GetDocument(JScore aJScore, Result<Business.JScore> aResult)
 		{
 			if(Context.Current.User == null)

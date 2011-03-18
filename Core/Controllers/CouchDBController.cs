@@ -28,7 +28,7 @@ namespace FoireMuses.Core.Controllers
             //TODO: the database deletion is only for testing facility, remove it!
             if (CouchClient.HasDatabase(Settings.DatabaseName))
             {
-                CouchClient.DeleteDatabase(Settings.DatabaseName);
+                //CouchClient.DeleteDatabase(Settings.DatabaseName);
             }
             CouchDatabase = CouchClient.GetDatabase(Settings.DatabaseName);
         }
