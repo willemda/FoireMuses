@@ -115,7 +115,7 @@ namespace FoireMuses.Import
                     AddAttr(xdoc, "job", character.Job);
                     AddAttr(xdoc, "type", character.Type);
                     AddAttr(xdoc, "model", character.Model);
-                    if(!String.IsNullOrWhiteSpace(character.Name))
+                    if(!String.IsNullOrEmpty(character.Name))
                         xdoc.Elem("nom", character.Name);
                     xdoc.End();
                 }
@@ -315,7 +315,7 @@ namespace FoireMuses.Import
 
         private static XDoc AddAttr(XDoc xdoc, string name, string value)
         {
-            if (!String.IsNullOrWhiteSpace(value))
+            if (!String.IsNullOrEmpty(value))
             {
                 xdoc.Attr(name, value);
             }
@@ -331,7 +331,7 @@ namespace FoireMuses.Import
 
         private static void AddProperty(JObject doc, string value, string name)
         {
-            if (!String.IsNullOrWhiteSpace(value))
+            if (!String.IsNullOrEmpty(value))
                 doc[name] = value.Trim();
         }
 
@@ -369,7 +369,7 @@ namespace FoireMuses.Import
 
         private static XDoc AddElem(XDoc xdoc, string name, string elem)
         {
-            if(!String.IsNullOrWhiteSpace(elem)){
+            if(!String.IsNullOrEmpty(elem)){
                 xdoc.Start(name);
                 xdoc.Add(XDocFactory.From(TraiterChaine(elem),MimeType.XML));
                 xdoc.End();

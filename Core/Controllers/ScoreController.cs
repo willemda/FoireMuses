@@ -101,17 +101,23 @@ namespace FoireMuses.Core.Controllers
         string VIEW_SCORES_ID = "scores";
         string VIEW_SCORES_HEAD = "head";
 
-        public Result<ViewResult<string, string>> GetHead(Result<ViewResult<string, string>> aResult)
+        public Result<ViewResult<string, string>> GetHead(int limit, Result<ViewResult<string, string>> aResult)
         {
 
             try
             {
                 ArgCheck.NotNull("aResult", aResult);
+                ViewOptions voptions = new ViewOptions();
+                if (limit > 0)
+                {
+                    voptions.Limit = limit;
+                }
 
                 Context.Current.Instance.CouchDbController.CouchDatabase.GetView
                 (
                     VIEW_SCORES_ID,
                     VIEW_SCORES_HEAD,
+                    voptions,
                     new Result<ViewResult<string, string>>()
                 ).WhenDone(
                         aResult.Return,
@@ -123,6 +129,11 @@ namespace FoireMuses.Core.Controllers
                 aResult.Throw(e);
             }
             return aResult;
+        }
+
+        public Result<ViewResult<string, string>> GetHead(Result<ViewResult<string, string>> aResult)
+        {
+            return GetHead(0, aResult);
         }
 
 

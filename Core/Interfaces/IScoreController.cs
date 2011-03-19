@@ -13,6 +13,7 @@ namespace FoireMuses.Core.Interfaces
     {
 		Result<ViewResult<string, string, JScore>> GetScoresFromSource (JSource aJSource, Result<ViewResult<string, string, JScore>> aResult);
 		Result<ViewResult<string[], string, JScore>> GetScoresFromPlay (JPlay aJPlay,  Result<ViewResult<string[], string, JScore>> aResult);
+        Result<ViewResult<string, string>> GetHead(int limit, Result<ViewResult<string, string>> aResult);
         Result<ViewResult<string, string>> GetHead(Result<ViewResult<string, string>> aResult);
     }
 }

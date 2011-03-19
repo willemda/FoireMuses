@@ -1,0 +1,9 @@
+<script> 
+  <!-- Address Book sample -->
+  <action verb="POST" path="/host/services">
+    <config>
+      <path>foiremuses</path>
+      <sid>http://foiremuses.org/service</sid>
+    </config>
+  </action>
+</script>
