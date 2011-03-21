@@ -15,6 +15,10 @@ namespace FoireMuses.Core
 		{
 			get
 			{
+                DreamContext dreamCtx = DreamContext.CurrentOrNull;
+                if (dreamCtx != null)
+                    return dreamCtx.GetState<Context>();
+
 				TaskEnv current = TaskEnv.CurrentOrNull;
 				if (current == null)
 				{
@@ -52,21 +56,30 @@ namespace FoireMuses.Core
 			theLogger.Debug("Attaching Context to current TaskEnv");
 			lock (this)
 			{
-				var env = TaskEnv.Current;
-				if (env.GetState<Context>() != null)
-				{
-					throw new DreamContextAccessException("tried to attach context to env that already has a dreamcontext");
-				}
-				if (theOwnerEnv != null && theOwnerEnv == env)
-				{
-					throw new DreamContextAccessException("tried to re-attach dreamcontext to env it is already attached to");
-				}
-				if (theOwnerEnv != null)
-				{
-					throw new DreamContextAccessException("tried to attach dreamcontext to an env, when it already is attached to another");
-				}
-				theOwnerEnv = env;
-				env.SetState(this);
+                DreamContext dreamCtx = DreamContext.CurrentOrNull;
+                if (dreamCtx != null)
+                {
+                    dreamCtx.SetState<Context>(this);
+                }
+                else
+                {
+
+                    var env = TaskEnv.Current;
+                    if (env.GetState<Context>() != null)
+                    {
+                        throw new DreamContextAccessException("tried to attach context to env that already has a dreamcontext");
+                    }
+                    if (theOwnerEnv != null && theOwnerEnv == env)
+                    {
+                        throw new DreamContextAccessException("tried to re-attach dreamcontext to env it is already attached to");
+                    }
+                    if (theOwnerEnv != null)
+                    {
+                        throw new DreamContextAccessException("tried to attach dreamcontext to an env, when it already is attached to another");
+                    }
+                    theOwnerEnv = env;
+                    env.SetState(this);
+                }
 			}
 		}
 

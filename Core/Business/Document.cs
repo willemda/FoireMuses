@@ -15,9 +15,9 @@ namespace FoireMuses.Core.Business
         public Document(JObject jobject) : base(jobject) { }
 
         //eventually override these methods in the subclasses if they are needed
-        public void BeforeCreate() { }
-        public void AfterCreate() { }
-        public void BeforeUpdate() { }
-        public void AfterUpdate() { }
+        public virtual void BeforeCreate() { }
+        public virtual void AfterCreate() { }
+        public virtual void BeforeUpdate() { }
+        public virtual void AfterUpdate() { }
     }
 }
