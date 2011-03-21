@@ -74,7 +74,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<T> Get(string id, Result<T> aResult)
+        public Result<T> GetByUsername(string id, Result<T> aResult)
         {
             try
             {

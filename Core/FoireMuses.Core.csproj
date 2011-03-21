@@ -79,6 +79,7 @@
     <Compile Include="Controllers\ViewController.cs" />
     <Compile Include="Exceptions\EmptyFieldException.cs" />
     <Compile Include="Instance.cs" />
+    <Compile Include="InstanceFactory.cs" />
     <Compile Include="Interfaces\IBaseController.cs" />
     <Compile Include="Interfaces\IDocument.cs" />
     <Compile Include="Interfaces\IUserController.cs" />

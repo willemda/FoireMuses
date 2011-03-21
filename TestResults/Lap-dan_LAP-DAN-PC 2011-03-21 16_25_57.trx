@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="50ed9314-6861-4792-b108-66fc0f799496" name="Lap-dan@LAP-DAN-PC 2011-03-21 16:25:57" runUser="Lap-dan-PC\Lap-dan" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="Local" id="e86c83ff-e53b-478c-840a-aba913a66787">
+    <Description>Il s'agit des paramètres de test par défaut pour une série de tests locale.</Description>
+    <Deployment userDeploymentRoot="C:\Projects\FoireMuses\TestResults" useDefaultDeploymentRoot="false" enabled="false" runDeploymentRoot="Lap-dan_LAP-DAN-PC 2011-03-21 16_25_57">
+      <DeploymentItem filename="C:\Projects\FoireMuses\externals\Newtonsoft.Json.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\externals\mindtouch.dream.test.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\externals\LoveSeat.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\externals\mindtouch.core.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\externals\mindtouch.dream.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\Core\bin\Debug\FoireMuses.Core.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\externals\Autofac.dll" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2011-03-21T16:25:57.9410000+01:00" queuing="2011-03-21T16:25:57.9910000+01:00" start="2011-03-21T16:25:58.0410000+01:00" finish="2011-03-21T16:26:02.9460000+01:00" />
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" error="0" failed="1" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" passed="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="Can_register_score_from_json" storage="c:\projects\foiremuses\foiremuses.unittests\bin\debug\foiremuses.unittests.dll" id="ab6eda6c-b215-b849-c420-7f0d1e0fa7f7">
+      <Execution id="eda08985-b80b-420d-9814-e1ab9a0a1c1c" />
+      <TestMethod codeBase="C:/Projects/FoireMuses/FoireMuses.UnitTests/bin/Debug/FoireMuses.UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="MindTouch.Core.Test.Services.ScoreServiceTest, FoireMuses.UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Can_register_score_from_json" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Les résultats ne figurent pas dans une liste" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tous les résultats chargés" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="ab6eda6c-b215-b849-c420-7f0d1e0fa7f7" executionId="eda08985-b80b-420d-9814-e1ab9a0a1c1c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="eda08985-b80b-420d-9814-e1ab9a0a1c1c" testId="ab6eda6c-b215-b849-c420-7f0d1e0fa7f7" testName="Can_register_score_from_json" computerName="LAP-DAN-PC" startTime="2011-03-21T16:25:58.0910000+01:00" endTime="2011-03-21T16:26:02.7750000+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="eda08985-b80b-420d-9814-e1ab9a0a1c1c">
+      <Output>
+        <ErrorInfo>
+          <Message>Class Initialization method MindTouch.Core.Test.Services.ScoreServiceTest.GlobalSetup threw exception. System.Exception: System.Exception: Unable to start service with config:
+&lt;config&gt;
+  &lt;sid&gt;http://foiremuses.org/service&lt;/sid&gt;
+  &lt;path&gt;foiremuses_jgn&lt;/path&gt;
+&lt;/config&gt;
+BadRequest: blueprint not found.</Message>
+          <StackTrace>    at MindTouch.Dream.Test.DreamTestHelper.CreateService(DreamHostInfo hostInfo, XDoc config)
+   at MindTouch.Dream.Test.DreamTestHelper.CreateService(DreamHostInfo hostInfo, String sid, String pathPrefix, XDoc extraConfig)
+   at MindTouch.Core.Test.Services.ScoreServiceTest.GlobalSetup(TestContext testContext) in C:\Projects\FoireMuses\FoireMuses.UnitTests\Class1.cs:line 176
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+</TestRun>

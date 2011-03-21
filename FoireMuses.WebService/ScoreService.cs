@@ -15,8 +15,10 @@ namespace FoireMuses.WebService
     using Yield = System.Collections.Generic.IEnumerator<IYield>;
     using FoireMuses.Core;
     using MindTouch.Xml;
+    using Newtonsoft.Json.Linq;
+    using FoireMuses.Core.Business;
 
-    public partial class ScoreService
+    public partial class Services
     {
 
         [DreamFeature("GET:scores", "Get all scores")]
@@ -27,7 +29,36 @@ namespace FoireMuses.WebService
             int limit = context.GetParam<int>("limit", 0);
             yield return Context.Current.Instance.ScoreController.GetHead(limit, res);
             //theLogger.Debug("Hello");
-            ResultToXml(response, res.Value);
+            response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.Rows.ToString()));
+            //ResultToXml(response, res.Value);
+        }
+
+        [DreamFeature("POST:scores", "Create new score")]
+        public Yield CreateScores(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+        {
+            JObject aObject = JObject.Parse(request.ToText());
+            Result<JScore> res = new Result<JScore>();
+            yield return Context.Current.Instance.ScoreController.Create(new JScore(aObject), res);
+            if (!res.HasException)
+                response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
+            else
+                response.Return(DreamMessage.BadRequest("Todo"));
+
+            yield break;
+        }
+
+        [DreamFeature("PUT:scores", "Create new score")]
+        public Yield CreateScores(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+        {
+            JObject aObject = JObject.Parse(request.ToText());
+            Result<JScore> res = new Result<JScore>();
+            yield return Context.Current.Instance.ScoreController.Update(new JScore(aObject), res);
+            if (!res.HasException)
+                response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
+            else
+                response.Return(DreamMessage.BadRequest("Todo"));
+
+            yield break;
         }
 
         private void ResultToXml(Result<DreamMessage> response, ViewResult<string, string> result)

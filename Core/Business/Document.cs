@@ -19,5 +19,11 @@ namespace FoireMuses.Core.Business
         public virtual void AfterCreate() { }
         public virtual void BeforeUpdate() { }
         public virtual void AfterUpdate() { }
+
+        public override bool Equals(object obj)
+        {
+            Document d = obj as Document;
+            return this.Id.Equals(d.Id);
+        }
     }
 }

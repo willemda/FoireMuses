@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="8f68d23d-d146-40ff-a110-03ccde6183d0" name="Lap-dan@LAP-DAN-PC 2011-03-21 16:44:35" runUser="Lap-dan-PC\Lap-dan" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="Local" id="e86c83ff-e53b-478c-840a-aba913a66787">
+    <Description>Il s'agit des paramètres de test par défaut pour une série de tests locale.</Description>
+    <Deployment userDeploymentRoot="C:\Projects\FoireMuses\TestResults" useDefaultDeploymentRoot="false" enabled="false" runDeploymentRoot="Lap-dan_LAP-DAN-PC 2011-03-21 16_44_35">
+      <DeploymentItem filename="C:\Projects\FoireMuses\externals\mindtouch.core.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\Core\bin\Debug\FoireMuses.Core.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\externals\Autofac.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\externals\LoveSeat.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\externals\Newtonsoft.Json.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\externals\mindtouch.dream.test.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\WebHost\services\FoireMuses.WebService.dll" />
+      <DeploymentItem filename="C:\Projects\FoireMuses\externals\mindtouch.dream.dll" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2011-03-21T16:44:35.6880000+01:00" queuing="2011-03-21T16:44:42.0370000+01:00" start="2011-03-21T16:44:42.8540000+01:00" finish="2011-03-21T16:45:39.7860000+01:00" />
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" error="0" failed="1" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" passed="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="Can_register_score_from_json" storage="c:\projects\foiremuses\foiremuses.unittests\bin\debug\foiremuses.unittests.dll" id="ab6eda6c-b215-b849-c420-7f0d1e0fa7f7">
+      <Execution id="9032c8a3-9a3c-48e8-9c2c-33548cded833" />
+      <TestMethod codeBase="C:/Projects/FoireMuses/FoireMuses.UnitTests/bin/Debug/FoireMuses.UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="MindTouch.Core.Test.Services.ScoreServiceTest, FoireMuses.UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="Can_register_score_from_json" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Les résultats ne figurent pas dans une liste" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Tous les résultats chargés" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="ab6eda6c-b215-b849-c420-7f0d1e0fa7f7" executionId="9032c8a3-9a3c-48e8-9c2c-33548cded833" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="9032c8a3-9a3c-48e8-9c2c-33548cded833" testId="ab6eda6c-b215-b849-c420-7f0d1e0fa7f7" testName="Can_register_score_from_json" computerName="LAP-DAN-PC" duration="00:00:00.4772369" startTime="2011-03-21T16:44:43.6140000+01:00" endTime="2011-03-21T16:45:35.3280000+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9032c8a3-9a3c-48e8-9c2c-33548cded833">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.IsTrue failed. </Message>
+          <StackTrace>   at MindTouch.Core.Test.Services.ScoreServiceTest.Can_register_score_from_json() in C:\Projects\FoireMuses\FoireMuses.UnitTests\Class1.cs:line 224
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+</TestRun>

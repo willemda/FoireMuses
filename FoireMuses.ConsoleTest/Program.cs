@@ -3,6 +3,8 @@ using MindTouch.Tasking;
 using FoireMuses.Core;
 using System;
 using LoveSeat;
+using Autofac.Builder;
+using MindTouch.Xml;
 
 namespace FoireMuses.ConsoleTest
 {
@@ -12,7 +14,8 @@ namespace FoireMuses.ConsoleTest
 
 		static void Main(string[] args)
 		{
-			Context context = new Context(new Instance());
+            InstanceFactory ifact = new InstanceFactory(new ContainerBuilder().Build(), new XDoc("config"));
+            Context context = new Context(ifact.GetInstance(null,null)); // TODO 
 			context.User = "coucou";
 			TaskEnv.ExecuteNew(() => StartTests(context));
 
@@ -24,7 +27,7 @@ namespace FoireMuses.ConsoleTest
 		{
 			context.AttachToCurrentTaskEnv();
 
-            context.Instance.ViewController.createGetHeadScoresView();
+            context.Instance.ViewController.createGetUserByUsernameView();
             return;
             
 

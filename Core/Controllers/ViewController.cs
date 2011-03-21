@@ -75,5 +75,25 @@ namespace FoireMuses.Core.Controllers
 				                    }"));
             Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
         }
+
+
+        public void createGetUserByUsernameView()
+        {
+            if (Context.Current.Instance.CouchDbController.CouchDatabase.DocumentExists("_design/users"))
+            {
+
+                CouchDesignDocument mavue = Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument("_design/users", new Result<CouchDesignDocument>()).Wait();
+                Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(mavue);
+            }
+            CouchDesignDocument view = new CouchDesignDocument("users");
+            view.Views.Add("byusername",
+                          new CouchView(
+                             @"function(doc){
+				                       if(doc.otype && doc.username && doc.otype=='user'){
+				                          emit(doc.username, doc.password)
+				                       }
+				                    }"));
+            Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
+        }
     }
 }

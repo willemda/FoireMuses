@@ -13,6 +13,7 @@ namespace FoireMuses.WebService
     using FoireMuses.Core;
     using FoireMuses.Core.Business;
     using MindTouch.Tasking;
+    using Autofac;
 
     [DreamService("Foire Muses", "Foire Muses",
         Info = "foire muses",
@@ -21,9 +22,9 @@ namespace FoireMuses.WebService
     public partial class Services : DreamService
     {
 
-        private static Instance theInstance = new Instance();
+        private InstanceFactory theFactory;
 
-        private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreService));
+        private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(Services));
 
         [DreamFeature("GET:info", "Information about the service")]
         public Yield GetInfo(DreamContext context, DreamMessage request, Result<DreamMessage> response)
@@ -46,9 +47,19 @@ namespace FoireMuses.WebService
         }
 
 
+        protected override Yield Start(XDoc config, IContainer container, Result result)
+        {
+            Result res;
+            yield return res = Coroutine.Invoke(base.Start, config, new Result());
+            res.Confirm();
+
+            theFactory = new InstanceFactory(container, config);
+            result.Return();
+        }
+
         private Yield SetContext(DreamContext context, DreamMessage request, Result<DreamMessage> response)
         {
-            Context ctx = new Context(theInstance);
+            Context ctx = new Context(theFactory.GetInstance(context,request));
             ctx.User = context.User;
             //create context and attach
             ctx.AttachToCurrentTaskEnv();
