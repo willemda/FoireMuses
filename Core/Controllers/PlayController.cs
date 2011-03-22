@@ -15,7 +15,7 @@ namespace FoireMuses.Core.Controllers
     class PlayController : BaseController<JPlay>, IPlayController
     {
 
-        public Result<JPlay> Create(JPlay aDoc, Result<JPlay> aResult)
+        new public Result<JPlay> Create(JPlay aDoc, Result<JPlay> aResult)
         {
             base.Create(aDoc, new Result<JPlay>()).WhenDone(
                 aResult.Return,
@@ -24,7 +24,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JPlay> GetById(string id, Result<JPlay> aResult)
+        new public Result<JPlay> GetById(string id, Result<JPlay> aResult)
         {
             base.GetById(id, new Result<JPlay>()).WhenDone(
                 aResult.Return,
@@ -33,7 +33,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JPlay> Get(JPlay aDoc, Result<JPlay> aResult)
+        new public Result<JPlay> Get(JPlay aDoc, Result<JPlay> aResult)
         {
             base.Get(aDoc, new Result<JPlay>()).WhenDone(
                 aResult.Return,
@@ -42,7 +42,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JPlay> Update(JPlay aDoc, Result<JPlay> aResult)
+        new public Result<JPlay> Update(JPlay aDoc, Result<JPlay> aResult)
         {
             base.Update(aDoc, new Result<JPlay>()).WhenDone(
                 aResult.Return,
@@ -51,7 +51,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JObject> Delete(JPlay aDoc, Result<JObject> aResult)
+        new public Result<JObject> Delete(JPlay aDoc, Result<JObject> aResult)
         {
             base.Delete(aDoc, new Result<JObject>()).WhenDone(
                 aResult.Return,

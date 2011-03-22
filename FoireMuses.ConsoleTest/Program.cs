@@ -29,7 +29,7 @@ namespace FoireMuses.ConsoleTest
 
             context.Instance.ViewController.createGetAllScoresView();
             //context.Instance.ViewController.createGetUserByUsernameView();
-            return;
+            //return;
             
 
 			//context.Instance.ScoreController.GetDocument((string)null, new Result<JScore>()).Wait();

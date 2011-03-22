@@ -67,7 +67,7 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-        public Result<JScore> Create(JScore aDoc, Result<JScore> aResult)
+        new public Result<JScore> Create(JScore aDoc, Result<JScore> aResult)
         {
             base.Create(aDoc, new Result<JScore>()).WhenDone(
                 aResult.Return,
@@ -76,7 +76,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JScore> GetById(string id, Result<JScore> aResult)
+        new public Result<JScore> GetById(string id, Result<JScore> aResult)
         {
             base.GetById(id, new Result<JScore>()).WhenDone(
                 aResult.Return,
@@ -85,7 +85,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JScore> Get(JScore aDoc, Result<JScore> aResult)
+        new public Result<JScore> Get(JScore aDoc, Result<JScore> aResult)
         {
             base.Get(aDoc, new Result<JScore>()).WhenDone(
                 aResult.Return,
@@ -94,7 +94,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JScore> Update(JScore aDoc, Result<JScore> aResult)
+        new public Result<JScore> Update(JScore aDoc, Result<JScore> aResult)
         {
             base.Update(aDoc, new Result<JScore>()).WhenDone(
                 aResult.Return,
@@ -103,7 +103,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JObject> Delete(JScore aDoc, Result<JObject> aResult)
+        new public Result<JObject> Delete(JScore aDoc, Result<JObject> aResult)
         {
             base.Delete(aDoc, new Result<JObject>()).WhenDone(
                 aResult.Return,

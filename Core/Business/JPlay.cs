@@ -34,32 +34,32 @@ namespace FoireMuses.Core.Business
        }
 
 
-       public void Created()
+       new public void Created()
        {
            base.Created();
        }
 
-       public void Creating()
+       new public void Creating()
        {
            base.Creating();
        }
 
-       public void Deleted()
+       new public void Deleted()
        {
            base.Deleted();
        }
 
-       public void Deleting()
+       new public void Deleting()
        {
            base.Deleting();
        }
 
-       public void Updated()
+       new public void Updated()
        {
            base.Updated();
        }
 
-       public void Updating()
+       new public void Updating()
        {
            base.Updating();
        }

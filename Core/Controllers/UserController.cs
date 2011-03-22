@@ -15,9 +15,6 @@ namespace FoireMuses.Core.Controllers
     public class UserController : BaseController<JUser>, IUserController
     {
 
-        string VIEW_USERS = "users";
-        string VIEW_USERS_BY_USERNAME = "byusername";
-
         public Result<JUser> GetByUsername(string username, Result<JUser> aResult)
         {
             try
@@ -48,7 +45,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JUser> Create(JUser aDoc, Result<JUser> aResult)
+        new public Result<JUser> Create(JUser aDoc, Result<JUser> aResult)
         {
             base.Create(aDoc, new Result<JUser>()).WhenDone(
                 aResult.Return,
@@ -57,7 +54,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JUser> GetById(string id, Result<JUser> aResult)
+        new public Result<JUser> GetById(string id, Result<JUser> aResult)
         {
             base.GetById(id, new Result<JUser>()).WhenDone(
                 aResult.Return,
@@ -66,7 +63,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JUser> Get(JUser aDoc, Result<JUser> aResult)
+        new public Result<JUser> Get(JUser aDoc, Result<JUser> aResult)
         {
             base.Get(aDoc, new Result<JUser>()).WhenDone(
                 aResult.Return,
@@ -75,7 +72,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JUser> Update(JUser aDoc, Result<JUser> aResult)
+        new public Result<JUser> Update(JUser aDoc, Result<JUser> aResult)
         {
             base.Update(aDoc, new Result<JUser>()).WhenDone(
                 aResult.Return,
@@ -84,7 +81,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<JObject> Delete(JUser aDoc, Result<JObject> aResult)
+        new public Result<JObject> Delete(JUser aDoc, Result<JObject> aResult)
         {
             base.Delete(aDoc, new Result<JObject>()).WhenDone(
                 aResult.Return,
