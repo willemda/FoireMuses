@@ -268,5 +268,20 @@ namespace MindTouch.Core.Test.Services
             Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
             Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
         }
+
+        // Delete methods not allowed
+        /*[Test]
+        public void Can_delete_score()
+        {
+            var score = new JObject();
+            score.Add("_id", "1");
+            score.Add("title", "la belle au bois dormant");
+            _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+            var response = _plug.At("scores").Delete(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+            Console.Write(response.ToString());
+            Assert.IsTrue(response.IsSuccessful);
+            Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
+            Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
+        }*/
     }
 }

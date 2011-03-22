@@ -82,10 +82,12 @@ namespace FoireMuses.WebService
             yield break;
         }
 
+
+        // TODO: delete methods not allowed!
         public Yield DeleteScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
         {
             JObject aObject = JObject.Parse(request.ToText());
-            Result<JScore> res = new Result<JScore>();
+            Result<JObject> res = new Result<JObject>();
             yield return Context.Current.Instance.ScoreController.Delete(new JScore(aObject), res);
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
