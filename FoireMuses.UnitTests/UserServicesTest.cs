@@ -47,7 +47,7 @@ namespace MindTouch.Core.Test.Services
 {
 
     [TestFixture]
-    public class ScoreServiceTest
+    public class UserServicesTest
     {
 
 
@@ -56,91 +56,103 @@ namespace MindTouch.Core.Test.Services
         private const string DEFAULT_HOST = "defaulthost";
 
         //--- Class Fields ---
-       // private static readonly ILog _log = LogUtils.CreateLog();
+        // private static readonly ILog _log = LogUtils.CreateLog();
 
         //--- Fields ---
         private static DreamHostInfo _hostInfo;
         private static DreamServiceInfo _service;
         private static Plug _plug;
-        private static MockScoreController msc;
+        private static MockUserController muc;
 
         //--- Mock Controllers ---
 
-        internal class MockScoreController : IScoreController
+        internal class MockUserController : IUserController
         {
 
-            private JScore monScore;
+            private JUser monUser = null;
 
-            public Result<LoveSeat.ViewResult<string, string, FoireMuses.Core.Business.JScore>> GetScoresFromSource(FoireMuses.Core.Business.JSource aJSource, Result<LoveSeat.ViewResult<string, string, FoireMuses.Core.Business.JScore>> aResult)
-            {
-                throw new NotImplementedException();
-            }
 
-            public Result<LoveSeat.ViewResult<string[], string, FoireMuses.Core.Business.JScore>> GetScoresFromPlay(FoireMuses.Core.Business.JPlay aJPlay, Result<LoveSeat.ViewResult<string[], string, FoireMuses.Core.Business.JScore>> aResult)
-            {
-                throw new NotImplementedException();
-            }
 
-            public Result<LoveSeat.ViewResult<string, string>> GetHead(int limit, Result<LoveSeat.ViewResult<string, string>> aResult)
+            public Result<JUser> GetByUsername(string username, Result<JUser> aResult)
             {
-                throw new NotImplementedException();
-            }
-
-            public Result<LoveSeat.ViewResult<string, string>> GetHead(Result<LoveSeat.ViewResult<string, string>> aResult)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Result<FoireMuses.Core.Business.JScore> Create(FoireMuses.Core.Business.JScore aDoc, Result<FoireMuses.Core.Business.JScore> aResult)
-            {
-                monScore = aDoc;
-                aResult.Return(monScore);
-                return aResult;
-            }
-
-            public Result<FoireMuses.Core.Business.JScore> Get(string id, Result<FoireMuses.Core.Business.JScore> aResult)
-            {
-                if (monScore != null && monScore.Id == id)
+                if (monUser != null)
                 {
-                    aResult.Return(monScore);
+                    JToken nom;
+                    monUser.TryGetValue("username", out nom);
+                    if (nom.Value<string>() == username)
+                    {
+                        aResult.Return(monUser);
+                    }
+                    else
+                    {
+                        aResult.Throw(new Exception("Todo"));
+                    }
                 }
                 else
-                    aResult.Throw(new Exception("NotFound"));
+                {
+                    aResult.Throw(new Exception("Todo"));
+                }
                 return aResult;
             }
 
-            public Result<FoireMuses.Core.Business.JScore> Get(FoireMuses.Core.Business.JScore aDoc, Result<FoireMuses.Core.Business.JScore> aResult)
+            public Result<JUser> Create(JUser aDoc, Result<JUser> aResult)
             {
-                if (monScore!=null)
+                monUser = aDoc;
+                aResult.Return(monUser);
+                return aResult;
+            }
+
+            public Result<JUser> Get(string id, Result<JUser> aResult)
+            {
+                if (monUser != null && monUser.Id == id )
                 {
-                    aResult.Return(monScore);
+                    aResult.Return(monUser);
                 }
                 else
-                    aResult.Throw(new Exception("NotFound"));
+                {
+                    aResult.Throw(new Exception("Todo"));
+                }
                 return aResult;
             }
 
-            public Result<FoireMuses.Core.Business.JScore> Update(FoireMuses.Core.Business.JScore aDoc, Result<FoireMuses.Core.Business.JScore> aResult)
+            public Result<JUser> Get(JUser aDoc, Result<JUser> aResult)
             {
-                if (monScore!=null)
+                if (monUser != null && monUser.Id == aDoc.Id)
                 {
-                    monScore = aDoc;
-                    aResult.Return(monScore);
+                    aResult.Return(monUser);
                 }
                 else
-                    aResult.Throw(new Exception("NotFound"));
+                {
+                    aResult.Throw(new Exception("Todo"));
+                }
                 return aResult;
             }
 
-            public Result<JObject> Delete(FoireMuses.Core.Business.JScore aDoc, Result<JObject> aResult)
+            public Result<JUser> Update(JUser aDoc, Result<JUser> aResult)
             {
-                if (monScore!=null)
+                if (monUser != null && monUser.Id == aDoc.Id)
                 {
-                    monScore = null;
+                    monUser = aDoc;
+                    aResult.Return(monUser);
+                }
+                else
+                {
+                    aResult.Throw(new Exception("Todo"));
+                }
+                return aResult;
+            }
+
+            public Result<JObject> Delete(JUser aDoc, Result<JObject> aResult)
+            {
+                if (monUser != null && monUser.Id == aDoc.Id)
+                {
+                    monUser = null;
                     aResult.Return(aDoc);
                 }
                 else
-                    aResult.Throw(new Exception("NotFound"));
+                {
+                    aResult.Throw(new Exception("Todo"));
+                }
                 return aResult;
             }
 
@@ -164,7 +176,7 @@ namespace MindTouch.Core.Test.Services
                 throw new NotImplementedException();
             }
 
-            public Result<LoveSeat.ViewResult<string, string, FoireMuses.Core.Business.JScore>> GetAll(Result<LoveSeat.ViewResult<string, string, FoireMuses.Core.Business.JScore>> aResult)
+            public Result<LoveSeat.ViewResult<string, string, JUser>> GetAll(Result<LoveSeat.ViewResult<string, string, JUser>> aResult)
             {
                 throw new NotImplementedException();
             }
@@ -177,8 +189,8 @@ namespace MindTouch.Core.Test.Services
         {
             var config = new XDoc("config");
             var builder = new ContainerBuilder();
-            msc = new MockScoreController();
-            builder.Register(c => msc).As<IScoreController>().ServiceScoped();
+            muc = new MockUserController();
+            builder.Register(c => muc).As<IUserController>().ServiceScoped();
             _hostInfo = DreamTestHelper.CreateRandomPortHost(config, builder.Build());
             _hostInfo.Host.Self.At("load").With("name", "foiremuses.webservice").Post(DreamMessage.Ok());
             _service = DreamTestHelper.CreateService(
@@ -193,7 +205,7 @@ namespace MindTouch.Core.Test.Services
         [TestInitialize]
         public void Setup()
         {
-           msc = new MockScoreController();
+            muc = new MockUserController();
         }
 
 
@@ -230,43 +242,64 @@ namespace MindTouch.Core.Test.Services
         }*/
 
         [Test]
-        public void Can_create_score_from_json()
+        public void Can_create_user_from_json()
         {
-            var score = new JObject();
-            score.Add("_id", "1");
-            score.Add("title", "la belle au bois dormant");
-            var response = _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON,score.ToString()), new Result<DreamMessage>()).Wait();
+            var user = new JObject();
+            user.Add("_id", "1");
+            user.Add("username", "toto");
+            user.Add("password", "azerty");
+            var response = _plug.At("users").Post(DreamMessage.Ok(MimeType.JSON, user.ToString()), new Result<DreamMessage>()).Wait();
             Assert.IsTrue(response.IsSuccessful);
             Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
-            Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
+            Assert.AreEqual("toto", JObject.Parse(response.ToText())["username"]);
+            Assert.AreEqual("azerty", JObject.Parse(response.ToText())["password"]);
         }
 
         [Test]
-        public void Can_update_score()
+        public void Can_update_user()
         {
-            var score = new JObject();
-            score.Add("_id", "1");
-            score.Add("title", "la belle au bois dormant");
-            _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON,score.ToString()), new Result<DreamMessage>()).Wait();
-            score.Remove("title");
-            score.Add("title", "la belle qui dors!");
-            var response = _plug.At("scores").Put(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+            var user = new JObject();
+            user.Add("_id", "1");
+            user.Add("username", "toto");
+            user.Add("password", "azerty");
+            _plug.At("users").Post(DreamMessage.Ok(MimeType.JSON, user.ToString()), new Result<DreamMessage>()).Wait();
+            user.Remove("password");
+            user.Add("password", "123456");
+            var response = _plug.At("users").Put(DreamMessage.Ok(MimeType.JSON, user.ToString()), new Result<DreamMessage>()).Wait();
             Assert.IsTrue(response.IsSuccessful);
             Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
-            Assert.AreEqual("la belle qui dors!", JObject.Parse(response.ToText())["title"]);
+            Assert.AreEqual("toto", JObject.Parse(response.ToText())["username"]);
+            Assert.AreEqual("123456", JObject.Parse(response.ToText())["password"]);
         }
 
         [Test]
-        public void Can_read_score_by_id()
+        public void Can_read_user_by_id()
         {
-            var score = new JObject();
-            score.Add("_id","1");
-            score.Add("title", "la belle au bois dormant");
-            _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
-            var response = _plug.At("scores","1").Get(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+            var user = new JObject();
+            user.Add("_id", "1");
+            user.Add("username", "toto");
+            user.Add("password", "azerty");
+            _plug.At("users").Post(DreamMessage.Ok(MimeType.JSON, user.ToString()), new Result<DreamMessage>()).Wait();
+            var response  = _plug.At("users","1").Get(DreamMessage.Ok(), new Result<DreamMessage>()).Wait();
             Assert.IsTrue(response.IsSuccessful);
             Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
-            Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
+            Assert.AreEqual("toto", JObject.Parse(response.ToText())["username"]);
+            Assert.AreEqual("azerty", JObject.Parse(response.ToText())["password"]);
+        }
+
+        [Test]
+        public void Can_read_user_by_username()
+        {
+            var user = new JObject();
+            user.Add("_id", "1");
+            user.Add("username", "toto");
+            user.Add("password", "azerty");
+            _plug.At("users").Post(DreamMessage.Ok(MimeType.JSON, user.ToString()), new Result<DreamMessage>()).Wait();
+            var response = _plug.At("users", "username","toto").Get(DreamMessage.Ok(), new Result<DreamMessage>()).Wait();
+            Assert.IsTrue(response.IsSuccessful);
+            Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
+            Assert.AreEqual("toto", JObject.Parse(response.ToText())["username"]);
+            Assert.AreEqual("azerty", JObject.Parse(response.ToText())["password"]);
         }
 
         // Delete methods not allowed

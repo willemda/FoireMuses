@@ -15,7 +15,7 @@ namespace FoireMuses.WebService
 
     public partial class Services
     {
-        [DreamFeature("POST:user","create a user")]
+        [DreamFeature("POST:users","create a user")]
         public Yield CreateUser(DreamContext context, DreamMessage request, Result<DreamMessage> response)
         {
             JObject aObject = JObject.Parse(request.ToText());
@@ -29,12 +29,40 @@ namespace FoireMuses.WebService
             yield break;
         }
 
-        [DreamFeature("GET:user/{username}", "create a user")]
+        [DreamFeature("GET:users/username/{username}", "get the user that has the given username")]
         public Yield GetUserByUsername(DreamContext context, DreamMessage request, Result<DreamMessage> response)
         {
             string theUsername = context.GetParam("username");
             Result<JUser> res = new Result<JUser>();
             yield return Context.Current.Instance.UserController.GetByUsername(theUsername, res);
+            if (!res.HasException)
+                response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
+            else
+                response.Return(DreamMessage.BadRequest("Todo"));
+
+            yield break;
+        }
+
+        [DreamFeature("GET:users/{id}", "get the user that has the given id")]
+        public Yield GetUserById(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+        {
+            string theId = context.GetParam("id");
+            Result<JUser> res = new Result<JUser>();
+            yield return Context.Current.Instance.UserController.Get(theId, res);
+            if (!res.HasException)
+                response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
+            else
+                response.Return(DreamMessage.BadRequest("Todo"));
+
+            yield break;
+        }
+
+        [DreamFeature("PUT:users", "update a user")]
+        public Yield UpdateUser(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+        {
+            JObject aObject = JObject.Parse(request.ToText());
+            Result<JUser> res = new Result<JUser>();
+            yield return Context.Current.Instance.UserController.Update(new JUser(aObject), res);
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
             else
