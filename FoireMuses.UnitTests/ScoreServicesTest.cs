@@ -159,12 +159,15 @@ namespace MindTouch.Core.Test.Services
                 throw new NotImplementedException();
             }
 
-            public void Readed()
+           
+
+            public Result<LoveSeat.ViewResult<string, string, FoireMuses.Core.Business.JScore>> GetAll(Result<LoveSeat.ViewResult<string, string, FoireMuses.Core.Business.JScore>> aResult)
             {
                 throw new NotImplementedException();
             }
 
-            public Result<LoveSeat.ViewResult<string, string, FoireMuses.Core.Business.JScore>> GetAll(Result<LoveSeat.ViewResult<string, string, FoireMuses.Core.Business.JScore>> aResult)
+
+            public void Readed(JScore doc, Result<JScore> res)
             {
                 throw new NotImplementedException();
             }

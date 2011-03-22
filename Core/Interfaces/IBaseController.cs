@@ -19,7 +19,7 @@ namespace FoireMuses.Core.Interfaces
         void Created();
         void Updated();
         void Deleted();
-        void Readed();
+        void Readed(T doc, Result<T> res);
 
         //Not really usefull, but quiet nice for debug // TODO DELETE
         Result<ViewResult<string,string,T>> GetAll(Result<ViewResult<string,string,T>> aResult);

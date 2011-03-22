@@ -18,7 +18,9 @@ namespace FoireMuses.Core.Business
 			this.Add ("type", "play");
 		}
 
-       public JPlay(JObject jobject) : base(jobject) { }
+       public JPlay(JObject jobject) : base(jobject) {
+           this.Add("type", "play");
+       }
 
     }
 }

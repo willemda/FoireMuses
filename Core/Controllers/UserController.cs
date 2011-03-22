@@ -8,6 +8,7 @@ using MindTouch.Tasking;
 using FoireMuses.Core.Utils;
 using LoveSeat;
 using LoveSeat.Support;
+using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Controllers
 {
@@ -47,38 +48,14 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        string VIEW_USERS_HEAD = "head";
-
-        public override Result<JUser> GetById(string id, Result<JUser> aResult)
+        public override void Readed(JUser user, Result<JUser> res)
         {
-            try
-            {
-                ArgCheck.NotNull("aResult", aResult);
-                ArgCheck.NotNullNorEmpty("id", id);
-
-                ViewOptions voptions = new ViewOptions();
-                KeyOptions koptions = new KeyOptions();
-                koptions.Add(id);
-                voptions.Key = koptions;
-                voptions.Limit = 1;
-
-                Context.Current.Instance.CouchDbController.CouchDatabase.GetView(
-                    VIEW_USERS,
-                    VIEW_USERS_HEAD,
-                    voptions,
-                    new Result<ViewResult<string, string, JUser>>()
-                ).WhenDone(
-                    a => aResult.Return(a.Rows.GetEnumerator().Current.Doc),
-                    aResult.Throw
-                    );
-                this.Readed();
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
-
-            return aResult;
+            JToken type;
+            user.TryGetValue("otype", out type);
+            if (type.Value<string>() == "user")
+                res.Return(user);
+            else
+                res.Throw(new Exception("Bad type"));
         }
     }
 }

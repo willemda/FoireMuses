@@ -15,7 +15,9 @@ namespace FoireMuses.Core.Business
 			this.Add ("type", "user");
 		}
 
-        public JUser(JObject jobject) : base(jobject) { }
+        public JUser(JObject jobject) : base(jobject) {
+            this.Add("type", "user");
+        }
 
         public override void BeforeCreate(){
             validate();

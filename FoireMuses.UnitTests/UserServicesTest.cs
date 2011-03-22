@@ -171,12 +171,13 @@ namespace MindTouch.Core.Test.Services
                 throw new NotImplementedException();
             }
 
-            public void Readed()
+            public Result<LoveSeat.ViewResult<string, string, JUser>> GetAll(Result<LoveSeat.ViewResult<string, string, JUser>> aResult)
             {
                 throw new NotImplementedException();
             }
 
-            public Result<LoveSeat.ViewResult<string, string, JUser>> GetAll(Result<LoveSeat.ViewResult<string, string, JUser>> aResult)
+
+            public void Readed(JUser doc, Result<JUser> res)
             {
                 throw new NotImplementedException();
             }

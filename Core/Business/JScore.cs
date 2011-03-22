@@ -19,7 +19,9 @@ namespace FoireMuses.Core.Business
 			this.Add ("type", "score");
 		}
 
-        public JScore(JObject jobject) : base(jobject) { }
+        public JScore(JObject jobject) : base(jobject) {
+            this.Add("type", "score");
+        }
 
     }
 }

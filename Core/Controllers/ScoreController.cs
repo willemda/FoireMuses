@@ -134,41 +134,15 @@ namespace FoireMuses.Core.Controllers
             return GetHead(0, aResult);
         }
 
-
-        public override Result<JScore> GetById(string id, Result<JScore> aResult)
+        public override void Readed(JScore score, Result<JScore> res)
         {
-            try
-            {
-                ArgCheck.NotNull("aResult", aResult);
-                ArgCheck.NotNullNorEmpty("id", id);
-
-                ViewOptions voptions = new ViewOptions();
-                KeyOptions koptions = new KeyOptions();
-                koptions.Add(id);
-                voptions.Key = koptions;
-                voptions.Limit = 1;
-
-                Context.Current.Instance.CouchDbController.CouchDatabase.GetView(
-                    VIEW_SCORES_ID,
-                    VIEW_SCORES_HEAD,
-                    voptions,
-                    new Result<ViewResult<string,string,JScore>>()
-                ).WhenDone(
-                    a=>aResult.Return(a.Rows.GetEnumerator().Current.Doc),
-                    aResult.Throw
-                    );
-                this.Readed();
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
-
-            return aResult;
+            JToken type;
+            score.TryGetValue("otype", out type);
+            if (type.Value<string>() == "score")
+                res.Return(score);
+            else
+                res.Throw(new Exception("Bad type"));
         }
-
-
-		
 	}
 }
 

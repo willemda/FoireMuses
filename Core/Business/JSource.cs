@@ -18,7 +18,9 @@ namespace FoireMuses.Core.Business
 			this.Add ("type", "source");
 		}
 
-        public JSource(JObject jobject) : base(jobject) { }
+        public JSource(JObject jobject) : base(jobject) {
+            this.Add("type", "source");
+        }
 
     }
 }

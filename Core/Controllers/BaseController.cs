@@ -28,7 +28,7 @@ namespace FoireMuses.Core.Controllers
         //called whenever a document is deleted
         public void Deleted() { }
         //called whenever a document is read/get
-        public void Readed() { }
+        public abstract void Readed(T doc, Result<T> res);
 
         public Result<T> Create(T aDoc, Result<T> aResult)
         {
@@ -74,7 +74,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public abstract Result<T> GetById(string id, Result<T> aResult);
+       // public abstract Result<T> GetById(string id, Result<T> aResult);
 
 
         public Result<T> Get(T aDoc, Result<T> aResult)
@@ -85,10 +85,31 @@ namespace FoireMuses.Core.Controllers
                 ArgCheck.NotNull("aDoc", aDoc);
 
                 Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(aDoc.Id, new Result<T>()).WhenDone(
-                    aResult.Return,
+                    a=>this.Readed(a,aResult),
                     aResult.Throw
                     );
-                this.Readed();
+                //this.Readed();
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
+
+            return aResult;
+        }
+
+        public Result<T> GetById(string id, Result<T> aResult)
+        {
+            try
+            {
+                ArgCheck.NotNull("aResult", aResult);
+                ArgCheck.NotNull("id", id);
+
+                Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(id, new Result<T>()).WhenDone(
+                    a=>this.Readed(a,aResult),
+                    aResult.Throw
+                    );
+                //this.Readed();
             }
             catch (Exception e)
             {
