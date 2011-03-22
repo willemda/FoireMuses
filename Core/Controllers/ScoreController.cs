@@ -29,6 +29,8 @@ using LoveSeat.Support;
 
 namespace FoireMuses.Core.Controllers
 {
+    using Yield = System.Collections.Generic.IEnumerator<IYield>;
+    using FoireMuses.Core.Exceptions;
 
 	public class ScoreController : BaseController<JScore>,IScoreController 
 	{
@@ -132,6 +134,86 @@ namespace FoireMuses.Core.Controllers
         public Result<ViewResult<string, string>> GetHead(Result<ViewResult<string, string>> aResult)
         {
             return GetHead(0, aResult);
+        }
+
+
+        public Yield GetByIdd(string id,Result<JScore> aResult)
+        {
+            Result<JScore> jscoreRes = new Result<JScore>();
+            yield return Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(id, jscoreRes);
+            if (jscoreRes.HasException)
+            {
+                aResult.Throw(jscoreRes.Exception);
+                yield break;
+            }
+
+            if (jscoreRes.Value == null)
+            {
+                aResult.Throw(new NoResultException());
+                yield break;
+            }
+
+            Result<bool> type = new Result<bool>();
+            yield return TypeScore(jscoreRes.Value, type);
+            if (type.HasException)
+            {
+                aResult.Throw(type.Exception);
+                yield break;
+            }
+
+            if (type.Value == true)
+            {
+                aResult.Return(jscoreRes.Value);
+            }
+            else
+            {
+                aResult.Throw(new NoResultException());
+                yield break;
+            } 
+            
+        }
+
+        public Result<bool> TypeScore(JScore score, Result<bool> aResult)
+        {
+            JToken type;
+            score.TryGetValue("otype", out type);
+            if (type.Value<string>() == "score")
+                aResult.Return(true);
+            else
+                aResult.Return(false);
+            return aResult;
+        }
+
+        private void ErrorManage(Exception e)
+        {
+            theLogger.Error("Exception ici");
+        }
+
+        public override Result<JScore> GetById(string id, Result<JScore> aResult)
+        {
+            Coroutine.Invoke(GetByIdd, id, new Result<JScore>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+            /*
+            try
+            {
+                ArgCheck.NotNull("aResult", aResult);
+                ArgCheck.NotNull("id", id);
+                Result<JScore> res = new Result<JScore>();
+                Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(id, res).WhenDone(
+                    aResult.Return,
+                    aResult.Throw
+                    );
+                //this.Readed();
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
+
+            return aResult;*/
         }
 
         public override void Readed(JScore score, Result<JScore> res)

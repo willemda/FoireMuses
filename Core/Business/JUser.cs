@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Exceptions;
+using LoveSeat.Interfaces;
+using LoveSeat;
 
 namespace FoireMuses.Core.Business
 {
-    public class JUser : Document
+    public class JUser : JDocument, IAuditableDocument
     {
 
         public JUser ()
@@ -16,11 +18,16 @@ namespace FoireMuses.Core.Business
 		}
 
         public JUser(JObject jobject) : base(jobject) {
-            this.Add("type", "user");
-        }
-
-        public override void BeforeCreate(){
-            validate();
+            JToken type;
+            if (this.TryGetValue("otype", out type))
+            {
+                if (type.Value<string>() != "user")
+                    throw new Exception("Bad object type");
+            }
+            else
+            {
+                this.Add("otype", "user");
+            }
         }
 
         private void validate()
@@ -41,5 +48,35 @@ namespace FoireMuses.Core.Business
 
         }
 
+
+        public void Created()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Creating()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Deleted()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Deleting()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Updated()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Updating()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

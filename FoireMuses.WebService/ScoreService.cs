@@ -44,12 +44,13 @@ namespace FoireMuses.WebService
         public Yield GetScoreById(DreamContext context, DreamMessage request, Result<DreamMessage> response)
         {
             Result<JScore> res = new Result<JScore>();
-            yield return Context.Current.Instance.ScoreController.GetById(context.GetParam("id"),res);
+            yield return Context.Current.Instance.ScoreController.GetById(context.GetParam("id"),res).Catch();
 
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
             else
-                response.Return(DreamMessage.BadRequest("Todo"));
+                response.Return(DreamMessage.BadRequest("Impossible d'effectuer la requête."));
+            yield break;
         }
 
 

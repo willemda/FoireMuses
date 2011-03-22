@@ -20,6 +20,8 @@ namespace FoireMuses.WebService
         {
             JObject aObject = JObject.Parse(request.ToText());
             Result<JUser> res = new Result<JUser>();
+            JUser user = new JUser();
+           
             yield return Context.Current.Instance.UserController.Create(new JUser(aObject), res);
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));

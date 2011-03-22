@@ -41,6 +41,7 @@ using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Interfaces;
 using FoireMuses.Core.Business;
 using System.Collections.Generic;
+using LoveSeat;
 #endif
 
 namespace MindTouch.Core.Test.Services
@@ -192,6 +193,8 @@ namespace MindTouch.Core.Test.Services
             );
             _plug = _service.WithInternalKey().AtLocalHost;
         }
+
+
 
         [TestInitialize]
         public void Setup()

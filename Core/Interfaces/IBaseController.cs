@@ -15,13 +15,5 @@ namespace FoireMuses.Core.Interfaces
         Result<T> Get(T aDoc, Result<T> aResult);
         Result<T> Update(T aDoc, Result<T> aResult);
         Result<JObject> Delete(T aDoc, Result<JObject> aResult);
-
-        void Created();
-        void Updated();
-        void Deleted();
-        void Readed(T doc, Result<T> res);
-
-        //Not really usefull, but quiet nice for debug // TODO DELETE
-        Result<ViewResult<string,string,T>> GetAll(Result<ViewResult<string,string,T>> aResult);
     }
 }
