@@ -1,3 +1,4 @@
 _ReSharper*
 */obj/*
 */bin/*
+*.trx

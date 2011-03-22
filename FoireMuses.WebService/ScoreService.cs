@@ -29,8 +29,12 @@ namespace FoireMuses.WebService
             int limit = context.GetParam<int>("limit", 0);
             yield return Context.Current.Instance.ScoreController.GetHead(limit, res);
             //theLogger.Debug("Hello");
-            response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.Rows.ToString()));
-            //ResultToXml(response, res.Value);
+
+
+            string json = ResultToJson(res.Value);
+            response.Return(DreamMessage.Ok(MimeType.JSON, json));
+
+            //ResultToXml(res.Value);
         }
 
         [DreamFeature("POST:scores", "Create new score")]
@@ -47,8 +51,8 @@ namespace FoireMuses.WebService
             yield break;
         }
 
-        [DreamFeature("PUT:scores", "Create new score")]
-        public Yield CreateScores(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+        [DreamFeature("PUT:scores", "Update the score")]
+        public Yield UpdateScores(DreamContext context, DreamMessage request, Result<DreamMessage> response)
         {
             JObject aObject = JObject.Parse(request.ToText());
             Result<JScore> res = new Result<JScore>();
@@ -61,9 +65,8 @@ namespace FoireMuses.WebService
             yield break;
         }
 
-        private void ResultToXml(Result<DreamMessage> response, ViewResult<string, string> result)
+        private XDoc ResultToXml(ViewResult<string, string> result)
         {
-            //theLogger.Debug("ToXML");
             XDoc xdoc = new XDoc("scores");
             foreach (ViewResultRow<string,string> row in result.Rows)
             {
@@ -72,7 +75,17 @@ namespace FoireMuses.WebService
                 xdoc.Attr("title", row.Value);
                 xdoc.End();
             }
-            response.Return(DreamMessage.Ok(xdoc));
+            return xdoc;
+        }
+
+        private string ResultToJson(ViewResult<string, string> result)
+        {
+            string json = "";
+            foreach (ViewResultRow<string,string> r in result.Rows)
+            {
+                json += "Id: " + r.Id + "\tKey: " + r.Key + "\n";
+            }
+            return json;
         }
 
 
