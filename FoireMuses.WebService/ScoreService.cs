@@ -28,17 +28,34 @@ namespace FoireMuses.WebService
             Result<ViewResult<string, string>> res = new Result<ViewResult<string, string>>();
             int limit = context.GetParam<int>("limit", 0);
             yield return Context.Current.Instance.ScoreController.GetHead(limit, res);
-            //theLogger.Debug("Hello");
 
 
-            string json = ResultToJson(res.Value);
-            response.Return(DreamMessage.Ok(MimeType.JSON, json));
-
-            //ResultToXml(res.Value);
+            if (!res.HasException)
+            {
+                string json = ResultToJson(res.Value);
+                response.Return(DreamMessage.Ok(MimeType.JSON, json));
+            }
+            else
+                response.Return(DreamMessage.BadRequest("Todo"));
+            
         }
 
+        [DreamFeature("GET:scores/{id}", "Get the score given by the id number")]
+        public Yield GetScoreById(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+        {
+            Result<JScore> res = new Result<JScore>();
+            yield return Context.Current.Instance.ScoreController.Get(context.GetParam("id"),res);
+
+            if (!res.HasException)
+                response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
+            else
+                response.Return(DreamMessage.BadRequest("Todo"));
+        }
+
+
+
         [DreamFeature("POST:scores", "Create new score")]
-        public Yield CreateScores(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+        public Yield CreateScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
         {
             JObject aObject = JObject.Parse(request.ToText());
             Result<JScore> res = new Result<JScore>();
@@ -52,11 +69,24 @@ namespace FoireMuses.WebService
         }
 
         [DreamFeature("PUT:scores", "Update the score")]
-        public Yield UpdateScores(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+        public Yield UpdateScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
         {
             JObject aObject = JObject.Parse(request.ToText());
             Result<JScore> res = new Result<JScore>();
             yield return Context.Current.Instance.ScoreController.Update(new JScore(aObject), res);
+            if (!res.HasException)
+                response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
+            else
+                response.Return(DreamMessage.BadRequest("Todo"));
+
+            yield break;
+        }
+
+        public Yield DeleteScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+        {
+            JObject aObject = JObject.Parse(request.ToText());
+            Result<JScore> res = new Result<JScore>();
+            yield return Context.Current.Instance.ScoreController.Delete(new JScore(aObject), res);
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
             else

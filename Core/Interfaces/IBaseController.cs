@@ -11,7 +11,7 @@ namespace FoireMuses.Core.Interfaces
     public interface IBaseController<T> where T : JDocument
     {
         Result<T> Create(T aDoc, Result<T> aResult);
-        Result<T> GetByUsername(string id, Result<T> aResult);
+        Result<T> Get(string id, Result<T> aResult);
         Result<T> Get(T aDoc, Result<T> aResult);
         Result<T> Update(T aDoc, Result<T> aResult);
         Result<JObject> Delete(T aDoc, Result<JObject> aResult);

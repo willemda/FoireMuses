@@ -98,9 +98,15 @@ namespace MindTouch.Core.Test.Services
                 return aResult;
             }
 
-            public Result<FoireMuses.Core.Business.JScore> GetByUsername(string id, Result<FoireMuses.Core.Business.JScore> aResult)
+            public Result<FoireMuses.Core.Business.JScore> Get(string id, Result<FoireMuses.Core.Business.JScore> aResult)
             {
-                throw new NotImplementedException();
+                if (monScore != null && monScore.Id == id)
+                {
+                    aResult.Return(monScore);
+                }
+                else
+                    aResult.Throw(new Exception("NotFound"));
+                return aResult;
             }
 
             public Result<FoireMuses.Core.Business.JScore> Get(FoireMuses.Core.Business.JScore aDoc, Result<FoireMuses.Core.Business.JScore> aResult)
@@ -227,9 +233,11 @@ namespace MindTouch.Core.Test.Services
         public void Can_create_score_from_json()
         {
             var score = new JObject();
+            score.Add("_id", "1");
             score.Add("title", "la belle au bois dormant");
             var response = _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON,score.ToString()), new Result<DreamMessage>()).Wait();
             Assert.IsTrue(response.IsSuccessful);
+            Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
             Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
         }
 
@@ -237,13 +245,28 @@ namespace MindTouch.Core.Test.Services
         public void Can_update_score()
         {
             var score = new JObject();
+            score.Add("_id", "1");
             score.Add("title", "la belle au bois dormant");
             _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON,score.ToString()), new Result<DreamMessage>()).Wait();
             score.Remove("title");
             score.Add("title", "la belle qui dors!");
             var response = _plug.At("scores").Put(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
             Assert.IsTrue(response.IsSuccessful);
+            Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
             Assert.AreEqual("la belle qui dors!", JObject.Parse(response.ToText())["title"]);
+        }
+
+        [Test]
+        public void Can_read_score_by_id()
+        {
+            var score = new JObject();
+            score.Add("_id","1");
+            score.Add("title", "la belle au bois dormant");
+            _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+            var response = _plug.At("scores","1").Get(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+            Assert.IsTrue(response.IsSuccessful);
+            Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
+            Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
         }
     }
 }
