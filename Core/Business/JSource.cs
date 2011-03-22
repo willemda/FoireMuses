@@ -12,7 +12,7 @@ namespace FoireMuses.Core.Business
     /// <summary>
     /// represent a Source(une source) object in json
     /// </summary>
-    public class JSource : JDocument, IAuditableDocument
+    public class JSource : Document
     {
         public JSource ()
 		{
@@ -35,32 +35,32 @@ namespace FoireMuses.Core.Business
 
         public void Created()
         {
-            throw new NotImplementedException();
+            base.Created();
         }
 
         public void Creating()
         {
-            throw new NotImplementedException();
+            base.Creating();
         }
 
         public void Deleted()
         {
-            throw new NotImplementedException();
+            base.Deleted();
         }
 
         public void Deleting()
         {
-            throw new NotImplementedException();
+            base.Deleting();
         }
 
         public void Updated()
         {
-            throw new NotImplementedException();
+            base.Updated();
         }
 
         public void Updating()
         {
-            throw new NotImplementedException();
+            base.Updating();
         }
     }
 }

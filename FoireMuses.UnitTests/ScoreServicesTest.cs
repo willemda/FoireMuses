@@ -87,7 +87,7 @@ namespace MindTouch.Core.Test.Services
                 throw new NotImplementedException();
             }
 
-            public Result<LoveSeat.ViewResult<string, string>> GetHead(Result<LoveSeat.ViewResult<string, string>> aResult)
+            public Result<LoveSeat.ViewResult<string, string>> GetAll(Result<LoveSeat.ViewResult<string, string>> aResult)
             {
                 throw new NotImplementedException();
             }
@@ -169,6 +169,17 @@ namespace MindTouch.Core.Test.Services
 
 
             public void Readed(JScore doc, Result<JScore> res)
+            {
+                throw new NotImplementedException();
+            }
+
+
+            public Result<ViewResult<string, string, JScore>> GetScoresFromPlay(JPlay aJPlay, Result<ViewResult<string, string, JScore>> aResult)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Result<ViewResult<string, string>> GetAll(int limit, Result<ViewResult<string, string>> aResult)
             {
                 throw new NotImplementedException();
             }

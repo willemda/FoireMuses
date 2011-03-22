@@ -32,12 +32,12 @@ namespace FoireMuses.Core.Controllers
 
                 Context.Current.Instance.CouchDbController.CouchDatabase.GetView
                 (
-                    VIEW_USERS,
-                    VIEW_USERS_BY_USERNAME,
+                    CouchViews.VIEW_USERS,
+                    CouchViews.VIEW_USERS_BY_USERNAME,
                     voptions,
                     new Result<ViewResult<string, string, JUser>>()
                 ).WhenDone(
-                        a => { aResult.Return(a.Rows.First().Doc); },
+                a => { aResult.Return(a.Rows.First().Doc); }, // TODO MOCHE CHANGER CA
                         aResult.Throw
                     );
             }
@@ -48,14 +48,49 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public override void Readed(JUser user, Result<JUser> res)
+        public Result<JUser> Create(JUser aDoc, Result<JUser> aResult)
         {
-            JToken type;
-            user.TryGetValue("otype", out type);
-            if (type.Value<string>() == "user")
-                res.Return(user);
-            else
-                res.Throw(new Exception("Bad type"));
+            base.Create(aDoc, new Result<JUser>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
+
+        public Result<JUser> GetById(string id, Result<JUser> aResult)
+        {
+            base.GetById(id, new Result<JUser>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
+
+        public Result<JUser> Get(JUser aDoc, Result<JUser> aResult)
+        {
+            base.Get(aDoc, new Result<JUser>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
+
+        public Result<JUser> Update(JUser aDoc, Result<JUser> aResult)
+        {
+            base.Update(aDoc, new Result<JUser>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
+
+        public Result<JObject> Delete(JUser aDoc, Result<JObject> aResult)
+        {
+            base.Delete(aDoc, new Result<JObject>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
         }
     }
 }

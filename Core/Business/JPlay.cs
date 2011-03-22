@@ -12,10 +12,11 @@ namespace FoireMuses.Core.Business
     /// <summary>
     /// represent a Play(une pièce) object in json
     /// </summary>
-    public class JPlay : JDocument, IAuditableDocument
+    public class JPlay : Document
     {
+
        public JPlay ()
-		{
+	    {
 			this.Add ("type", "play");
 		}
 
@@ -35,32 +36,32 @@ namespace FoireMuses.Core.Business
 
        public void Created()
        {
-           throw new NotImplementedException();
+           base.Created();
        }
 
        public void Creating()
        {
-           throw new NotImplementedException();
+           base.Creating();
        }
 
        public void Deleted()
        {
-           throw new NotImplementedException();
+           base.Deleted();
        }
 
        public void Deleting()
        {
-           throw new NotImplementedException();
+           base.Deleting();
        }
 
        public void Updated()
        {
-           throw new NotImplementedException();
+           base.Updated();
        }
 
        public void Updating()
        {
-           throw new NotImplementedException();
+           base.Updating();
        }
     }
 }

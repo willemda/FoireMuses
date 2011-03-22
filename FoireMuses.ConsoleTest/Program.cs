@@ -27,7 +27,8 @@ namespace FoireMuses.ConsoleTest
 		{
 			context.AttachToCurrentTaskEnv();
 
-            context.Instance.ViewController.createGetUserByUsernameView();
+            context.Instance.ViewController.createGetAllScoresView();
+            //context.Instance.ViewController.createGetUserByUsernameView();
             return;
             
 

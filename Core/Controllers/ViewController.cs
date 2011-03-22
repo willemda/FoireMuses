@@ -57,7 +57,7 @@ namespace FoireMuses.Core.Controllers
             Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
         }
 
-        public void createGetHeadScoresView()
+        public void createGetAllScoresView()
         {
             if (Context.Current.Instance.CouchDbController.CouchDatabase.DocumentExists("_design/scores"))
             {
@@ -66,11 +66,11 @@ namespace FoireMuses.Core.Controllers
                 Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(mavue);
             }
             CouchDesignDocument view = new CouchDesignDocument("scores");
-            view.Views.Add("head",
+            view.Views.Add("all",
                           new CouchView(
                              @"function(doc){
 				                       if(doc.otype && doc.title && doc.otype=='score'){
-				                          emit(doc._id, doc.title)
+				                          emit(doc._id, doc._rev)
 				                       }
 				                    }"));
             Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());

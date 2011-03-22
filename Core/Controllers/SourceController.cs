@@ -15,14 +15,49 @@ namespace FoireMuses.Core.Controllers
     class SourceController : BaseController<JSource>, ISourceController
     {
 
-        public override void Readed(JSource source, Result<JSource> res)
+        public Result<JSource> Create(JSource aDoc, Result<JSource> aResult)
         {
-            JToken type;
-            source.TryGetValue("otype", out type);
-            if (type.Value<string>() == "source")
-                res.Return(source);
-            else
-                res.Throw(new Exception("Bad type"));
+            base.Create(aDoc, new Result<JSource>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
+
+        public Result<JSource> GetById(string id, Result<JSource> aResult)
+        {
+            base.GetById(id, new Result<JSource>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
+
+        public Result<JSource> Get(JSource aDoc, Result<JSource> aResult)
+        {
+            base.Get(aDoc, new Result<JSource>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
+
+        public Result<JSource> Update(JSource aDoc, Result<JSource> aResult)
+        {
+            base.Update(aDoc, new Result<JSource>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
+
+        public Result<JObject> Delete(JSource aDoc, Result<JObject> aResult)
+        {
+            base.Delete(aDoc, new Result<JObject>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
         }
 
 

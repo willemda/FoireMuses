@@ -27,7 +27,7 @@ namespace FoireMuses.WebService
         {   
             Result<ViewResult<string, string>> res = new Result<ViewResult<string, string>>();
             int limit = context.GetParam<int>("limit", 0);
-            yield return Context.Current.Instance.ScoreController.GetHead(limit, res);
+            yield return Context.Current.Instance.ScoreController.GetAll(limit, res).Catch();
 
 
             if (!res.HasException)
@@ -37,19 +37,22 @@ namespace FoireMuses.WebService
             }
             else
                 response.Return(DreamMessage.BadRequest("Todo"));
-            
+
+            yield break;
         }
 
         [DreamFeature("GET:scores/{id}", "Get the score given by the id number")]
         public Yield GetScoreById(DreamContext context, DreamMessage request, Result<DreamMessage> response)
         {
             Result<JScore> res = new Result<JScore>();
-            yield return Context.Current.Instance.ScoreController.GetById(context.GetParam("id"),res).Catch();
+            string theId = context.GetParam<string>("id");
+            yield return Context.Current.Instance.ScoreController.GetById(theId,res).Catch();
 
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
             else
                 response.Return(DreamMessage.BadRequest("Impossible d'effectuer la requête."));
+
             yield break;
         }
 
@@ -60,7 +63,8 @@ namespace FoireMuses.WebService
         {
             JObject aObject = JObject.Parse(request.ToText());
             Result<JScore> res = new Result<JScore>();
-            yield return Context.Current.Instance.ScoreController.Create(new JScore(aObject), res);
+            yield return Context.Current.Instance.ScoreController.Create(new JScore(aObject), res).Catch();
+
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
             else
@@ -74,7 +78,8 @@ namespace FoireMuses.WebService
         {
             JObject aObject = JObject.Parse(request.ToText());
             Result<JScore> res = new Result<JScore>();
-            yield return Context.Current.Instance.ScoreController.Update(new JScore(aObject), res);
+            yield return Context.Current.Instance.ScoreController.Update(new JScore(aObject), res).Catch();
+
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
             else
@@ -89,7 +94,8 @@ namespace FoireMuses.WebService
         {
             JObject aObject = JObject.Parse(request.ToText());
             Result<JObject> res = new Result<JObject>();
-            yield return Context.Current.Instance.ScoreController.Delete(new JScore(aObject), res);
+            yield return Context.Current.Instance.ScoreController.Delete(new JScore(aObject), res).Catch();
+
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
             else

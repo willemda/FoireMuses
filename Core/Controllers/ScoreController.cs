@@ -36,8 +36,6 @@ namespace FoireMuses.Core.Controllers
 	{
         private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
 
-        string VIEW_SCORES_FROM_SOURCE_ID = "scores";
-        string VIEW_SCORES_FROM_SOURCE_NAME = "fromsource";
 
 		public Result<ViewResult<string, string, JScore>> GetScoresFromSource(JSource aJSource, Result<ViewResult<string, string, JScore>> aResult)
 		{
@@ -53,8 +51,8 @@ namespace FoireMuses.Core.Controllers
 
                 Context.Current.Instance.CouchDbController.CouchDatabase.GetView
                 (
-                    VIEW_SCORES_FROM_SOURCE_ID,
-                    VIEW_SCORES_FROM_SOURCE_NAME,
+                    CouchViews.VIEW_SCORES,
+                    CouchViews.VIEW_SCORES_FROM_SOURCE,
                     voptions,
                     new Result<ViewResult<string, string, JScore>>()
                 ).WhenDone(
@@ -69,10 +67,53 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-        string VIEW_SCORES_FROM_PLAY_ID = "";
-        string VIEW_SCORES_FROM_PLAY_NAME = "";
+        public Result<JScore> Create(JScore aDoc, Result<JScore> aResult)
+        {
+            base.Create(aDoc, new Result<JScore>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );         
+            return aResult;
+        }
 
-		public Result<ViewResult<string[], string, JScore>> GetScoresFromPlay(JPlay aJPlay, Result<ViewResult<string[], string, JScore>> aResult)
+        public Result<JScore> GetById(string id, Result<JScore> aResult)
+        {
+            base.GetById(id, new Result<JScore>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
+
+        public Result<JScore> Get(JScore aDoc, Result<JScore> aResult)
+        {
+            base.Get(aDoc, new Result<JScore>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
+
+        public Result<JScore> Update(JScore aDoc, Result<JScore> aResult)
+        {
+            base.Update(aDoc, new Result<JScore>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
+
+        public Result<JObject> Delete(JScore aDoc, Result<JObject> aResult)
+        {
+            base.Delete(aDoc, new Result<JObject>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
+
+
+		public Result<ViewResult<string, string, JScore>> GetScoresFromPlay(JPlay aJPlay, Result<ViewResult<string, string, JScore>> aResult)
 		{
 
             try
@@ -80,11 +121,17 @@ namespace FoireMuses.Core.Controllers
                 ArgCheck.NotNull("aResult", aResult);
                 ArgCheck.NotNull("aJPlay", aJPlay);
 
+                ViewOptions voptions = new ViewOptions();
+                KeyOptions koptions = new KeyOptions();
+                koptions.Add(aJPlay.Id);
+                voptions.Key = koptions;
+
                 Context.Current.Instance.CouchDbController.CouchDatabase.GetView
                 (
-                    VIEW_SCORES_FROM_PLAY_ID,
-                    VIEW_SCORES_FROM_PLAY_NAME,
-                    new Result<ViewResult<string[], string, JScore>>()
+                    CouchViews.VIEW_SCORES,
+                    CouchViews.VIEW_SCORES_FROM_PLAY,
+                    voptions,
+                    new Result<ViewResult<string, string, JScore>>()
                 ).WhenDone(
                         aResult.Return,
                         aResult.Throw
@@ -98,10 +145,9 @@ namespace FoireMuses.Core.Controllers
 		}
 
 
-        string VIEW_SCORES_ID = "scores";
-        string VIEW_SCORES_HEAD = "head";
+        
 
-        public Result<ViewResult<string, string>> GetHead(int limit, Result<ViewResult<string, string>> aResult)
+        public Result<ViewResult<string, string>> GetAll(int limit, Result<ViewResult<string, string>> aResult)
         {
 
             try
@@ -115,8 +161,8 @@ namespace FoireMuses.Core.Controllers
 
                 Context.Current.Instance.CouchDbController.CouchDatabase.GetView
                 (
-                    VIEW_SCORES_ID,
-                    VIEW_SCORES_HEAD,
+                    CouchViews.VIEW_SCORES,
+                    CouchViews.VIEW_ALL,
                     voptions,
                     new Result<ViewResult<string, string>>()
                 ).WhenDone(
@@ -131,100 +177,12 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<ViewResult<string, string>> GetHead(Result<ViewResult<string, string>> aResult)
+
+        public Result<ViewResult<string, string>> GetAll(Result<ViewResult<string, string>> aResult)
         {
-            return GetHead(0, aResult);
+            return GetAll(0, aResult);
         }
 
-
-        public Yield GetByIdd(string id,Result<JScore> aResult)
-        {
-            Result<JScore> jscoreRes = new Result<JScore>();
-            yield return Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(id, jscoreRes);
-            if (jscoreRes.HasException)
-            {
-                aResult.Throw(jscoreRes.Exception);
-                yield break;
-            }
-
-            if (jscoreRes.Value == null)
-            {
-                aResult.Throw(new NoResultException());
-                yield break;
-            }
-
-            Result<bool> type = new Result<bool>();
-            yield return TypeScore(jscoreRes.Value, type);
-            if (type.HasException)
-            {
-                aResult.Throw(type.Exception);
-                yield break;
-            }
-
-            if (type.Value == true)
-            {
-                aResult.Return(jscoreRes.Value);
-            }
-            else
-            {
-                aResult.Throw(new NoResultException());
-                yield break;
-            } 
-            
-        }
-
-        public Result<bool> TypeScore(JScore score, Result<bool> aResult)
-        {
-            JToken type;
-            score.TryGetValue("otype", out type);
-            if (type.Value<string>() == "score")
-                aResult.Return(true);
-            else
-                aResult.Return(false);
-            return aResult;
-        }
-
-        private void ErrorManage(Exception e)
-        {
-            theLogger.Error("Exception ici");
-        }
-
-        public override Result<JScore> GetById(string id, Result<JScore> aResult)
-        {
-            Coroutine.Invoke(GetByIdd, id, new Result<JScore>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-            /*
-            try
-            {
-                ArgCheck.NotNull("aResult", aResult);
-                ArgCheck.NotNull("id", id);
-                Result<JScore> res = new Result<JScore>();
-                Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(id, res).WhenDone(
-                    aResult.Return,
-                    aResult.Throw
-                    );
-                //this.Readed();
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
-
-            return aResult;*/
-        }
-
-        public override void Readed(JScore score, Result<JScore> res)
-        {
-            JToken type;
-            score.TryGetValue("otype", out type);
-            if (type.Value<string>() == "score")
-                res.Return(score);
-            else
-                res.Throw(new Exception("Bad type"));
-        }
 	}
 }
 

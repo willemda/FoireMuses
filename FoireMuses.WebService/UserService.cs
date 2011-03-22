@@ -21,8 +21,9 @@ namespace FoireMuses.WebService
             JObject aObject = JObject.Parse(request.ToText());
             Result<JUser> res = new Result<JUser>();
             JUser user = new JUser();
-           
-            yield return Context.Current.Instance.UserController.Create(new JUser(aObject), res);
+
+            yield return Context.Current.Instance.UserController.Create(new JUser(aObject), res).Catch();
+
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
             else
@@ -36,7 +37,8 @@ namespace FoireMuses.WebService
         {
             string theUsername = context.GetParam("username");
             Result<JUser> res = new Result<JUser>();
-            yield return Context.Current.Instance.UserController.GetByUsername(theUsername, res);
+            yield return Context.Current.Instance.UserController.GetByUsername(theUsername, res).Catch();
+
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
             else
@@ -50,7 +52,8 @@ namespace FoireMuses.WebService
         {
             string theId = context.GetParam("id");
             Result<JUser> res = new Result<JUser>();
-            yield return Context.Current.Instance.UserController.GetById(theId, res);
+            yield return Context.Current.Instance.UserController.GetById(theId, res).Catch();
+
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
             else
@@ -64,7 +67,8 @@ namespace FoireMuses.WebService
         {
             JObject aObject = JObject.Parse(request.ToText());
             Result<JUser> res = new Result<JUser>();
-            yield return Context.Current.Instance.UserController.Update(new JUser(aObject), res);
+            yield return Context.Current.Instance.UserController.Update(new JUser(aObject), res).Catch();
+
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
             else

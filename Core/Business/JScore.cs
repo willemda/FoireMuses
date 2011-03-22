@@ -12,7 +12,7 @@ namespace FoireMuses.Core.Business
     /// <summary>
     /// represent a Score(un air) object in json
     /// </summary>
-    public class JScore :JDocument, IAuditableDocument
+    public class JScore :Document
     {
 		
 		public JScore ()
@@ -36,32 +36,32 @@ namespace FoireMuses.Core.Business
 
         public void Created()
         {
-            throw new NotImplementedException();
+            base.Created();
         }
 
         public void Creating()
         {
-            throw new NotImplementedException();
+            base.Creating();
         }
 
         public void Deleted()
         {
-            throw new NotImplementedException();
+            base.Deleted();
         }
 
         public void Deleting()
         {
-            throw new NotImplementedException();
+            base.Deleting();
         }
 
         public void Updated()
         {
-            throw new NotImplementedException();
+            base.Updated();
         }
 
         public void Updating()
         {
-            throw new NotImplementedException();
+            base.Updating();
         }
     }
 }
