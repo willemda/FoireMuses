@@ -47,8 +47,6 @@ namespace FoireMuses.Core.Controllers
                 ViewOptions voptions = new ViewOptions();
                 KeyOptions koptions = new KeyOptions();
                 koptions.Add(aJSource.Id);
-                theLogger.Debug(koptions.ToString());
-
                 voptions.Key = koptions;
 
                 Context.Current.Instance.CouchDbController.CouchDatabase.GetView
@@ -137,23 +135,40 @@ namespace FoireMuses.Core.Controllers
         }
 
 
-		/*public Result<Business.JScore> GetDocument(JScore aJScore, Result<Business.JScore> aResult)
-		{
-			if(Context.Current.User == null)
-			{
-				aResult.Throw(new Exception("No User specified"));
-			}
-			else
-			{
-				aResult.Return(new JScore());
-			}
-			return aResult;
-		}
+        public override Result<JScore> GetById(string id, Result<JScore> aResult)
+        {
+            try
+            {
+                ArgCheck.NotNull("aResult", aResult);
+                ArgCheck.NotNullNorEmpty("id", id);
 
-		public Result<Business.JScore> UpdateDocument(JScore aJScore, Result<Business.JScore> aResult)
-		{
-			throw new NotImplementedException();
-		}*/
+                ViewOptions voptions = new ViewOptions();
+                KeyOptions koptions = new KeyOptions();
+                koptions.Add(id);
+                voptions.Key = koptions;
+                voptions.Limit = 1;
+
+                Context.Current.Instance.CouchDbController.CouchDatabase.GetView(
+                    VIEW_SCORES_ID,
+                    VIEW_SCORES_HEAD,
+                    voptions,
+                    new Result<ViewResult<string,string,JScore>>()
+                ).WhenDone(
+                    a=>aResult.Return(a.Rows.GetEnumerator().Current.Doc),
+                    aResult.Throw
+                    );
+                this.Readed();
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
+
+            return aResult;
+        }
+
+
+		
 	}
 }
 

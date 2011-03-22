@@ -48,7 +48,7 @@ namespace FoireMuses.WebService
         {
             string theId = context.GetParam("id");
             Result<JUser> res = new Result<JUser>();
-            yield return Context.Current.Instance.UserController.Get(theId, res);
+            yield return Context.Current.Instance.UserController.GetById(theId, res);
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
             else

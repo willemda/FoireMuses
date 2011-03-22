@@ -74,26 +74,8 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        public Result<T> Get(string id, Result<T> aResult)
-        {
-            try
-            {
-                ArgCheck.NotNull("aResult", aResult);
-                ArgCheck.NotNullNorEmpty("id", id);
+        public abstract Result<T> GetById(string id, Result<T> aResult);
 
-                Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument(id, new Result<T>()).WhenDone(
-                    aResult.Return,
-                    aResult.Throw
-                    );
-                this.Readed();
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
-
-            return aResult;
-        }
 
         public Result<T> Get(T aDoc, Result<T> aResult)
         {

@@ -23,7 +23,12 @@ namespace FoireMuses.Core.Business
         public override bool Equals(object obj)
         {
             Document d = obj as Document;
-            return this.Id.Equals(d.Id);
+            return (this.Id.Equals(d.Id) && this.Rev.Equals(d.Rev));
         }
+
+       /* public override int GetHashCode()
+        {
+            return this.Id.GetHashCode()+this.Rev.GetHashCode();
+        }*/
     }
 }

@@ -44,7 +44,7 @@ namespace FoireMuses.WebService
         public Yield GetScoreById(DreamContext context, DreamMessage request, Result<DreamMessage> response)
         {
             Result<JScore> res = new Result<JScore>();
-            yield return Context.Current.Instance.ScoreController.Get(context.GetParam("id"),res);
+            yield return Context.Current.Instance.ScoreController.GetById(context.GetParam("id"),res);
 
             if (!res.HasException)
                 response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));

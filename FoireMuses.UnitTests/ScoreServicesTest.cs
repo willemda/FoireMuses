@@ -98,7 +98,7 @@ namespace MindTouch.Core.Test.Services
                 return aResult;
             }
 
-            public Result<FoireMuses.Core.Business.JScore> Get(string id, Result<FoireMuses.Core.Business.JScore> aResult)
+            public Result<FoireMuses.Core.Business.JScore> GetById(string id, Result<FoireMuses.Core.Business.JScore> aResult)
             {
                 if (monScore != null && monScore.Id == id)
                 {

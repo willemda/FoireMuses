@@ -21,11 +21,11 @@ namespace FoireMuses.Core.Controllers
                 Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(mavue);
             }
             CouchDesignDocument view = new CouchDesignDocument("scores");
-            view.Views.Add("all",
+            view.Views.Add("allbyid",
                           new CouchView(
                              @"function(doc){
-				                       if(doc.type && doc.type == 'score'){
-				                          emit(doc.title, doc._id)
+				                       if(doc.type && doc.title && doc.otype == 'score'){
+				                          emit(doc._id, doc.title)
 				                       }
 				                    }"));
             view.Views.Add("fromsource",

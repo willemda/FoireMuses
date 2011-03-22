@@ -46,5 +46,39 @@ namespace FoireMuses.Core.Controllers
             }
             return aResult;
         }
+
+        string VIEW_USERS_HEAD = "head";
+
+        public override Result<JUser> GetById(string id, Result<JUser> aResult)
+        {
+            try
+            {
+                ArgCheck.NotNull("aResult", aResult);
+                ArgCheck.NotNullNorEmpty("id", id);
+
+                ViewOptions voptions = new ViewOptions();
+                KeyOptions koptions = new KeyOptions();
+                koptions.Add(id);
+                voptions.Key = koptions;
+                voptions.Limit = 1;
+
+                Context.Current.Instance.CouchDbController.CouchDatabase.GetView(
+                    VIEW_USERS,
+                    VIEW_USERS_HEAD,
+                    voptions,
+                    new Result<ViewResult<string, string, JUser>>()
+                ).WhenDone(
+                    a => aResult.Return(a.Rows.GetEnumerator().Current.Doc),
+                    aResult.Throw
+                    );
+                this.Readed();
+            }
+            catch (Exception e)
+            {
+                aResult.Throw(e);
+            }
+
+            return aResult;
+        }
     }
 }

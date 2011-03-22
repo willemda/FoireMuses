@@ -102,7 +102,7 @@ namespace MindTouch.Core.Test.Services
                 return aResult;
             }
 
-            public Result<JUser> Get(string id, Result<JUser> aResult)
+            public Result<JUser> GetById(string id, Result<JUser> aResult)
             {
                 if (monUser != null && monUser.Id == id )
                 {
