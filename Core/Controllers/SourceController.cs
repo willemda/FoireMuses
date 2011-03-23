@@ -15,7 +15,7 @@ namespace FoireMuses.Core.Controllers
     class SourceController : BaseController<JSource>, ISourceController
     {
 
-        new public Result<JSource> Create(JSource aDoc, Result<JSource> aResult)
+        public override Result<JSource> Create(JSource aDoc, Result<JSource> aResult)
         {
             base.Create(aDoc, new Result<JSource>()).WhenDone(
                 aResult.Return,
@@ -24,7 +24,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        new public Result<JSource> GetById(string id, Result<JSource> aResult)
+        public override Result<JSource> GetById(string id, Result<JSource> aResult)
         {
             base.GetById(id, new Result<JSource>()).WhenDone(
                 aResult.Return,
@@ -33,7 +33,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        new public Result<JSource> Get(JSource aDoc, Result<JSource> aResult)
+        public override Result<JSource> Get(JSource aDoc, Result<JSource> aResult)
         {
             base.Get(aDoc, new Result<JSource>()).WhenDone(
                 aResult.Return,
@@ -42,7 +42,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        new public Result<JSource> Update(JSource aDoc, Result<JSource> aResult)
+        public override Result<JSource> Update(JSource aDoc, Result<JSource> aResult)
         {
             base.Update(aDoc, new Result<JSource>()).WhenDone(
                 aResult.Return,
@@ -51,7 +51,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        new public Result<JObject> Delete(JSource aDoc, Result<JObject> aResult)
+        public override Result<JObject> Delete(JSource aDoc, Result<JObject> aResult)
         {
             base.Delete(aDoc, new Result<JObject>()).WhenDone(
                 aResult.Return,

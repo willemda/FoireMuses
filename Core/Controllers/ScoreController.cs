@@ -31,14 +31,16 @@ namespace FoireMuses.Core.Controllers
 {
     using Yield = System.Collections.Generic.IEnumerator<IYield>;
     using FoireMuses.Core.Exceptions;
+    using System.Collections.Generic;
+    using System.Collections;
 
-	public class ScoreController : BaseController<JScore>,IScoreController 
-	{
+    public class ScoreController : BaseController<JScore>, IScoreController
+    {
         private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
 
 
-		public Result<ViewResult<string, string, JScore>> GetScoresFromSource(JSource aJSource, Result<ViewResult<string, string, JScore>> aResult)
-		{
+        public Result<ViewResult<string, string, JScore>> GetScoresFromSource(JSource aJSource, Result<ViewResult<string, string, JScore>> aResult)
+        {
             try
             {
                 ArgCheck.NotNull("aResult", aResult);
@@ -64,19 +66,19 @@ namespace FoireMuses.Core.Controllers
             {
                 aResult.Throw(e);
             }
-			return aResult;
-		}
+            return aResult;
+        }
 
-        new public Result<JScore> Create(JScore aDoc, Result<JScore> aResult)
+        public override Result<JScore> Create(JScore aDoc, Result<JScore> aResult)
         {
             base.Create(aDoc, new Result<JScore>()).WhenDone(
                 aResult.Return,
                 aResult.Throw
-                );         
+                );
             return aResult;
         }
 
-        new public Result<JScore> GetById(string id, Result<JScore> aResult)
+        public override Result<JScore> GetById(string id, Result<JScore> aResult)
         {
             base.GetById(id, new Result<JScore>()).WhenDone(
                 aResult.Return,
@@ -85,7 +87,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        new public Result<JScore> Get(JScore aDoc, Result<JScore> aResult)
+        public override Result<JScore> Get(JScore aDoc, Result<JScore> aResult)
         {
             base.Get(aDoc, new Result<JScore>()).WhenDone(
                 aResult.Return,
@@ -94,16 +96,27 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        new public Result<JScore> Update(JScore aDoc, Result<JScore> aResult)
+        private Yield UpdateHelper(JScore aDoc, Result<JScore> aResult)
         {
-            base.Update(aDoc, new Result<JScore>()).WhenDone(
+            yield return CheckAuthorization(aDoc, new Result());
+            //if we reach there we have the update rights.
+            Result<JScore> jscore = new Result<JScore>();
+            yield return base.Update(aDoc, new Result<JScore>());
+            //finally return the jscore updated
+            aResult.Return(jscore.Value);
+            yield break;
+        }
+
+        public override Result<JScore> Update(JScore aDoc, Result<JScore> aResult)
+        {
+            Coroutine.Invoke(UpdateHelper, aDoc,new Result<JScore>()).WhenDone(
                 aResult.Return,
                 aResult.Throw
                 );
             return aResult;
         }
 
-        new public Result<JObject> Delete(JScore aDoc, Result<JObject> aResult)
+        public override Result<JObject> Delete(JScore aDoc, Result<JObject> aResult)
         {
             base.Delete(aDoc, new Result<JObject>()).WhenDone(
                 aResult.Return,
@@ -113,8 +126,8 @@ namespace FoireMuses.Core.Controllers
         }
 
 
-		public Result<ViewResult<string, string, JScore>> GetScoresFromPlay(JPlay aJPlay, Result<ViewResult<string, string, JScore>> aResult)
-		{
+        public Result<ViewResult<string, string, JScore>> GetScoresFromPlay(JPlay aJPlay, Result<ViewResult<string, string, JScore>> aResult)
+        {
 
             try
             {
@@ -142,10 +155,10 @@ namespace FoireMuses.Core.Controllers
                 aResult.Throw(e);
             }
             return aResult;
-		}
+        }
 
 
-        
+
 
         public Result<ViewResult<string, string>> GetAll(int limit, Result<ViewResult<string, string>> aResult)
         {
@@ -183,6 +196,6 @@ namespace FoireMuses.Core.Controllers
             return GetAll(0, aResult);
         }
 
-	}
+    }
 }
 

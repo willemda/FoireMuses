@@ -60,7 +60,7 @@ namespace FoireMuses.WebService
         private Yield SetContext(DreamContext context, DreamMessage request, Result<DreamMessage> response)
         {
             Context ctx = new Context(theFactory.GetInstance(context,request));
-            ctx.User = context.User;
+            //ctx.User = context.User;
             //create context and attach
             ctx.AttachToCurrentTaskEnv();
             response.Return(request);

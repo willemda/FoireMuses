@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using MindTouch.Dream;
 using MindTouch.Tasking;
+using FoireMuses.Core.Business;
 
 namespace FoireMuses.Core
 {
@@ -39,7 +40,7 @@ namespace FoireMuses.Core
 		}
 
 		//TODO : Specify a Type for the user.
-		public object User { get; set; }
+		public JUser User { get; set; }
 		public Instance Instance { get; private set; }
 
 		private TaskEnv theOwnerEnv;

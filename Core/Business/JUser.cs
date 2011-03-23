@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Exceptions;
 using LoveSeat.Interfaces;
 using LoveSeat;
+using System.Text.RegularExpressions;
 
 namespace FoireMuses.Core.Business
 {
@@ -30,53 +31,81 @@ namespace FoireMuses.Core.Business
             }
         }
 
+
+        static Regex goodCharsForUsernameRegex = new Regex("\\w{5,20}");
+        static Regex goodCharsForPasswordRegex = new Regex("\\w{5,20}");
+
         private void validate()
         {
+            CheckUsername();
+            CheckPassword();
+        }
+
+        private void CheckUsername(){
             JToken jtok;
             if(this.TryGetValue("username", out jtok)){
-                if(String.IsNullOrEmpty(jtok.Value<string>())){
+                if(jtok != null && String.IsNullOrEmpty(jtok.Value<string>())){
                     throw new EmptyFieldException("username");
                 }
-            }
-            
-          
-            if(this.TryGetValue("password", out jtok)){
-                if(String.IsNullOrEmpty(jtok.Value<string>())){
-                    throw new EmptyFieldException("password");
+                if(DoesContainBadCharacters(goodCharsForUsernameRegex, jtok.Value<string>())){
+                    throw new BadCharacterException("username");
                 }
             }
+        }
 
+        private void CheckPassword(){
+            JToken jtok;
+            if(this.TryGetValue("password", out jtok)){
+                if(jtok != null && String.IsNullOrEmpty(jtok.Value<string>())){
+                    throw new EmptyFieldException("password");
+                }
+                if(DoesContainBadCharacters(goodCharsForPasswordRegex, jtok.Value<string>())){
+                    throw new BadCharacterException("password");
+                }
+            }
+        }
+
+        
+        private bool DoesContainBadCharacters(Regex theGoodCharsRegex,string theString)
+        {
+            if (!theGoodCharsRegex.IsMatch(theString))
+            {
+                return true;
+            }
+            return false;
         }
 
 
-        new public void Created()
+        public override void Created()
         {
             base.Created();
         }
 
-        new public void Creating()
+        public override void Creating()
         {
             base.Creating();
+            validate();
         }
 
-        new public void Deleted()
+        public override void Deleted()
         {
             base.Deleted();
         }
 
-        new public void Deleting()
+        public override void Deleting()
         {
             base.Deleting();
         }
 
-        new public void Updated()
+        public override void Updated()
         {
             base.Updated();
         }
 
-        new public void Updating()
+        public override void Updating()
         {
             base.Updating();
+            validate();
         }
     }
 }

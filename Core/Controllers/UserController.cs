@@ -45,7 +45,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        new public Result<JUser> Create(JUser aDoc, Result<JUser> aResult)
+        public override Result<JUser> Create(JUser aDoc, Result<JUser> aResult)
         {
             base.Create(aDoc, new Result<JUser>()).WhenDone(
                 aResult.Return,
@@ -54,7 +54,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        new public Result<JUser> GetById(string id, Result<JUser> aResult)
+        public override Result<JUser> GetById(string id, Result<JUser> aResult)
         {
             base.GetById(id, new Result<JUser>()).WhenDone(
                 aResult.Return,
@@ -63,7 +63,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        new public Result<JUser> Get(JUser aDoc, Result<JUser> aResult)
+        public override Result<JUser> Get(JUser aDoc, Result<JUser> aResult)
         {
             base.Get(aDoc, new Result<JUser>()).WhenDone(
                 aResult.Return,
@@ -72,7 +72,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        new public Result<JUser> Update(JUser aDoc, Result<JUser> aResult)
+        public override Result<JUser> Update(JUser aDoc, Result<JUser> aResult)
         {
             base.Update(aDoc, new Result<JUser>()).WhenDone(
                 aResult.Return,
@@ -81,7 +81,7 @@ namespace FoireMuses.Core.Controllers
             return aResult;
         }
 
-        new public Result<JObject> Delete(JUser aDoc, Result<JObject> aResult)
+        public override Result<JObject> Delete(JUser aDoc, Result<JObject> aResult)
         {
             base.Delete(aDoc, new Result<JObject>()).WhenDone(
                 aResult.Return,

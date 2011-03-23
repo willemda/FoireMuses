@@ -5,6 +5,7 @@ using System;
 using LoveSeat;
 using Autofac.Builder;
 using MindTouch.Xml;
+using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.ConsoleTest
 {
@@ -16,7 +17,7 @@ namespace FoireMuses.ConsoleTest
 		{
             InstanceFactory ifact = new InstanceFactory(new ContainerBuilder().Build(), new XDoc("config"));
             Context context = new Context(ifact.GetInstance(null,null)); // TODO 
-			context.User = "coucou";
+            context.User = null;
 			TaskEnv.ExecuteNew(() => StartTests(context));
 
 			Console.WriteLine("Press enter to close");
@@ -27,7 +28,16 @@ namespace FoireMuses.ConsoleTest
 		{
 			context.AttachToCurrentTaskEnv();
 
-            context.Instance.ViewController.createGetAllScoresView();
+            /*JUser user = new JUser();
+            JArray arr = new JArray();
+            arr.Add("group1");
+            arr.Add("group2");
+            user.Add("groupsId", arr);
+            JToken tok;
+            user.TryGetValue("groupsId", out tok);
+            Console.WriteLine(user["groupsId"].Value<JArray>().First);*/
+            
+            //context.Instance.ViewController.createGetAllScoresView();
             //context.Instance.ViewController.createGetUserByUsernameView();
             //return;
             

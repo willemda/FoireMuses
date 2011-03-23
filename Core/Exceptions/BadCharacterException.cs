@@ -5,11 +5,11 @@ using System.Text;
 
 namespace FoireMuses.Core.Exceptions
 {
-    class EmptyFieldException : Exception
+    public class BadCharacterException : Exception
     {
         private string theFieldName;
 
-        public EmptyFieldException(string theFieldName)
+        public BadCharacterException(string theFieldName)
             : base(theFieldName)
         {
             this.theFieldName = theFieldName;

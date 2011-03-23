@@ -13,38 +13,41 @@ namespace FoireMuses.Core.Business
         public DateTime CreationDate { get; private set; }
         public DateTime LastUpdateDate { get; private set; }
 
+        public string CreatorId { get; set; }
+        public string LastModifierId { get; set; }
+
         public Document() { }
 
         public Document(JObject jobject) : base(jobject) {
         }
 
-        public void Created()
+        public virtual void Created()
         {
            
         }
 
-        public void Creating()
+        public virtual void Creating()
         {
             CreationDate = DateTime.Now;
             LastUpdateDate = DateTime.Now;
         }
 
-        public void Deleted()
+        public virtual void Deleted()
         {
             
         }
 
-        public void Deleting()
+        public virtual void Deleting()
         {
             
         }
 
-        public void Updated()
+        public virtual void Updated()
         {
             
         }
 
-        public void Updating()
+        public virtual void Updating()
         {
             LastUpdateDate = DateTime.Now;
         }
