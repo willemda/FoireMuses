@@ -3,6 +3,8 @@ _ReSharper*
 */obj/*
 */bin/*
 *.trx
-FoireMuses.suo
+*.suo
+*.user
 */TestResults/*
 FoireMuses.5.1.ReSharper.user
+WebHost/services/*
