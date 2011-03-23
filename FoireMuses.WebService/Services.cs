@@ -60,9 +60,13 @@ namespace FoireMuses.WebService
         private Yield SetContext(DreamContext context, DreamMessage request, Result<DreamMessage> response)
         {
             Context ctx = new Context(theFactory.GetInstance(context,request));
-            //ctx.User = context.User;
-            //create context and attach
+           
+            //todo: fix this, find real auth
+            JUser myUser = new JUser();
+            myUser.Add("username", "danny");
+            ctx.User = myUser;
             ctx.AttachToCurrentTaskEnv();
+            //create context and attach
             response.Return(request);
             yield break;
             //verification if the user if authenticated or not..

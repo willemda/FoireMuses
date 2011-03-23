@@ -4,3 +4,4 @@ _ReSharper*
 */bin/*
 *.trx
 FoireMuses.suo
+*/TestResults/*

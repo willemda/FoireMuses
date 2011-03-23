@@ -42,6 +42,7 @@ using FoireMuses.Core.Interfaces;
 using FoireMuses.Core.Business;
 using System.Collections.Generic;
 using LoveSeat;
+using FoireMuses.Core;
 #endif
 
 namespace MindTouch.Core.Test.Services
