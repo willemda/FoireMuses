@@ -80,28 +80,20 @@ namespace FoireMuses.Core.Controllers
             throw new NoResultException();
         }
 
+		public virtual Result<T> Create(T aDoc, Result<T> aResult)
+		{
+			ArgCheck.NotNull("aDoc", aDoc);
+			ArgCheck.NotNull("aResult", aResult);
 
+			Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument<T>(aDoc, new Result<T>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
 
-        public virtual Result<T> Create(T aDoc, Result<T> aResult)
-        {
-            try
-            {
-                ArgCheck.NotNull("aDoc", aDoc);
-                ArgCheck.NotNull("aResult", aResult);
+			return aResult;
+		}
 
-                Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument<T>(aDoc, new Result<T>()).WhenDone(
-                     aResult.Return,
-                     aResult.Throw
-                     );
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
-            return aResult;
-        }
-
-        public virtual Result<T> Update(T aDoc, Result<T> aResult)
+    	public virtual Result<T> Update(T aDoc, Result<T> aResult)
         {
             try
             {
