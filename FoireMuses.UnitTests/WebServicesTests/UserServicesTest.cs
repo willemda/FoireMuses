@@ -41,6 +41,7 @@ using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Interfaces;
 using FoireMuses.Core.Business;
 using System.Collections.Generic;
+using FoireMuses.UnitTests.Mock;
 #endif
 
 namespace MindTouch.Core.Test.Services
@@ -62,126 +63,7 @@ namespace MindTouch.Core.Test.Services
         private static DreamHostInfo _hostInfo;
         private static DreamServiceInfo _service;
         private static Plug _plug;
-        private static MockUserController muc;
-
-        //--- Mock Controllers ---
-
-        internal class MockUserController : IUserController
-        {
-
-            private JUser monUser = null;
-
-
-
-            public Result<JUser> GetByUsername(string username, Result<JUser> aResult)
-            {
-                if (monUser != null)
-                {
-                    JToken nom;
-                    monUser.TryGetValue("username", out nom);
-                    if (nom.Value<string>() == username)
-                    {
-                        aResult.Return(monUser);
-                    }
-                    else
-                    {
-                        aResult.Throw(new Exception("Todo"));
-                    }
-                }
-                else
-                {
-                    aResult.Throw(new Exception("Todo"));
-                }
-                return aResult;
-            }
-
-            public Result<JUser> Create(JUser aDoc, Result<JUser> aResult)
-            {
-                monUser = aDoc;
-                aResult.Return(monUser);
-                return aResult;
-            }
-
-            public Result<JUser> GetById(string id, Result<JUser> aResult)
-            {
-                if (monUser != null && monUser.Id == id )
-                {
-                    aResult.Return(monUser);
-                }
-                else
-                {
-                    aResult.Throw(new Exception("Todo"));
-                }
-                return aResult;
-            }
-
-            public Result<JUser> Get(JUser aDoc, Result<JUser> aResult)
-            {
-                if (monUser != null && monUser.Id == aDoc.Id)
-                {
-                    aResult.Return(monUser);
-                }
-                else
-                {
-                    aResult.Throw(new Exception("Todo"));
-                }
-                return aResult;
-            }
-
-            public Result<JUser> Update(JUser aDoc, Result<JUser> aResult)
-            {
-                if (monUser != null && monUser.Id == aDoc.Id)
-                {
-                    monUser = aDoc;
-                    aResult.Return(monUser);
-                }
-                else
-                {
-                    aResult.Throw(new Exception("Todo"));
-                }
-                return aResult;
-            }
-
-            public Result<JObject> Delete(JUser aDoc, Result<JObject> aResult)
-            {
-                if (monUser != null && monUser.Id == aDoc.Id)
-                {
-                    monUser = null;
-                    aResult.Return(aDoc);
-                }
-                else
-                {
-                    aResult.Throw(new Exception("Todo"));
-                }
-                return aResult;
-            }
-
-            public void Created()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Updated()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Deleted()
-            {
-                throw new NotImplementedException();
-            }
-
-            public Result<LoveSeat.ViewResult<string, string, JUser>> GetAll(Result<LoveSeat.ViewResult<string, string, JUser>> aResult)
-            {
-                throw new NotImplementedException();
-            }
-
-
-            public void Readed(JUser doc, Result<JUser> res)
-            {
-                throw new NotImplementedException();
-            }
-        }
+        private static MockUserController theMockUserController;
 
         //--- Methods ---
 
@@ -189,16 +71,20 @@ namespace MindTouch.Core.Test.Services
         public static void GlobalSetup(TestContext testContext)
         {
             var config = new XDoc("config");
+
+        	var instances = new XDoc("instances")
+        		.Start("instance").Attr("webhost", "test.foiremuses.org").Attr("databaseName", "foiremusesxml").End();
+
             var builder = new ContainerBuilder();
-            muc = new MockUserController();
-            builder.Register(c => muc).As<IUserController>().ServiceScoped();
+            theMockUserController = new MockUserController();
+            builder.Register(c => theMockUserController).As<IUserController>().ServiceScoped();
             _hostInfo = DreamTestHelper.CreateRandomPortHost(config, builder.Build());
             _hostInfo.Host.Self.At("load").With("name", "foiremuses.webservice").Post(DreamMessage.Ok());
             _service = DreamTestHelper.CreateService(
                 _hostInfo,
                 "http://foiremuses.org/service",
                 "foiremuses",
-                new XDoc("config")
+                instances
             );
             _plug = _service.WithInternalKey().AtLocalHost;
         }
@@ -206,7 +92,7 @@ namespace MindTouch.Core.Test.Services
         [TestInitialize]
         public void Setup()
         {
-            muc = new MockUserController();
+            theMockUserController = new MockUserController();
         }
 
 

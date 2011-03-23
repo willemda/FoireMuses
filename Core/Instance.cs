@@ -7,6 +7,7 @@ using FoireMuses.Core.Interfaces;
 using FoireMuses.Core.Controllers;
 using Autofac;
 using Autofac.Builder;
+using MindTouch.Xml;
 
 namespace FoireMuses.Core
 {
@@ -17,46 +18,46 @@ namespace FoireMuses.Core
 	{
 		internal ICouchDBController CouchDbController { get; private set; }
 		public IScoreController ScoreController { get; private set; }
-        public ISourceController SourceController { get; private set; }
-        public ViewController ViewController { get; private set; }
-        public IUserController UserController { get; private set; }
+		public ISourceController SourceController { get; private set; }
+		public ViewController ViewController { get; private set; }
+		public IUserController UserController { get; private set; }
 
-		public Instance(IContainer container)
+		public Instance(IContainer container, XDoc anInstanceXmlConfig)
 		{
-            if (!container.IsRegistered<IScoreController>())
-            {
-                var builder = new ContainerBuilder();
-                builder.Register<ScoreController>().As<IScoreController>();
-                builder.Build(container);
-            }
-            ScoreController = container.Resolve<IScoreController>();
+			ContainerBuilder builder = new ContainerBuilder();
 
-            if (!container.IsRegistered<ICouchDBController>())
-            {
-                var builder = new ContainerBuilder();
-                builder.Register<CouchDBController>().As<ICouchDBController>();
-                builder.Build(container);
-            }
-            CouchDbController = container.Resolve<ICouchDBController>();
+			if(!container.IsRegistered<ISettingsController>())
+			{
+				XmlSettingsController controller = new XmlSettingsController(anInstanceXmlConfig);
+				builder.Register<ISettingsController>(controller);
+			}
+			if (!container.IsRegistered<IScoreController>())
+			{
+				builder.Register<ScoreController>().As<IScoreController>();
+			}
 
-            if (!container.IsRegistered<IUserController>())
-            {
-                var builder = new ContainerBuilder();
-                builder.Register<UserController>().As<IUserController>();
-                builder.Build(container);
-            }
-            UserController = container.Resolve<IUserController>();
+			if (!container.IsRegistered<ICouchDBController>())
+			{
+				builder.Register<CouchDBController>().As<ICouchDBController>();
+			}
 
+			if (!container.IsRegistered<IUserController>())
+			{
+				builder.Register<UserController>().As<IUserController>();
+			}
 
-            if (!container.IsRegistered<ISourceController>())
-            {
-                var builder = new ContainerBuilder();
-                builder.Register<SourceController>().As<ISourceController>();
-                builder.Build(container);
-            }
-            SourceController = container.Resolve<ISourceController>();
+			if (!container.IsRegistered<ISourceController>())
+			{
+				builder.Register<SourceController>().As<ISourceController>();
+			}
 
-            ViewController = new ViewController();
+			builder.Build(container);
+
+			ScoreController = container.Resolve<IScoreController>();
+			CouchDbController = container.Resolve<ICouchDBController>();
+			UserController = container.Resolve<IUserController>();
+			SourceController = container.Resolve<ISourceController>();
+			ViewController = new ViewController();
 		}
 	}
 }

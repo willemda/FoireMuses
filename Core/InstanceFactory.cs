@@ -11,20 +11,35 @@ using FoireMuses.Core.Controllers;
 
 namespace FoireMuses.Core
 {
-    public class InstanceFactory
-    {
-        private Dictionary<string, Instance> listInstance = new Dictionary<string, Instance>();
+	public class InstanceFactory
+	{
+		private readonly Dictionary<string, Instance> theInstancesList = new Dictionary<string, Instance>();
 
-        public InstanceFactory(IContainer container, XDoc config)
-        {
-            listInstance.Add("ask.devel.foiremuses.be", new Instance(container));
-        }
+		public InstanceFactory(IContainer aContainer, XDoc aConfig)
+		{
+			aConfig["//instance"].ForEach(
+				x => theInstancesList.Add(
+					x["@webhost"].AsText,
+					new Instance(aContainer,x)));
 
-        public Instance GetInstance(DreamContext context, DreamMessage request){
-            Instance toReturn;
-            //listInstance.TryGetValue(context.Uri.Path, out toReturn);
-            listInstance.TryGetValue("ask.devel.foiremuses.be", out toReturn);
-            return toReturn;
-        }
-    }
+			if(theInstancesList.Count == 0)
+				throw  new ArgumentException("Invalid Configuration, you have to specify at least one instance");
+		}
+
+		public Instance GetInstance(DreamContext aContext, DreamMessage aRequest)
+		{
+			Instance instance = null;
+			if (!theInstancesList.TryGetValue(aContext.Uri.Host, out instance))
+			{
+				instance = GetDefaultInstance();
+			}
+			return instance;
+		}
+
+		public Instance GetDefaultInstance()
+		{
+			//return the first one
+			return theInstancesList[theInstancesList.Keys.First()];
+		}
+	}
 }

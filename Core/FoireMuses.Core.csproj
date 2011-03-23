@@ -90,7 +90,8 @@
     <Compile Include="Utils\ArgCheck.cs" />
     <Compile Include="Business\JScore.cs" />
     <Compile Include="Utils\CouchViews.cs" />
-    <Compile Include="Utils\Settings.cs" />
+    <Compile Include="Interfaces\ISettingsController.cs" />
+    <Compile Include="Controllers\XmlSettingsController.cs" />
     <Compile Include="Controllers\ScoreController.cs" />
     <Compile Include="Interfaces\ICouchDBController.cs" />
     <Compile Include="Interfaces\IPlayController.cs" />

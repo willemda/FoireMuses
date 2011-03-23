@@ -21,7 +21,6 @@ namespace FoireMuses.WebService
 
 	public partial class Services
 	{
-
 		[DreamFeature("GET:scores", "Get all scores")]
 		[DreamFeatureParam("limit", "int?", "the number of document given by the output")]
 		public Yield GetScores(DreamContext context, DreamMessage request, Result<DreamMessage> response)
