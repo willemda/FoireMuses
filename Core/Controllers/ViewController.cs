@@ -14,11 +14,11 @@ namespace FoireMuses.Core.Controllers
     {
         public void createScoresFromSourceView()
         {
-            if (Context.Current.Instance.CouchDbController.CouchDatabase.DocumentExists("_design/scores"))
+            if (Context.Current.Instance.StoreController.CouchDatabase.DocumentExists("_design/scores"))
             {
                 
-                CouchDesignDocument mavue = Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument("_design/scores",new Result<CouchDesignDocument>()).Wait();
-                Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(mavue);
+                CouchDesignDocument mavue = Context.Current.Instance.StoreController.CouchDatabase.GetDocument("_design/scores",new Result<CouchDesignDocument>()).Wait();
+                Context.Current.Instance.StoreController.CouchDatabase.DeleteDocument(mavue);
             }
             CouchDesignDocument view = new CouchDesignDocument("scores");
             view.Views.Add("allbyid",
@@ -35,16 +35,16 @@ namespace FoireMuses.Core.Controllers
 				                          emit(doc.source_id, doc.title)
 				                       }
 				                    }"));
-            Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
+            Context.Current.Instance.StoreController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
         }
 
         public void createGetAllView()
         {
-            if (Context.Current.Instance.CouchDbController.CouchDatabase.DocumentExists("_design/alldoc"))
+            if (Context.Current.Instance.StoreController.CouchDatabase.DocumentExists("_design/alldoc"))
             {
 
-                CouchDesignDocument mavue = Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument("_design/alldoc", new Result<CouchDesignDocument>()).Wait();
-                Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(mavue);
+                CouchDesignDocument mavue = Context.Current.Instance.StoreController.CouchDatabase.GetDocument("_design/alldoc", new Result<CouchDesignDocument>()).Wait();
+                Context.Current.Instance.StoreController.CouchDatabase.DeleteDocument(mavue);
             }
             CouchDesignDocument view = new CouchDesignDocument("alldoc");
             view.Views.Add("all",
@@ -54,16 +54,16 @@ namespace FoireMuses.Core.Controllers
 				                          emit(doc.type, doc._id)
 				                       }
 				                    }"));
-            Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
+            Context.Current.Instance.StoreController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
         }
 
         public void createGetAllScoresView()
         {
-            if (Context.Current.Instance.CouchDbController.CouchDatabase.DocumentExists("_design/scores"))
+            if (Context.Current.Instance.StoreController.CouchDatabase.DocumentExists("_design/scores"))
             {
 
-                CouchDesignDocument mavue = Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument("_design/scores", new Result<CouchDesignDocument>()).Wait();
-                Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(mavue);
+                CouchDesignDocument mavue = Context.Current.Instance.StoreController.CouchDatabase.GetDocument("_design/scores", new Result<CouchDesignDocument>()).Wait();
+                Context.Current.Instance.StoreController.CouchDatabase.DeleteDocument(mavue);
             }
             CouchDesignDocument view = new CouchDesignDocument("scores");
             view.Views.Add("all",
@@ -73,17 +73,17 @@ namespace FoireMuses.Core.Controllers
 				                          emit(doc._id, doc._rev)
 				                       }
 				                    }"));
-            Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
+            Context.Current.Instance.StoreController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
         }
 
 
         public void createGetUserByUsernameView()
         {
-            if (Context.Current.Instance.CouchDbController.CouchDatabase.DocumentExists("_design/users"))
+            if (Context.Current.Instance.StoreController.CouchDatabase.DocumentExists("_design/users"))
             {
 
-                CouchDesignDocument mavue = Context.Current.Instance.CouchDbController.CouchDatabase.GetDocument("_design/users", new Result<CouchDesignDocument>()).Wait();
-                Context.Current.Instance.CouchDbController.CouchDatabase.DeleteDocument(mavue);
+                CouchDesignDocument mavue = Context.Current.Instance.StoreController.CouchDatabase.GetDocument("_design/users", new Result<CouchDesignDocument>()).Wait();
+                Context.Current.Instance.StoreController.CouchDatabase.DeleteDocument(mavue);
             }
             CouchDesignDocument view = new CouchDesignDocument("users");
             view.Views.Add("byusername",
@@ -93,7 +93,7 @@ namespace FoireMuses.Core.Controllers
 				                          emit(doc.username, doc.password)
 				                       }
 				                    }"));
-            Context.Current.Instance.CouchDbController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
+            Context.Current.Instance.StoreController.CouchDatabase.CreateDocument(view, new Result<CouchDesignDocument>());
         }
     }
 }

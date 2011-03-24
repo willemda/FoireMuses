@@ -19,9 +19,9 @@ namespace FoireMuses.Core.Interfaces
 		Result<IScore> GetScoreById(string id, Result<IScore> aResult);
 		Result<IScore> UpdateScore(IScore aDocument, Result<IScore> aResult);
 		Result<bool> DeleteScore (IScore aDocument, Result<bool> aResult);
-		Result<IList<IScore>> SearchScoreForText(int offset, int max, string textSearch, IScore aScore, Result<IList<IScore>> aResult);
-		Result<IList<IScore>> SearchScoreForCode(int offset, int max, string code, IScore aScore, Result<IList<IScore>> aResult);
-		Result<IList<IScore>> ScoresFromSource(int offset, int max, ISource aSource, Result<IList<IScore>> aResult);
+		Result<SearchResult<IScore>> SearchScoreForText(int offset, int max, string textSearch, IScore aScore, Result<SearchResult<IScore>> aResult);
+		Result<SearchResult<IScore>> SearchScoreForCode(int offset, int max, string code, IScore aScore, Result<SearchResult<IScore>> aResult);
+		Result<SearchResult<IScore>> ScoresFromSource(int offset, int max, ISource aSource, Result<SearchResult<IScore>> aResult);
 
 		Result<IUser> CreateUser(IUser aDocument, Result<IUser> aResult);
 		Result<IUser> GetUser(IUser aDocument, Result<IUser> aResult);
@@ -29,6 +29,6 @@ namespace FoireMuses.Core.Interfaces
 		Result<IUser> GetUserById(string id, Result<IUser> aResult);
 		Result<IUser> UpdateUser(IUser aDocument, Result<IUser> aResult);
 		Result<bool> DeleteUser(IUser aDocument, Result<bool> aResult);
-		Result<IList<IUser>> SearchUserForText(string textSearch, IUser aUser, Result<IList<IUser>> aResult);
+		Result<SearchResult<IUser>> SearchUserForText(string textSearch, IUser aUser, Result<SearchResult<IUser>> aResult);
 	}
 }

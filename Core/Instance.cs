@@ -16,7 +16,7 @@ namespace FoireMuses.Core
 	/// </summary>
 	public class Instance
 	{
-		internal IStoreController CouchDbController { get; private set; }
+		internal IStoreController StoreController { get; private set; }
 		public IScoreController ScoreController { get; private set; }
 		public ISourceController SourceController { get; private set; }
 		public ViewController ViewController { get; private set; }
@@ -54,7 +54,7 @@ namespace FoireMuses.Core
 			builder.Build(container);
 
 			ScoreController = container.Resolve<IScoreController>();
-			CouchDbController = container.Resolve<IStoreController>();
+			StoreController = container.Resolve<IStoreController>();
 			UserController = container.Resolve<IUserController>();
 			SourceController = container.Resolve<ISourceController>();
 			ViewController = new ViewController();

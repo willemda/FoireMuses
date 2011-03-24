@@ -27,7 +27,7 @@ namespace FoireMuses.Core.Controllers
                 koptions.Add(username);
                 voptions.Key = koptions;
 
-                Context.Current.Instance.CouchDbController.CouchDatabase.GetView
+                Context.Current.Instance.StoreController.CouchDatabase.GetView
                 (
                     CouchViews.VIEW_USERS,
                     CouchViews.VIEW_USERS_BY_USERNAME,

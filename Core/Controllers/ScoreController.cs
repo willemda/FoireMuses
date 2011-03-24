@@ -26,164 +26,143 @@ using FoireMuses.Core.Interfaces;
 using FoireMuses.Core.Utils;
 using FoireMuses.Core.Business;
 using LoveSeat.Support;
+using Yield = System.Collections.Generic.IEnumerator<IYield>;
+using FoireMuses.Core.Exceptions;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace FoireMuses.Core.Controllers
 {
-    using Yield = System.Collections.Generic.IEnumerator<IYield>;
-    using FoireMuses.Core.Exceptions;
-    using System.Collections.Generic;
-    using System.Collections;
 
-    public class ScoreController : BaseController<JScore>, IScoreController
-    {
-        private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
+	public class ScoreController : IScoreController
+	{
 
+		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
 
-        public Result<ViewResult<string, string, JScore>> GetScoresFromSource(JSource aJSource, Result<ViewResult<string, string, JScore>> aResult)
-        {
-            try
-            {
-                ArgCheck.NotNull("aResult", aResult);
-                ArgCheck.NotNull("aJSource", aJSource);
+		public Result<SearchResult<JScore>> GetScoresFromSource(int offset, int max, JSource aJSource, Result<SearchResult<JScore>> aResult)
+		{
+			Context.Current.Instance.StoreController.ScoresFromSource(offset, max, aJSource, new Result<SearchResult<JScore>>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 
-                ViewOptions voptions = new ViewOptions();
-                KeyOptions koptions = new KeyOptions();
-                koptions.Add(aJSource.Id);
-                voptions.Key = koptions;
+		public override Result<JScore> Create(JScore aDoc, Result<JScore> aResult)
+		{
+			base.Create(aDoc, new Result<JScore>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 
-                Context.Current.Instance.CouchDbController.CouchDatabase.GetView
-                (
-                    CouchViews.VIEW_SCORES,
-                    CouchViews.VIEW_SCORES_FROM_SOURCE,
-                    voptions,
-                    new Result<ViewResult<string, string, JScore>>()
-                ).WhenDone(
-                        aResult.Return,
-                        aResult.Throw
-                    );
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
-            return aResult;
-        }
+		public override Result<JScore> GetById(string id, Result<JScore> aResult)
+		{
+			base.GetById(id, new Result<JScore>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 
-        public override Result<JScore> Create(JScore aDoc, Result<JScore> aResult)
-        {
-            base.Create(aDoc, new Result<JScore>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
+		public override Result<JScore> Get(JScore aDoc, Result<JScore> aResult)
+		{
+			base.Get(aDoc, new Result<JScore>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 
-        public override Result<JScore> GetById(string id, Result<JScore> aResult)
-        {
-            base.GetById(id, new Result<JScore>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
+		private Yield UpdateHelper(JScore aDoc, Result<JScore> aResult)
+		{
+			yield return CheckAuthorization(aDoc, new Result());
+			//if we reach there we have the update rights.
+			Result<JScore> jscore = new Result<JScore>();
+			yield return base.Update(aDoc, new Result<JScore>());
+			//finally return the jscore updated
+			aResult.Return(jscore.Value);
+			yield break;
+		}
 
-        public override Result<JScore> Get(JScore aDoc, Result<JScore> aResult)
-        {
-            base.Get(aDoc, new Result<JScore>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
+		public override Result<JScore> Update(JScore aDoc, Result<JScore> aResult)
+		{
+			Coroutine.Invoke(UpdateHelper, aDoc, new Result<JScore>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 
-        private Yield UpdateHelper(JScore aDoc, Result<JScore> aResult)
-        {
-            yield return CheckAuthorization(aDoc, new Result());
-            //if we reach there we have the update rights.
-            Result<JScore> jscore = new Result<JScore>();
-            yield return base.Update(aDoc, new Result<JScore>());
-            //finally return the jscore updated
-            aResult.Return(jscore.Value);
-            yield break;
-        }
-
-        public override Result<JScore> Update(JScore aDoc, Result<JScore> aResult)
-        {
-            Coroutine.Invoke(UpdateHelper, aDoc, new Result<JScore>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
-
-        public override Result<JObject> Delete(JScore aDoc, Result<JObject> aResult)
-        {
-            base.Delete(aDoc, new Result<JObject>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
+		public override Result<JObject> Delete(JScore aDoc, Result<JObject> aResult)
+		{
+			base.Delete(aDoc, new Result<JObject>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 
 
-        public Result<ViewResult<string, string, JScore>> GetScoresFromPlay(JPlay aJPlay, Result<ViewResult<string, string, JScore>> aResult)
-        {
-            ArgCheck.NotNull("aResult", aResult);
-            ArgCheck.NotNull("aJPlay", aJPlay);
+		public Result<ViewResult<string, string, JScore>> GetScoresFromPlay(JPlay aJPlay, Result<ViewResult<string, string, JScore>> aResult)
+		{
+			ArgCheck.NotNull("aResult", aResult);
+			ArgCheck.NotNull("aJPlay", aJPlay);
 
-            ViewOptions voptions = new ViewOptions();
-            KeyOptions koptions = new KeyOptions();
-            koptions.Add(aJPlay.Id);
-            voptions.Key = koptions;
+			ViewOptions voptions = new ViewOptions();
+			KeyOptions koptions = new KeyOptions();
+			koptions.Add(aJPlay.Id);
+			voptions.Key = koptions;
 
-            Context.Current.Instance.CouchDbController.CouchDatabase.GetView
-            (
-                CouchViews.VIEW_SCORES,
-                CouchViews.VIEW_SCORES_FROM_PLAY,
-                voptions,
-                new Result<ViewResult<string, string, JScore>>()
-            ).WhenDone(
-                    aResult.Return,
-                    aResult.Throw
-                );
-            return aResult;
-        }
+			Context.Current.Instance.StoreController.CouchDatabase.GetView
+			(
+				CouchViews.VIEW_SCORES,
+				CouchViews.VIEW_SCORES_FROM_PLAY,
+				voptions,
+				new Result<ViewResult<string, string, JScore>>()
+			).WhenDone(
+					aResult.Return,
+					aResult.Throw
+				);
+			return aResult;
+		}
 
 
 
 
-        public Result<ViewResult<string, string>> GetAll(int limit, Result<ViewResult<string, string>> aResult)
-        {
+		public Result<ViewResult<string, string>> GetAll(int limit, Result<ViewResult<string, string>> aResult)
+		{
 
 
-            ArgCheck.NotNull("aResult", aResult);
-            ViewOptions voptions = new ViewOptions();
-            if (limit > 0)
-            {
-                voptions.Limit = limit;
-            }
+			ArgCheck.NotNull("aResult", aResult);
+			ViewOptions voptions = new ViewOptions();
+			if (limit > 0)
+			{
+				voptions.Limit = limit;
+			}
 
-            Context.Current.Instance.CouchDbController.CouchDatabase.GetView
-            (
-                CouchViews.VIEW_SCORES,
-                CouchViews.VIEW_ALL,
-                voptions,
-                new Result<ViewResult<string, string>>()
-            ).WhenDone(
-                    aResult.Return,
-                    aResult.Throw
-                );
+			Context.Current.Instance.StoreController.CouchDatabase.GetView
+			(
+				CouchViews.VIEW_SCORES,
+				CouchViews.VIEW_ALL,
+				voptions,
+				new Result<ViewResult<string, string>>()
+			).WhenDone(
+					aResult.Return,
+					aResult.Throw
+				);
 
-            return aResult;
-        }
+			return aResult;
+		}
 
 
-        public Result<ViewResult<string, string>> GetAll(Result<ViewResult<string, string>> aResult)
-        {
-            ArgCheck.NotNull("aResult", aResult);
-            return GetAll(0, aResult);
-        }
+		public Result<ViewResult<string, string>> GetAll(Result<ViewResult<string, string>> aResult)
+		{
+			ArgCheck.NotNull("aResult", aResult);
+			return GetAll(0, aResult);
+		}
 
-    }
+	}
 }
 
