@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using FoireMuses.Core.Interfaces;
 
 namespace FoireMuses.Core.Business
 {
-    public class JGroup : Document
+    public class JGroup : Document, IGroup
     {
         public JGroup ()
 	    {

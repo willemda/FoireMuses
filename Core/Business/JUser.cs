@@ -7,105 +7,147 @@ using FoireMuses.Core.Exceptions;
 using LoveSeat.Interfaces;
 using LoveSeat;
 using System.Text.RegularExpressions;
+using FoireMuses.Core.Interfaces;
 
 namespace FoireMuses.Core.Business
 {
-    public class JUser : Document
-    {
+	public class JUser : Document, IUser
+	{
 
-        public JUser ()
+		public JUser()
 		{
-			this.Add ("type", "user");
+			this.Add("type", "user");
 		}
 
-        public JUser(JObject jobject) : base(jobject) {
-            JToken type;
-            if (this.TryGetValue("otype", out type))
-            {
-                if (type.Value<string>() != "user")
-                    throw new Exception("Bad object type");
-            }
-            else
-            {
-                this.Add("otype", "user");
-            }
-        }
+		public JUser(JObject jobject)
+			: base(jobject)
+		{
+			JToken type;
+			if (this.TryGetValue("otype", out type))
+			{
+				if (type.Value<string>() != "user")
+					throw new Exception("Bad object type");
+			}
+			else
+			{
+				this.Add("otype", "user");
+			}
+		}
+
+		public string Username
+		{
+			get { return this["username"].Value<string>(); }
+			set { this["username"] = value; }
+		}
+
+		public string Password
+		{
+			get { return this["password"].Value<string>(); }
+			set { this["password"] = value; }
+		}
+
+		public string Email
+		{
+			get { return this["email"].Value<string>(); }
+			set { this["email"] = value; }
+		}
+
+		public IEnumerable<string> Groups
+		{
+			get { return this["groups"].Values<string>(); }
+		}
+
+		public void AddGroup(string group)
+		{
+			if (!Groups.Contains(group))
+			{
+				JArray temp = this["groups"].Value<JArray>();
+				temp.Add(group);
+				this["groups"] = temp;
+			}
+		}
+
+		public void RemoveGroup(string group)
+		{
+			this["groups"] = this["groups"].Value<JArray>().Remove(group);
+		}
 
 
-        static Regex goodCharsForUsernameRegex = new Regex("\\w{5,20}");
-        static Regex goodCharsForPasswordRegex = new Regex("\\w{5,20}");
+		static Regex goodCharsForUsernameRegex = new Regex("\\w{5,20}");
+		static Regex goodCharsForPasswordRegex = new Regex("\\w{5,20}");
 
-        private void validate()
-        {
-            CheckUsername();
-            CheckPassword();
-        }
+		private void validate()
+		{
+			CheckUsername();
+			CheckPassword();
+		}
 
-        private void CheckUsername(){
-            JToken jtok;
-            if(this.TryGetValue("username", out jtok)){
-                if(jtok != null && String.IsNullOrEmpty(jtok.Value<string>())){
-                    throw new EmptyFieldException("username");
-                }
-                if(DoesContainBadCharacters(goodCharsForUsernameRegex, jtok.Value<string>())){
-                    throw new BadCharacterException("username");
-                }
-            }
-        }
+		private void CheckUsername()
+		{
+			if (String.IsNullOrEmpty(Username))
+			{
+				throw new ArgumentException("username");
+			}
+			if (DoesContainBadCharacters(goodCharsForUsernameRegex, Username))
+			{
+				throw new ArgumentException("username");
+			}
+		}
 
-        private void CheckPassword(){
-            JToken jtok;
-            if(this.TryGetValue("password", out jtok)){
-                if(jtok != null && String.IsNullOrEmpty(jtok.Value<string>())){
-                    throw new EmptyFieldException("password");
-                }
-                if(DoesContainBadCharacters(goodCharsForPasswordRegex, jtok.Value<string>())){
-                    throw new BadCharacterException("password");
-                }
-            }
-        }
-
-        
-        private bool DoesContainBadCharacters(Regex theGoodCharsRegex,string theString)
-        {
-            if (!theGoodCharsRegex.IsMatch(theString))
-            {
-                return true;
-            }
-            return false;
-        }
+		private void CheckPassword()
+		{
+			if (String.IsNullOrEmpty(Password))
+			{
+				throw new ArgumentException("password");
+			}
+			if (DoesContainBadCharacters(goodCharsForPasswordRegex, Password))
+			{
+				throw new ArgumentException("password");
+			}
+		}
+		
 
 
-        public override void Created()
-        {
-            base.Created();
-        }
+		private bool DoesContainBadCharacters(Regex theGoodCharsRegex, string theString)
+		{
+			if (!theGoodCharsRegex.IsMatch(theString))
+			{
+				return true;
+			}
+			return false;
+		}
 
-        public override void Creating()
-        {
-            base.Creating();
-            validate();
-        }
 
-        public override void Deleted()
-        {
-            base.Deleted();
-        }
+		public override void Created()
+		{
+			base.Created();
+		}
 
-        public override void Deleting()
-        {
-            base.Deleting();
-        }
+		public override void Creating()
+		{
+			base.Creating();
+			validate();
+		}
 
-        public override void Updated()
-        {
-            base.Updated();
-        }
+		public override void Deleted()
+		{
+			base.Deleted();
+		}
 
-        public override void Updating()
-        {
-            base.Updating();
-            validate();
-        }
-    }
+		public override void Deleting()
+		{
+			base.Deleting();
+		}
+
+		public override void Updated()
+		{
+			base.Updated();
+		}
+
+		public override void Updating()
+		{
+			base.Updating();
+			validate();
+		}
+	}
 }

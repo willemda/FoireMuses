@@ -9,58 +9,60 @@ using LoveSeat.Interfaces;
 
 namespace FoireMuses.Core.Business
 {
-    /// <summary>
-    /// represent a Source(une source) object in json
-    /// </summary>
-    public class JSource : Document
-    {
-        public JSource ()
+	/// <summary>
+	/// represent a Source(une source) object in json
+	/// </summary>
+	public class JSource : Document, ISource
+	{
+		public JSource()
 		{
-			this.Add ("type", "source");
+			this.Add("type", "source");
 		}
 
-        public JSource(JObject jobject) : base(jobject) {
-            JToken type;
-            if (this.TryGetValue("otype", out type))
-            {
-                if (type.Value<string>() != "source")
-                    throw new Exception("Bad object type");
-            }
-            else
-            {
-                this.Add("otype", "source");
-            }
-        }
+		public JSource(JObject jobject)
+			: base(jobject)
+		{
+			JToken type;
+			if (this.TryGetValue("otype", out type))
+			{
+				if (type.Value<string>() != "source")
+					throw new Exception("Bad object type");
+			}
+			else
+			{
+				this.Add("otype", "source");
+			}
+		}
 
 
-        public override void Created()
-        {
-            base.Created();
-        }
+		public override void Created()
+		{
+			base.Created();
+		}
 
-        public override void Creating()
-        {
-            base.Creating();
-        }
+		public override void Creating()
+		{
+			base.Creating();
+		}
 
-        public override void Deleted()
-        {
-            base.Deleted();
-        }
+		public override void Deleted()
+		{
+			base.Deleted();
+		}
 
-        public override void Deleting()
-        {
-            base.Deleting();
-        }
+		public override void Deleting()
+		{
+			base.Deleting();
+		}
 
-        public override void Updated()
-        {
-            base.Updated();
-        }
+		public override void Updated()
+		{
+			base.Updated();
+		}
 
-        public override void Updating()
-        {
-            base.Updating();
-        }
-    }
+		public override void Updating()
+		{
+			base.Updating();
+		}
+	}
 }

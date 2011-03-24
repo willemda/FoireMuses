@@ -28,14 +28,16 @@ namespace FoireMuses.ConsoleTest
 		{
 			context.AttachToCurrentTaskEnv();
 
-			/*JUser user = new JUser();
+			JUser user = new JUser();
 			JArray arr = new JArray();
 			arr.Add("group1");
 			arr.Add("group2");
 			user.Add("groupsId", arr);
-			JToken tok;
-			user.TryGetValue("groupsId", out tok);
-			Console.WriteLine(user["groupsId"].Value<JArray>().First);*/
+			foreach (string group in user["groupsId"].Values<string>())
+			{
+				Console.WriteLine(group);
+			}
+			return;
 
 			//context.Instance.ViewController.createGetAllScoresView();
 			//context.Instance.ViewController.createGetUserByUsernameView();

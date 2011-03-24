@@ -8,7 +8,7 @@ using LoveSeat;
 
 namespace FoireMuses.Core.Interfaces
 {
-    public interface IBaseController<T> where T : JDocument
+    public interface IBaseController<T>
     {
         Result<T> Create(T aDoc, Result<T> aResult);
         Result<T> GetById(string id, Result<T> aResult);

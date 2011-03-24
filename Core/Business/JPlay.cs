@@ -12,7 +12,7 @@ namespace FoireMuses.Core.Business
     /// <summary>
     /// represent a Play(une pièce) object in json
     /// </summary>
-    public class JPlay : Document
+    public class JPlay : Document, IPlay
     {
 
        public JPlay ()
