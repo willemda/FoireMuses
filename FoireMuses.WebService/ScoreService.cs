@@ -43,8 +43,8 @@ namespace FoireMuses.WebService
 			yield return Context.Current.Instance.ScoreController.GetById(id, result);
 
 			response.Return(result.Value == null
-			                	? DreamMessage.NotFound("No Score found for id " + id)
-			                	: DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
+								? DreamMessage.NotFound("No Score found for id " + id)
+								: DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
 		}
 
 		[DreamFeature("POST:scores", "Create new score")]
@@ -52,14 +52,9 @@ namespace FoireMuses.WebService
 		{
 			JObject aObject = JObject.Parse(request.ToText());
 			Result<JScore> res = new Result<JScore>();
-			yield return Context.Current.Instance.ScoreController.Create(new JScore(aObject), res).Catch();
+			yield return Context.Current.Instance.ScoreController.Create(new JScore(aObject), res);
 
-			if (!res.HasException)
-				response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
-			else
-				response.Return(DreamMessage.BadRequest("Todo"));
-
-			yield break;
+			response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
 		}
 
 		[DreamFeature("PUT:scores", "Update the score")]
@@ -67,14 +62,9 @@ namespace FoireMuses.WebService
 		{
 			JObject aObject = JObject.Parse(request.ToText());
 			Result<JScore> res = new Result<JScore>();
-			yield return Context.Current.Instance.ScoreController.Update(new JScore(aObject), res).Catch();
+			yield return Context.Current.Instance.ScoreController.Update(new JScore(aObject), res);
 
-			if (!res.HasException)
-				response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
-			else
-				response.Return(DreamMessage.BadRequest("Todo"));
-
-			yield break;
+			response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
 		}
 
 
@@ -83,14 +73,9 @@ namespace FoireMuses.WebService
 		{
 			JObject aObject = JObject.Parse(request.ToText());
 			Result<JObject> res = new Result<JObject>();
-			yield return Context.Current.Instance.ScoreController.Delete(new JScore(aObject), res).Catch();
+			yield return Context.Current.Instance.ScoreController.Delete(new JScore(aObject), res);
 
-			if (!res.HasException)
-				response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
-			else
-				response.Return(DreamMessage.BadRequest("Todo"));
-
-			yield break;
+			response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
 		}
 
 		private XDoc ResultToXml(ViewResult<string, string> result)

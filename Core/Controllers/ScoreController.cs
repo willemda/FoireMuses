@@ -109,7 +109,7 @@ namespace FoireMuses.Core.Controllers
 
         public override Result<JScore> Update(JScore aDoc, Result<JScore> aResult)
         {
-            Coroutine.Invoke(UpdateHelper, aDoc,new Result<JScore>()).WhenDone(
+            Coroutine.Invoke(UpdateHelper, aDoc, new Result<JScore>()).WhenDone(
                 aResult.Return,
                 aResult.Throw
                 );
@@ -128,32 +128,24 @@ namespace FoireMuses.Core.Controllers
 
         public Result<ViewResult<string, string, JScore>> GetScoresFromPlay(JPlay aJPlay, Result<ViewResult<string, string, JScore>> aResult)
         {
+            ArgCheck.NotNull("aResult", aResult);
+            ArgCheck.NotNull("aJPlay", aJPlay);
 
-            try
-            {
-                ArgCheck.NotNull("aResult", aResult);
-                ArgCheck.NotNull("aJPlay", aJPlay);
+            ViewOptions voptions = new ViewOptions();
+            KeyOptions koptions = new KeyOptions();
+            koptions.Add(aJPlay.Id);
+            voptions.Key = koptions;
 
-                ViewOptions voptions = new ViewOptions();
-                KeyOptions koptions = new KeyOptions();
-                koptions.Add(aJPlay.Id);
-                voptions.Key = koptions;
-
-                Context.Current.Instance.CouchDbController.CouchDatabase.GetView
-                (
-                    CouchViews.VIEW_SCORES,
-                    CouchViews.VIEW_SCORES_FROM_PLAY,
-                    voptions,
-                    new Result<ViewResult<string, string, JScore>>()
-                ).WhenDone(
-                        aResult.Return,
-                        aResult.Throw
-                    );
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
+            Context.Current.Instance.CouchDbController.CouchDatabase.GetView
+            (
+                CouchViews.VIEW_SCORES,
+                CouchViews.VIEW_SCORES_FROM_PLAY,
+                voptions,
+                new Result<ViewResult<string, string, JScore>>()
+            ).WhenDone(
+                    aResult.Return,
+                    aResult.Throw
+                );
             return aResult;
         }
 
@@ -163,36 +155,32 @@ namespace FoireMuses.Core.Controllers
         public Result<ViewResult<string, string>> GetAll(int limit, Result<ViewResult<string, string>> aResult)
         {
 
-            try
-            {
-                ArgCheck.NotNull("aResult", aResult);
-                ViewOptions voptions = new ViewOptions();
-                if (limit > 0)
-                {
-                    voptions.Limit = limit;
-                }
 
-                Context.Current.Instance.CouchDbController.CouchDatabase.GetView
-                (
-                    CouchViews.VIEW_SCORES,
-                    CouchViews.VIEW_ALL,
-                    voptions,
-                    new Result<ViewResult<string, string>>()
-                ).WhenDone(
-                        aResult.Return,
-                        aResult.Throw
-                    );
-            }
-            catch (Exception e)
+            ArgCheck.NotNull("aResult", aResult);
+            ViewOptions voptions = new ViewOptions();
+            if (limit > 0)
             {
-                aResult.Throw(e);
+                voptions.Limit = limit;
             }
+
+            Context.Current.Instance.CouchDbController.CouchDatabase.GetView
+            (
+                CouchViews.VIEW_SCORES,
+                CouchViews.VIEW_ALL,
+                voptions,
+                new Result<ViewResult<string, string>>()
+            ).WhenDone(
+                    aResult.Return,
+                    aResult.Throw
+                );
+
             return aResult;
         }
 
 
         public Result<ViewResult<string, string>> GetAll(Result<ViewResult<string, string>> aResult)
         {
+            ArgCheck.NotNull("aResult", aResult);
             return GetAll(0, aResult);
         }
 
