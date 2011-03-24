@@ -19,7 +19,6 @@ namespace FoireMuses.Core
 		internal IStoreController StoreController { get; private set; }
 		public IScoreController ScoreController { get; private set; }
 		public ISourceController SourceController { get; private set; }
-		public ViewController ViewController { get; private set; }
 		public IUserController UserController { get; private set; }
 
 		public Instance(IContainer container, XDoc anInstanceXmlConfig)
@@ -57,7 +56,6 @@ namespace FoireMuses.Core
 			StoreController = container.Resolve<IStoreController>();
 			UserController = container.Resolve<IUserController>();
 			SourceController = container.Resolve<ISourceController>();
-			ViewController = new ViewController();
 		}
 	}
 }

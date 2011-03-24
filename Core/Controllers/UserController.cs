@@ -12,82 +12,66 @@ using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Controllers
 {
-    public class UserController : BaseController<JUser>, IUserController
-    {
+	public class UserController : IUserController
+	{
 
-        public Result<JUser> GetByUsername(string username, Result<JUser> aResult)
-        {
-            try
-            {
-                ArgCheck.NotNull("aResult", aResult);
-                ArgCheck.NotNull("username", username);
+		public Result<IUser> GetByUsername(string username, Result<IUser> aResult)
+		{
+			Context.Current.Instance.StoreController.GetUserByUsername(username, new Result<IUser>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 
-                ViewOptions voptions = new ViewOptions();
-                KeyOptions koptions = new KeyOptions();
-                koptions.Add(username);
-                voptions.Key = koptions;
+		public Result<SearchResult<IUser>> GetAll(int offset, int max, Result<SearchResult<IUser>> aResult)
+		{
+			throw new NotImplementedException();
+		}
 
-                Context.Current.Instance.StoreController.CouchDatabase.GetView
-                (
-                    CouchViews.VIEW_USERS,
-                    CouchViews.VIEW_USERS_BY_USERNAME,
-                    voptions,
-                    new Result<ViewResult<string, string, JUser>>()
-                ).WhenDone(
-                a => { aResult.Return(a.Rows.First().Doc); }, // TODO MOCHE CHANGER CA
-                        aResult.Throw
-                    );
-            }
-            catch (Exception e)
-            {
-                aResult.Throw(e);
-            }
-            return aResult;
-        }
+		public Result<IUser> Create(IUser aDoc, Result<IUser> aResult)
+		{
+			Context.Current.Instance.StoreController.CreateUser(aDoc, new Result<IUser>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 
-        public override Result<JUser> Create(JUser aDoc, Result<JUser> aResult)
-        {
-            base.Create(aDoc, new Result<JUser>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
+		public Result<IUser> Get(string id, Result<IUser> aResult)
+		{
+			Context.Current.Instance.StoreController.GetUserById(id, new Result<IUser>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 
-        public override Result<JUser> GetById(string id, Result<JUser> aResult)
-        {
-            base.GetById(id, new Result<JUser>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
+		public Result<IUser> Get(IUser aDoc, Result<IUser> aResult)
+		{
+			Context.Current.Instance.StoreController.GetUser(aDoc, new Result<IUser>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 
-        public override Result<JUser> Get(JUser aDoc, Result<JUser> aResult)
-        {
-            base.Get(aDoc, new Result<JUser>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
+		public Result<IUser> Update(IUser aDoc, Result<IUser> aResult)
+		{
+			Context.Current.Instance.StoreController.UpdateUser(aDoc, new Result<IUser>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 
-        public override Result<JUser> Update(JUser aDoc, Result<JUser> aResult)
-        {
-            base.Update(aDoc, new Result<JUser>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
-
-        public override Result<JObject> Delete(JUser aDoc, Result<JObject> aResult)
-        {
-            base.Delete(aDoc, new Result<JObject>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
-    }
+		public Result<bool> Delete(IUser aDoc, Result<bool> aResult)
+		{
+			Context.Current.Instance.StoreController.DeleteUser(aDoc, new Result<bool>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
+	}
 }

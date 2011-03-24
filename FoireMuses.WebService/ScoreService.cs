@@ -25,22 +25,22 @@ namespace FoireMuses.WebService
 		[DreamFeatureParam("limit", "int?", "the number of document given by the output")]
 		public Yield GetScores(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			Result<ViewResult<string, string>> res = new Result<ViewResult<string, string>>();
+			Result<SearchResult<IScore>> result = new Result<SearchResult<IScore>>();
 			int limit = context.GetParam("limit", 100);
 
-			yield return Context.Current.Instance.ScoreController.GetAll(limit, res);
+			yield return Context.Current.Instance.ScoreController.GetAll(0,limit, result);
 
-			string json = ResultToJson(res.Value);
+			string json = ResultToJson(result.Value);
 			response.Return(DreamMessage.Ok(MimeType.JSON, json));
 		}
 
 		[DreamFeature("GET:scores/{id}", "Get the score given by the id number")]
 		public Yield GetScoreById(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			Result<JScore> result = new Result<JScore>();
+			Result<IScore> result = new Result<IScore>();
 			string id = context.GetParam<string>("id");
 
-			yield return Context.Current.Instance.ScoreController.GetById(id, result);
+			yield return Context.Current.Instance.ScoreController.Get(id, result);
 
 			response.Return(result.Value == null
 								? DreamMessage.NotFound("No Score found for id " + id)
@@ -50,32 +50,32 @@ namespace FoireMuses.WebService
 		[DreamFeature("POST:scores", "Create new score")]
 		public Yield CreateScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			JObject aObject = JObject.Parse(request.ToText());
-			Result<JScore> res = new Result<JScore>();
-			yield return Context.Current.Instance.ScoreController.Create(new JScore(aObject), res);
+			IScore score = Factory.IScoreFromJson(request.ToText());
+			Result<IScore> result = new Result<IScore>();
+			yield return Context.Current.Instance.ScoreController.Create(score, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
+			response.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
 		}
 
 		[DreamFeature("PUT:scores", "Update the score")]
 		public Yield UpdateScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			JObject aObject = JObject.Parse(request.ToText());
-			Result<JScore> res = new Result<JScore>();
-			yield return Context.Current.Instance.ScoreController.Update(new JScore(aObject), res);
+			IScore score = Factory.IScoreFromJson(request.ToText());
+			Result<IScore> result = new Result<IScore>();
+			yield return Context.Current.Instance.ScoreController.Update(score, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
+			response.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
 		}
 
 
 		// TODO: delete methods not allowed!
 		public Yield DeleteScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			JObject aObject = JObject.Parse(request.ToText());
-			Result<JObject> res = new Result<JObject>();
-			yield return Context.Current.Instance.ScoreController.Delete(new JScore(aObject), res);
+			IScore score= Factory.IScoreFromJson(request.ToText());
+			Result<bool> result = new Result<bool>();
+			yield return Context.Current.Instance.ScoreController.Delete(score, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
+			response.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
 		}
 
 		private XDoc ResultToXml(ViewResult<string, string> result)
@@ -101,6 +101,16 @@ namespace FoireMuses.WebService
 			return json;
 		}
 
+
+		private string ResultToJson(SearchResult<IScore> result)
+		{
+			string json = "";
+			foreach (IScore score in result)
+			{
+				json += (score as JScore).ToString()+"\n";
+			}
+			return json;
+		}
 
 	}
 

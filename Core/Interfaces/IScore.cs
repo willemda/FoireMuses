@@ -20,7 +20,7 @@ namespace FoireMuses.Core.Interfaces
 		string RythmSignature { get; set; }
 		string OtherTitles { get; set; }
 		string Stanza { get; set; }
-		string Type { get; set; }
+		string ScoreType { get; set; }
 
 		string SourceMusicaleId { get; set; }
 		int SourceMusicaleActNumber { get; set; }
@@ -40,5 +40,12 @@ namespace FoireMuses.Core.Interfaces
 
 		void AddTag(string tag);
 		void RemoveTag(string tag);
+
+		string CreatorId { get; }
+		string LastModifierId { get; }
+		IEnumerable<string> CollaboratorsId { get; }
+
+		void AddCollaborator(string collab);
+		void RemoveCollaborator(string collab);
 	}
 }

@@ -12,52 +12,38 @@ using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Controllers
 {
-    class PlayController : BaseController<JPlay>, IPlayController
-    {
+	class PlayController : IPlayController
+	{
 
-        public override Result<JPlay> Create(JPlay aDoc, Result<JPlay> aResult)
-        {
-            base.Create(aDoc, new Result<JPlay>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
 
-        public override Result<JPlay> GetById(string id, Result<JPlay> aResult)
-        {
-            base.GetById(id, new Result<JPlay>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
+		public Result<JPlay> Create(JPlay aDoc, Result<JPlay> aResult)
+		{
+			throw new NotImplementedException();
+		}
 
-        public override Result<JPlay> Get(JPlay aDoc, Result<JPlay> aResult)
-        {
-            base.Get(aDoc, new Result<JPlay>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
+		public Result<JPlay> Update(JPlay aDoc, Result<JPlay> aResult)
+		{
+			throw new NotImplementedException();
+		}
 
-        public override Result<JPlay> Update(JPlay aDoc, Result<JPlay> aResult)
-        {
-            base.Update(aDoc, new Result<JPlay>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
+		public Result<JPlay> Get(JPlay aDoc, Result<JPlay> aResult)
+		{
+			throw new NotImplementedException();
+		}
 
-        public override Result<JObject> Delete(JPlay aDoc, Result<JObject> aResult)
-        {
-            base.Delete(aDoc, new Result<JObject>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
-    }
+		public Result<JPlay> Get(string id, Result<JPlay> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<bool> Delete(JPlay aDoc, Result<bool> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<SearchResult<JPlay>> GetAll(int offset, int max, Result<SearchResult<JPlay>> aResult)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

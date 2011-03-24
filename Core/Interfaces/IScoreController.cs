@@ -9,11 +9,8 @@ using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Interfaces
 {
-    public interface IScoreController : IBaseController<JScore>
-    {
-		Result<ViewResult<string, string, JScore>> GetScoresFromSource (JSource aJSource, Result<ViewResult<string, string, JScore>> aResult);
-		Result<ViewResult<string, string, JScore>> GetScoresFromPlay (JPlay aJPlay,  Result<ViewResult<string, string, JScore>> aResult);
-        Result<ViewResult<string, string>> GetAll(int limit, Result<ViewResult<string, string>> aResult);
-        Result<ViewResult<string, string>> GetAll(Result<ViewResult<string, string>> aResult);
-    }
+	public interface IScoreController : IBaseController<IScore>
+	{
+		Result<SearchResult<IScore>> GetScoresFromSource(int offset, int max,ISource aJSource, Result<SearchResult<IScore>> aResult);
+	}
 }

@@ -10,7 +10,7 @@ namespace FoireMuses.Core
 		public int Offset { get; private set; }
 		public int Max { get; private set; }
 		public int TotalCount { get; private set; }
-		IEnumerable<T> Ienum{get; private set;}
+		public IEnumerable<T> Ienum{get; private set;}
 
 		public SearchResult(IList<T> list, int offset, int max, int totalCount){
 			Ienum = list.AsEnumerable();

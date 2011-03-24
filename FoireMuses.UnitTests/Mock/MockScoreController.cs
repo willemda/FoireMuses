@@ -15,114 +15,39 @@ namespace FoireMuses.UnitTests.Mock
 
 		private JScore monScore;
 
-		public Result<LoveSeat.ViewResult<string, string, FoireMuses.Core.Business.JScore>> GetScoresFromSource(FoireMuses.Core.Business.JSource aJSource, Result<LoveSeat.ViewResult<string, string, FoireMuses.Core.Business.JScore>> aResult)
+
+
+		public Result<Core.SearchResult<IScore>> GetScoresFromSource(int offset, int max, ISource aJSource, Result<Core.SearchResult<IScore>> aResult)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Result<LoveSeat.ViewResult<string[], string, FoireMuses.Core.Business.JScore>> GetScoresFromPlay(FoireMuses.Core.Business.JPlay aJPlay, Result<LoveSeat.ViewResult<string[], string, FoireMuses.Core.Business.JScore>> aResult)
+		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Result<LoveSeat.ViewResult<string, string>> GetHead(int limit, Result<LoveSeat.ViewResult<string, string>> aResult)
+		public Result<IScore> Update(IScore aDoc, Result<IScore> aResult)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Result<LoveSeat.ViewResult<string, string>> GetAll(Result<LoveSeat.ViewResult<string, string>> aResult)
+		public Result<IScore> Get(IScore aDoc, Result<IScore> aResult)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Result<FoireMuses.Core.Business.JScore> Create(FoireMuses.Core.Business.JScore aDoc, Result<FoireMuses.Core.Business.JScore> aResult)
-		{
-			monScore = aDoc;
-			aResult.Return(monScore);
-			return aResult;
-		}
-
-		public Result<FoireMuses.Core.Business.JScore> GetById(string id, Result<FoireMuses.Core.Business.JScore> aResult)
-		{
-			if (monScore != null && monScore.Id == id)
-			{
-				aResult.Return(monScore);
-			}
-			else
-				aResult.Throw(new Exception("NotFound"));
-			return aResult;
-		}
-
-		public Result<FoireMuses.Core.Business.JScore> Get(FoireMuses.Core.Business.JScore aDoc, Result<FoireMuses.Core.Business.JScore> aResult)
-		{
-			if (monScore != null)
-			{
-				aResult.Return(monScore);
-			}
-			else
-				aResult.Throw(new Exception("NotFound"));
-			return aResult;
-		}
-
-		public Result<FoireMuses.Core.Business.JScore> Update(FoireMuses.Core.Business.JScore aDoc, Result<FoireMuses.Core.Business.JScore> aResult)
-		{
-			if (monScore != null)
-			{
-				monScore = aDoc;
-				aResult.Return(monScore);
-			}
-			else
-				aResult.Throw(new Exception("NotFound"));
-			return aResult;
-		}
-
-		public Result<JObject> Delete(FoireMuses.Core.Business.JScore aDoc, Result<JObject> aResult)
-		{
-			if (monScore != null)
-			{
-				monScore = null;
-				aResult.Return(aDoc);
-			}
-			else
-				aResult.Throw(new Exception("NotFound"));
-			return aResult;
-		}
-
-		public void Created()
+		public Result<IScore> Get(string id, Result<IScore> aResult)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Updated()
+		public Result<bool> Delete(IScore aDoc, Result<bool> aResult)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Deleted()
-		{
-			throw new NotImplementedException();
-		}
-
-
-
-		public Result<LoveSeat.ViewResult<string, string, FoireMuses.Core.Business.JScore>> GetAll(Result<LoveSeat.ViewResult<string, string, FoireMuses.Core.Business.JScore>> aResult)
-		{
-			throw new NotImplementedException();
-		}
-
-
-		public void Readed(JScore doc, Result<JScore> res)
-		{
-			throw new NotImplementedException();
-		}
-
-
-		public Result<ViewResult<string, string, JScore>> GetScoresFromPlay(JPlay aJPlay, Result<ViewResult<string, string, JScore>> aResult)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Result<ViewResult<string, string>> GetAll(int limit, Result<ViewResult<string, string>> aResult)
+		public Result<Core.SearchResult<IScore>> GetAll(int offset, int max, Result<Core.SearchResult<IScore>> aResult)
 		{
 			throw new NotImplementedException();
 		}

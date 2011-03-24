@@ -12,6 +12,7 @@ namespace FoireMuses.WebService
 	using FoireMuses.Core.Business;
 	using Newtonsoft.Json.Linq;
 	using FoireMuses.Core;
+	using FoireMuses.Core.Interfaces;
 
 	public partial class Services
 	{
@@ -19,10 +20,8 @@ namespace FoireMuses.WebService
 		public Yield CreateUser(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			JObject aObject = JObject.Parse(request.ToText());
-			Result<JUser> res = new Result<JUser>();
-			JUser user = new JUser();
-
-			yield return Context.Current.Instance.UserController.Create(new JUser(aObject), res).Catch();
+			Result<IUser> res = new Result<IUser>();
+			yield return Context.Current.Instance.UserController.Create(new JUser(aObject), res);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
 		}
@@ -31,7 +30,7 @@ namespace FoireMuses.WebService
 		public Yield GetUserByUsername(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			string username = context.GetParam("username");
-			Result<JUser> result = new Result<JUser>();
+			Result<IUser> result = new Result<IUser>();
 			yield return Context.Current.Instance.UserController.GetByUsername(username, result);
 
 			response.Return(result.Value == null
@@ -43,8 +42,8 @@ namespace FoireMuses.WebService
 		public Yield GetUserById(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			string id = context.GetParam("id");
-			Result<JUser> result = new Result<JUser>();
-			yield return Context.Current.Instance.UserController.GetById(id, result);
+			Result<IUser> result = new Result<IUser>();
+			yield return Context.Current.Instance.UserController.Get(id, result);
 
 			response.Return(result.Value == null
 								? DreamMessage.NotFound("No User found for id " + id)
@@ -55,10 +54,10 @@ namespace FoireMuses.WebService
 		public Yield UpdateUser(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			JObject aObject = JObject.Parse(request.ToText());
-			Result<JUser> res = new Result<JUser>();
-			yield return Context.Current.Instance.UserController.Update(new JUser(aObject), res);
+			Result<IUser> result = new Result<IUser>();
+			yield return Context.Current.Instance.UserController.Update(new JUser(aObject), result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
+			response.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
 		}
 	}
 }

@@ -18,6 +18,7 @@ using TestAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAtt
 using TestFixtureAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute;
 using TestFixtureSetUpAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.ClassInitializeAttribute;
 using TestFixtureTearDownAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.ClassCleanupAttribute;
+using FoireMuses.Core.Interfaces;
 #endif
 namespace FoireMuses.UnitTests.CoreTests
 {
@@ -42,7 +43,7 @@ namespace FoireMuses.UnitTests.CoreTests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void CreationWithNullMustThrowException()
 		{
-			Context.Current.Instance.ScoreController.Create(null, new Result<JScore>()).Wait();
+			Context.Current.Instance.ScoreController.Create(null, new Result<IScore>()).Wait();
 		}
 	}
 }

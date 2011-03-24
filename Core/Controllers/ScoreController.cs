@@ -26,10 +26,11 @@ using FoireMuses.Core.Interfaces;
 using FoireMuses.Core.Utils;
 using FoireMuses.Core.Business;
 using LoveSeat.Support;
-using Yield = System.Collections.Generic.IEnumerator<IYield>;
+using Yield = System.Collections.Generic.IEnumerator<MindTouch.Tasking.IYield>;
 using FoireMuses.Core.Exceptions;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 
 namespace FoireMuses.Core.Controllers
 {
@@ -39,130 +40,115 @@ namespace FoireMuses.Core.Controllers
 
 		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
 
-		public Result<SearchResult<JScore>> GetScoresFromSource(int offset, int max, JSource aJSource, Result<SearchResult<JScore>> aResult)
+		public Result<SearchResult<IScore>> GetScoresFromSource(int offset, int max, ISource aJSource, Result<SearchResult<IScore>> aResult)
 		{
-			Context.Current.Instance.StoreController.ScoresFromSource(offset, max, aJSource, new Result<SearchResult<JScore>>()).WhenDone(
+			Context.Current.Instance.StoreController.ScoresFromSource(offset, max, aJSource, new Result<SearchResult<IScore>>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
 		}
 
-		public override Result<JScore> Create(JScore aDoc, Result<JScore> aResult)
+		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
 		{
-			base.Create(aDoc, new Result<JScore>()).WhenDone(
+			Context.Current.Instance.StoreController.CreateScore((IScore)aDoc, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
 		}
 
-		public override Result<JScore> GetById(string id, Result<JScore> aResult)
+		public Result<IScore> Get(string id, Result<IScore> aResult)
 		{
-			base.GetById(id, new Result<JScore>()).WhenDone(
+			Context.Current.Instance.StoreController.GetScoreById(id, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
 		}
 
-		public override Result<JScore> Get(JScore aDoc, Result<JScore> aResult)
+		public Result<IScore> Get(IScore aDoc, Result<IScore> aResult)
 		{
-			base.Get(aDoc, new Result<JScore>()).WhenDone(
+			Context.Current.Instance.StoreController.GetScore(aDoc, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
 		}
 
-		private Yield UpdateHelper(JScore aDoc, Result<JScore> aResult)
+		private Yield UpdateHelper(IScore aDoc, Result<IScore> aResult)
 		{
 			yield return CheckAuthorization(aDoc, new Result());
 			//if we reach there we have the update rights.
-			Result<JScore> jscore = new Result<JScore>();
-			yield return base.Update(aDoc, new Result<JScore>());
-			//finally return the jscore updated
-			aResult.Return(jscore.Value);
+			Result<IScore> IScore = new Result<IScore>();
+			yield return Context.Current.Instance.StoreController.UpdateScore(aDoc, new Result<IScore>());
+			//finally return the IScore updated
+			aResult.Return(IScore.Value);
 			yield break;
 		}
-
-		public override Result<JScore> Update(JScore aDoc, Result<JScore> aResult)
+		public Result CheckAuthorization(IScore aDoc, Result aResult)
 		{
-			Coroutine.Invoke(UpdateHelper, aDoc, new Result<JScore>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
+			if (Context.Current.User == null || (!IsCreator(aDoc) && !IsCollaborator(aDoc)))
+				throw new UnauthorizedAccessException();
 			return aResult;
 		}
 
-		public override Result<JObject> Delete(JScore aDoc, Result<JObject> aResult)
+		private bool IsCreator(IScore aDoc)
 		{
-			base.Delete(aDoc, new Result<JObject>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
-			return aResult;
+			JUser current = Context.Current.User;
+			Result<IScore> result = new Result<IScore>();
+			Get(aDoc, result).Wait();
+			if (result.Value != null && result.Value.CreatorId == current.Id)
+				return true;
+			return false;
 		}
 
-
-		public Result<ViewResult<string, string, JScore>> GetScoresFromPlay(JPlay aJPlay, Result<ViewResult<string, string, JScore>> aResult)
+		private bool IsCollaborator(IScore aDoc)
 		{
-			ArgCheck.NotNull("aResult", aResult);
-			ArgCheck.NotNull("aJPlay", aJPlay);
-
-			ViewOptions voptions = new ViewOptions();
-			KeyOptions koptions = new KeyOptions();
-			koptions.Add(aJPlay.Id);
-			voptions.Key = koptions;
-
-			Context.Current.Instance.StoreController.CouchDatabase.GetView
-			(
-				CouchViews.VIEW_SCORES,
-				CouchViews.VIEW_SCORES_FROM_PLAY,
-				voptions,
-				new Result<ViewResult<string, string, JScore>>()
-			).WhenDone(
-					aResult.Return,
-					aResult.Throw
-				);
-			return aResult;
-		}
-
-
-
-
-		public Result<ViewResult<string, string>> GetAll(int limit, Result<ViewResult<string, string>> aResult)
-		{
-
-
-			ArgCheck.NotNull("aResult", aResult);
-			ViewOptions voptions = new ViewOptions();
-			if (limit > 0)
+			JUser current = Context.Current.User;
+			JToken groupsId;
+			JArray groups = new JArray();
+			if (current.TryGetValue("groupsId", out groupsId)) // get the groups of the current user
 			{
-				voptions.Limit = limit;
+				groups = groupsId.Value<JArray>();
 			}
+			Result<IScore> result = new Result<IScore>();
+			this.Get(aDoc, result).Wait();
+			if (result.Value != null)
+				foreach (string collab in result.Value.CollaboratorsId)
+				{
+					if (groups.Contains(collab) || collab == current.Id)
+						return true;
+				}
+			return false;
+		}
 
-			Context.Current.Instance.StoreController.CouchDatabase.GetView
-			(
-				CouchViews.VIEW_SCORES,
-				CouchViews.VIEW_ALL,
-				voptions,
-				new Result<ViewResult<string, string>>()
-			).WhenDone(
-					aResult.Return,
-					aResult.Throw
+		public Result<IScore> Update(IScore aDoc, Result<IScore> aResult)
+		{
+			Coroutine.Invoke(UpdateHelper, aDoc, new Result<IScore>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
 				);
-
 			return aResult;
 		}
 
-
-		public Result<ViewResult<string, string>> GetAll(Result<ViewResult<string, string>> aResult)
+		public Result<bool> Delete(IScore aDoc, Result<bool> aResult)
 		{
-			ArgCheck.NotNull("aResult", aResult);
-			return GetAll(0, aResult);
+			Context.Current.Instance.StoreController.DeleteScore(aDoc, new Result<bool>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
+		public Result<SearchResult<IScore>> GetAll(int offset, int max, Result<SearchResult<IScore>> aResult)
+		{
+			Context.Current.Instance.StoreController.GetAllScores(offset, max, new Result<SearchResult<IScore>>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 	}
 }
 

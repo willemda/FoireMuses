@@ -7,9 +7,8 @@ using MindTouch.Tasking;
 
 namespace FoireMuses.Core.Interfaces
 {
-    public interface IUserController: IBaseController<JUser>
+    public interface IUserController : IBaseController<IUser>
     {
-
-        Result<JUser> GetByUsername(string username, Result<JUser> aResult);
+        Result<IUser> GetByUsername(string username, Result<IUser> aResult);
     }
 }

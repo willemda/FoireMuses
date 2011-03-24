@@ -12,54 +12,38 @@ using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Controllers
 {
-    class SourceController : BaseController<JSource>, ISourceController
-    {
-
-        public override Result<JSource> Create(JSource aDoc, Result<JSource> aResult)
-        {
-            base.Create(aDoc, new Result<JSource>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
-
-        public override Result<JSource> GetById(string id, Result<JSource> aResult)
-        {
-            base.GetById(id, new Result<JSource>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
-
-        public override Result<JSource> Get(JSource aDoc, Result<JSource> aResult)
-        {
-            base.Get(aDoc, new Result<JSource>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
-
-        public override Result<JSource> Update(JSource aDoc, Result<JSource> aResult)
-        {
-            base.Update(aDoc, new Result<JSource>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
-
-        public override Result<JObject> Delete(JSource aDoc, Result<JObject> aResult)
-        {
-            base.Delete(aDoc, new Result<JObject>()).WhenDone(
-                aResult.Return,
-                aResult.Throw
-                );
-            return aResult;
-        }
+	class SourceController : ISourceController
+	{
 
 
-    }
+		public Result<JSource> Create(JSource aDoc, Result<JSource> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<JSource> Update(JSource aDoc, Result<JSource> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<JSource> Get(JSource aDoc, Result<JSource> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<JSource> Get(string id, Result<JSource> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<bool> Delete(JSource aDoc, Result<bool> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<SearchResult<JSource>> GetAll(int offset, int max, Result<SearchResult<JSource>> aResult)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

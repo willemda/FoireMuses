@@ -22,6 +22,7 @@ namespace FoireMuses.Core.Interfaces
 		Result<SearchResult<IScore>> SearchScoreForText(int offset, int max, string textSearch, IScore aScore, Result<SearchResult<IScore>> aResult);
 		Result<SearchResult<IScore>> SearchScoreForCode(int offset, int max, string code, IScore aScore, Result<SearchResult<IScore>> aResult);
 		Result<SearchResult<IScore>> ScoresFromSource(int offset, int max, ISource aSource, Result<SearchResult<IScore>> aResult);
+		Result<SearchResult<IScore>> GetAllScores(int offset, int max, Result<SearchResult<IScore>> aResult);
 
 		Result<IUser> CreateUser(IUser aDocument, Result<IUser> aResult);
 		Result<IUser> GetUser(IUser aDocument, Result<IUser> aResult);
@@ -29,6 +30,6 @@ namespace FoireMuses.Core.Interfaces
 		Result<IUser> GetUserById(string id, Result<IUser> aResult);
 		Result<IUser> UpdateUser(IUser aDocument, Result<IUser> aResult);
 		Result<bool> DeleteUser(IUser aDocument, Result<bool> aResult);
-		Result<SearchResult<IUser>> SearchUserForText(string textSearch, IUser aUser, Result<SearchResult<IUser>> aResult);
+		Result<SearchResult<IUser>> SearchUserForText(int offset,int max, string textSearch, IUser aUser, Result<SearchResult<IUser>> aResult);
 	}
 }

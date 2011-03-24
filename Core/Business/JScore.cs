@@ -113,7 +113,7 @@ namespace FoireMuses.Core.Business
 			set { this["stanza"] = value; }
 		}
 
-		public string Type
+		public string ScoreType
 		{
 			get { return this["type"].Value<string>(); }
 			set { this["type"] = value; }
@@ -211,6 +211,38 @@ namespace FoireMuses.Core.Business
 			this["tags"] = this["tags"].Value<JArray>().Remove(tag);
 		}
 
+		public string CreatorId
+		{
+			get { return this["creatorId"].Value<string>(); }
+			private set { this["creatorId"] = value; }
+		}
+
+		public string LastModifierId
+		{
+			get { return this["lastModifierId"].Value<string>(); }
+			private set { this["lastModifierId"] = value; }
+		}
+
+		public IEnumerable<string> CollaboratorsId
+		{
+			get { return this["collaboratorsId"].Values<string>(); }
+		}
+
+		public void AddCollaborator(string collab)
+		{
+			if (!Tags.Contains(collab))
+			{
+				JArray temp = this["collaboratorsId"].Value<JArray>();
+				temp.Add(collab);
+				this["collaboratorsId"] = temp;
+			}
+		}
+
+		public void RemoveCollaborator(string collab)
+		{
+			this["collaboratorsId"] = this["collaboratorsId"].Value<JArray>().Remove(collab);
+		}
+
 		public override void Created()
 		{
 			base.Created();
@@ -219,6 +251,7 @@ namespace FoireMuses.Core.Business
 		public override void Creating()
 		{
 			base.Creating();
+			CreatorId = Context.Current.User.Id;
 		}
 
 		public override void Deleted()
@@ -239,6 +272,7 @@ namespace FoireMuses.Core.Business
 		public override void Updating()
 		{
 			base.Updating();
+			LastModifierId = Context.Current.User.Id;
 		}
 	}
 }

@@ -72,15 +72,14 @@
     <Compile Include="Business\JSource.cs" />
     <Compile Include="Business\JUser.cs" />
     <Compile Include="Context.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CouchDBController.cs" />
     <Compile Include="Controllers\PlayController.cs" />
     <Compile Include="Controllers\SourceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
-    <Compile Include="Controllers\ViewController.cs" />
     <Compile Include="Exceptions\EmptyFieldException.cs" />
     <Compile Include="Exceptions\InternalError.cs" />
     <Compile Include="Exceptions\NoRightException.cs" />
+    <Compile Include="Factory.cs" />
     <Compile Include="Instance.cs" />
     <Compile Include="InstanceFactory.cs" />
     <Compile Include="Interfaces\IBaseController.cs" />
