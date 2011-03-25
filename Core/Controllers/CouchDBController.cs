@@ -194,5 +194,28 @@ namespace FoireMuses.Core.Controllers
 				);
 			return aResult;
 		}
+
+
+		public Result<SearchResult<IUser>> GetAllUsers(int offset, int max, Result<SearchResult<IUser>> aResult)
+		{
+			ViewOptions viewOptions = new ViewOptions();
+			viewOptions.Skip = offset;
+			if (max > 0)
+				viewOptions.Limit = max;
+
+			CouchDatabase.GetView<string, string, JUser>(CouchViews.VIEW_USERS, CouchViews.VIEW_ALL, viewOptions, new Result<ViewResult<string, string, JUser>>()).WhenDone(
+				a =>
+				{
+					IList<IUser> list = new List<IUser>();
+					foreach (ViewResultRow<string, string, JUser> row in a.Rows)
+					{
+						list.Add(row.Doc);
+					}
+					aResult.Return(new SearchResult<IUser>(list, a.OffSet, max, a.TotalRows));
+				},
+				aResult.Throw
+				);
+			return aResult;
+		}
 	}
 }

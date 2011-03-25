@@ -2,28 +2,41 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MindTouch.Dream;
+using MindTouch.Xml;
+using MindTouch.Tasking;
+using FoireMuses.Core.Business;
+using Newtonsoft.Json.Linq;
+using FoireMuses.Core;
+using FoireMuses.Core.Interfaces;
 
 namespace FoireMuses.WebService
 {
 	using Yield = System.Collections.Generic.IEnumerator<MindTouch.Tasking.IYield>;
-	using MindTouch.Dream;
-	using MindTouch.Xml;
-	using MindTouch.Tasking;
-	using FoireMuses.Core.Business;
-	using Newtonsoft.Json.Linq;
-	using FoireMuses.Core;
-	using FoireMuses.Core.Interfaces;
+	
 
 	public partial class Services
 	{
+		[DreamFeature("GET:users","get the users")]
+		[DreamFeatureParam("max","int?","limit the result to max rows")]
+		[DreamFeatureParam("offset", "int?", "skip the offset first results")]
+		public Yield GetUsers(DreamContext context, DreamMessage request, Result<DreamMessage> response){
+			Result<SearchResult<IUser>> result = new Result<SearchResult<IUser>>();
+			int limit = context.GetParam("limit", 100);
+			int offset = context.GetParam("offset", 0);
+
+			yield return Context.Current.Instance.UserController.GetAll(offset, limit, result);
+
+			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
+		}
+
 		[DreamFeature("POST:users", "create a user")]
 		public Yield CreateUser(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			JObject aObject = JObject.Parse(request.ToText());
-			Result<IUser> res = new Result<IUser>();
-			yield return Context.Current.Instance.UserController.Create(new JUser(aObject), res);
+			Result<IUser> result = new Result<IUser>();
+			yield return Context.Current.Instance.UserController.Create(Factory.IUserFromJson(request.ToText()), result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, res.Value.ToString()));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
 		}
 
 		[DreamFeature("GET:users/username/{username}", "get the user that has the given username")]
@@ -35,7 +48,7 @@ namespace FoireMuses.WebService
 
 			response.Return(result.Value == null
 								? DreamMessage.NotFound("No User found for username " + username)
-								: DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
+								: DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
 		}
 
 		[DreamFeature("GET:users/{id}", "get the user that has the given id")]
@@ -47,7 +60,7 @@ namespace FoireMuses.WebService
 
 			response.Return(result.Value == null
 								? DreamMessage.NotFound("No User found for id " + id)
-								: DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
+								: DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
 		}
 
 		[DreamFeature("PUT:users", "update a user")]
@@ -57,7 +70,7 @@ namespace FoireMuses.WebService
 			Result<IUser> result = new Result<IUser>();
 			yield return Context.Current.Instance.UserController.Update(new JUser(aObject), result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
 		}
 	}
 }

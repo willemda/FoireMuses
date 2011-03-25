@@ -10,8 +10,8 @@ namespace FoireMuses.Core.Business
 {
 	public class Document : JDocument, IAuditableDocument
 	{
-		public DateTime CreationDate { get; private set; }
-		public DateTime LastUpdateDate { get; private set; }
+		public DateTimeOffset CreationDate { get; private set; }
+		public DateTimeOffset LastUpdateDate { get; private set; }
 
 		public Document() { }
 
@@ -27,8 +27,8 @@ namespace FoireMuses.Core.Business
 
 		public virtual void Creating()
 		{
-			CreationDate = DateTime.Now;
-			LastUpdateDate = DateTime.Now;
+			CreationDate = DateTimeOffset.Now;
+			LastUpdateDate = DateTimeOffset.Now;
 		}
 
 		public virtual void Deleted()
@@ -48,7 +48,7 @@ namespace FoireMuses.Core.Business
 
 		public virtual void Updating()
 		{
-			LastUpdateDate = DateTime.Now;
+			LastUpdateDate = DateTimeOffset.Now;
 		}
 	}
 }

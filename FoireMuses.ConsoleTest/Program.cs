@@ -27,7 +27,6 @@ namespace FoireMuses.ConsoleTest
 		private static void StartTests(Context context)
 		{
 			context.AttachToCurrentTaskEnv();
-
 		}
 
 

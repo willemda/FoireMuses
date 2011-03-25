@@ -31,5 +31,6 @@ namespace FoireMuses.Core.Interfaces
 		Result<IUser> UpdateUser(IUser aDocument, Result<IUser> aResult);
 		Result<bool> DeleteUser(IUser aDocument, Result<bool> aResult);
 		Result<SearchResult<IUser>> SearchUserForText(int offset,int max, string textSearch, IUser aUser, Result<SearchResult<IUser>> aResult);
+		Result<SearchResult<IUser>> GetAllUsers(int offset, int max, Result<SearchResult<IUser>> aResult);
 	}
 }

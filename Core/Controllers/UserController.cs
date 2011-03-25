@@ -26,7 +26,11 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<SearchResult<IUser>> GetAll(int offset, int max, Result<SearchResult<IUser>> aResult)
 		{
-			throw new NotImplementedException();
+			Context.Current.Instance.StoreController.GetAllUsers(offset, max, new Result<SearchResult<IUser>>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public Result<IUser> Create(IUser aDoc, Result<IUser> aResult)

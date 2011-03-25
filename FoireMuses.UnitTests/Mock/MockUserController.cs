@@ -11,38 +11,47 @@ namespace FoireMuses.UnitTests.Mock
 {
 	internal class MockUserController : IUserController
 	{
-		public JUser theUser = null;
+		public IUser user = null;
 
 
 
 		public Result<IUser> GetByUsername(string username, Result<IUser> aResult)
 		{
-			throw new NotImplementedException();
+			aResult.Return(user);
+			return aResult;
 		}
 
 		public Result<IUser> Create(IUser aDoc, Result<IUser> aResult)
 		{
-			throw new NotImplementedException();
+			user = aDoc;
+			aResult.Return(user);
+			return aResult;
 		}
 
 		public Result<IUser> Update(IUser aDoc, Result<IUser> aResult)
 		{
-			throw new NotImplementedException();
+			user = aDoc;
+			aResult.Return(user);
+			return aResult;
 		}
 
 		public Result<IUser> Get(IUser aDoc, Result<IUser> aResult)
 		{
-			throw new NotImplementedException();
+			aResult.Return(user);
+			return aResult;
 		}
 
 		public Result<IUser> Get(string id, Result<IUser> aResult)
-		{
-			throw new NotImplementedException();
+		{;
+			aResult.Return(user);
+			return aResult;
 		}
 
 		public Result<bool> Delete(IUser aDoc, Result<bool> aResult)
 		{
-			throw new NotImplementedException();
+			user = null;
+			aResult.Return(true);
+			return aResult;
 		}
 
 		public Result<Core.SearchResult<IUser>> GetAll(int offset, int max, Result<Core.SearchResult<IUser>> aResult)

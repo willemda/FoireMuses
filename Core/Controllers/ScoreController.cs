@@ -51,7 +51,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
 		{
-			Context.Current.Instance.StoreController.CreateScore((IScore)aDoc, new Result<IScore>()).WhenDone(
+			Context.Current.Instance.StoreController.CreateScore(aDoc, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);

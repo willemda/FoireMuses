@@ -8,3 +8,4 @@ _ReSharper*
 */TestResults/*
 FoireMuses.5.1.ReSharper.user
 WebHost/services/*
+*.dat
