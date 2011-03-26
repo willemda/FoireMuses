@@ -12,7 +12,7 @@ namespace FoireMuses.Core.Loveseat
 	/// <summary>
 	/// An Controller that stores in CouchDb
 	/// </summary>
-	public class LoveseatController : IScoreStoreController, IUserStoreController
+	public class LoveseatController : IScoreDataMapper, IUserDataMapper
 	{
 		private CouchDatabase CouchDatabase;
 		private CouchClient CouchClient;
@@ -23,7 +23,7 @@ namespace FoireMuses.Core.Loveseat
 			CouchDatabase = CouchClient.GetDatabase(aSettingsController.DatabaseName);
 		}
 
-		public Result<IScore> CreateScore(IScore aDocument, Result<IScore> aResult)
+		public Result<IScore> Create(IScore aDocument, Result<IScore> aResult)
 		{
 			CouchDatabase.CreateDocument<JScore>(aDocument as JScore, new Result<JScore>()).WhenDone(
 				aResult.Return,
@@ -34,10 +34,10 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<IScore> GetScore(IScore aDocument, Result<IScore> aResult)
 		{
-			return GetScoreById((aDocument as JScore).Id, aResult);
+			return Retrieve((aDocument as JScore).Id, aResult);
 		}
 
-		public Result<IScore> GetScoreById(string id, Result<IScore> aResult)
+		public Result<IScore> Retrieve(string id, Result<IScore> aResult)
 		{
 			CouchDatabase.GetDocument<JScore>(id, new Result<JScore>()).WhenDone(
 				aResult.Return,
@@ -46,7 +46,7 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public Result<IScore> UpdateScore(IScore aDocument, Result<IScore> aResult)
+		public Result<IScore> Update(IScore aDocument, Result<IScore> aResult)
 		{
 			CouchDatabase.UpdateDocument<JScore>(aDocument as JScore, new Result<JScore>()).WhenDone(
 				aResult.Return,
@@ -55,7 +55,7 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public Result<bool> DeleteScore(IScore aDocument, Result<bool> aResult)
+		public Result<bool> Delete(IScore aDocument, Result<bool> aResult)
 		{
 			CouchDatabase.DeleteDocument(aDocument as JScore, new Result<JObject>()).WhenDone(
 				a =>
@@ -77,7 +77,7 @@ namespace FoireMuses.Core.Loveseat
 			throw new NotImplementedException();
 		}
 
-		public Result<IUser> CreateUser(IUser aDocument, Result<IUser> aResult)
+		public Result<IUser> Create(IUser aDocument, Result<IUser> aResult)
 		{
 			CouchDatabase.CreateDocument<JUser>(aDocument as JUser, new Result<JUser>()).WhenDone(
 				aResult.Return,
@@ -88,10 +88,10 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<IUser> GetUser(IUser aDocument, Result<IUser> aResult)
 		{
-			return GetUserById((aDocument as JUser).Id, aResult);
+			return Retrieve((aDocument as JUser).Id, aResult);
 		}
 
-		public Result<IUser> GetUserByUsername(string username, Result<IUser> aResult)
+		public Result<IUser> RetrieveByUsername(string username, Result<IUser> aResult)
 		{
 			ViewOptions viewOptions = new ViewOptions();
 			viewOptions.Key.Add(username);
@@ -111,7 +111,7 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public Result<IUser> GetUserById(string id, Result<IUser> aResult)
+		public Result<IUser> Retrieve(string id, Result<IUser> aResult)
 		{
 			CouchDatabase.GetDocument<JUser>(id, new Result<JUser>()).WhenDone(
 				aResult.Return,
@@ -120,7 +120,7 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public Result<IUser> UpdateUser(IUser aDocument, Result<IUser> aResult)
+		public Result<IUser> Update(IUser aDocument, Result<IUser> aResult)
 		{
 			CouchDatabase.UpdateDocument<JUser>(aDocument as JUser, new Result<JUser>()).WhenDone(
 				aResult.Return,
@@ -129,7 +129,7 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public Result<bool> DeleteUser(IUser aDocument, Result<bool> aResult)
+		public Result<bool> Delete(IUser aDocument, Result<bool> aResult)
 		{
 			CouchDatabase.DeleteDocument(aDocument as JUser, new Result<JObject>()).WhenDone(
 				a=>{

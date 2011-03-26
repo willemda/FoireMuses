@@ -11,16 +11,16 @@ namespace FoireMuses.Core.Controllers
 {
 	public class UserController : IUserController
 	{
-		private IUserStoreController theStoreController;
+		private IUserDataMapper theStoreController;
 
-		public  UserController(IUserStoreController aController)
+		public  UserController(IUserDataMapper aController)
 		{
 			theStoreController = aController;
 		}
 
 		public Result<IUser> GetByUsername(string username, Result<IUser> aResult)
 		{
-			theStoreController.GetUserByUsername(username, new Result<IUser>()).WhenDone(
+			theStoreController.RetrieveByUsername(username, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -38,7 +38,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IUser> Create(IUser aDoc, Result<IUser> aResult)
 		{
-			theStoreController.CreateUser(aDoc, new Result<IUser>()).WhenDone(
+			theStoreController.Create(aDoc, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -47,16 +47,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IUser> Get(string id, Result<IUser> aResult)
 		{
-			theStoreController.GetUserById(id, new Result<IUser>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
-			return aResult;
-		}
-
-		public Result<IUser> Get(IUser aDoc, Result<IUser> aResult)
-		{
-			theStoreController.GetUser(aDoc, new Result<IUser>()).WhenDone(
+			theStoreController.Retrieve(id, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -65,7 +56,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IUser> Update(IUser aDoc, Result<IUser> aResult)
 		{
-			theStoreController.UpdateUser(aDoc, new Result<IUser>()).WhenDone(
+			theStoreController.Update(aDoc, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -74,11 +65,16 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<bool> Delete(IUser aDoc, Result<bool> aResult)
 		{
-			theStoreController.DeleteUser(aDoc, new Result<bool>()).WhenDone(
+			theStoreController.Delete(aDoc, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
+		}
+
+		public Result<IUser> Get(IUser aDoc, Result<IUser> aResult)
+		{
+			return Get(aDoc.Id, aResult);
 		}
 	}
 }

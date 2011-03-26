@@ -7,6 +7,8 @@ namespace FoireMuses.Core.Interfaces
 {
 	public interface IScore
 	{
+		string Id { get; set; }
+
 		string Title{get;set;}
 		string Code1 { get; set; }
 		string Code2 { get; set; }

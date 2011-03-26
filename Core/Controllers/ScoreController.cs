@@ -36,9 +36,9 @@ namespace FoireMuses.Core.Controllers
 	{
 		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
 
-		private IScoreStoreController theStoreController;
+		private readonly IScoreDataMapper theStoreController;
 
-		public ScoreController(IScoreStoreController aController)
+		public ScoreController(IScoreDataMapper aController)
 		{
 			theStoreController = aController;
 		}
@@ -54,7 +54,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
 		{
-			theStoreController.CreateScore(aDoc, new Result<IScore>()).WhenDone(
+			theStoreController.Create(aDoc, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -63,7 +63,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IScore> Get(string id, Result<IScore> aResult)
 		{
-			theStoreController.GetScoreById(id, new Result<IScore>()).WhenDone(
+			theStoreController.Retrieve(id, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -72,21 +72,17 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IScore> Get(IScore aDoc, Result<IScore> aResult)
 		{
-			theStoreController.GetScore(aDoc, new Result<IScore>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
-			return aResult;
+			return Get(aDoc.Id, aResult);
 		}
 
 		private Yield UpdateHelper(IScore aDoc, Result<IScore> aResult)
 		{
 			yield return CheckAuthorization(aDoc, new Result());
 			//if we reach there we have the update rights.
-			Result<IScore> IScore = new Result<IScore>();
-			yield return theStoreController.UpdateScore(aDoc, new Result<IScore>());
+			Result<IScore> scoreResult = new Result<IScore>();
+			yield return theStoreController.Update(aDoc, new Result<IScore>());
 			//finally return the IScore updated
-			aResult.Return(IScore.Value);
+			aResult.Return(scoreResult.Value);
 			yield break;
 		}
 		public Result CheckAuthorization(IScore aDoc, Result aResult)
@@ -124,7 +120,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<bool> Delete(IScore aDoc, Result<bool> aResult)
 		{
-			theStoreController.DeleteScore(aDoc, new Result<bool>()).WhenDone(
+			theStoreController.Delete(aDoc, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
