@@ -36,16 +36,16 @@ namespace FoireMuses.Core.Controllers
 	{
 		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
 
-		private readonly IScoreDataMapper theStoreController;
+		private readonly IScoreDataMapper theScoreDataMapper;
 
 		public ScoreController(IScoreDataMapper aController)
 		{
-			theStoreController = aController;
+			theScoreDataMapper = aController;
 		}
 
 		public Result<SearchResult<IScore>> GetScoresFromSource(int offset, int max, ISource aJSource, Result<SearchResult<IScore>> aResult)
 		{
-			theStoreController.ScoresFromSource(offset, max, aJSource, new Result<SearchResult<IScore>>()).WhenDone(
+			theScoreDataMapper.ScoresFromSource(offset, max, aJSource, new Result<SearchResult<IScore>>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -54,7 +54,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
 		{
-			theStoreController.Create(aDoc, new Result<IScore>()).WhenDone(
+			theScoreDataMapper.Create(aDoc, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -63,7 +63,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IScore> Get(string id, Result<IScore> aResult)
 		{
-			theStoreController.Retrieve(id, new Result<IScore>()).WhenDone(
+			theScoreDataMapper.Retrieve(id, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -80,7 +80,7 @@ namespace FoireMuses.Core.Controllers
 			yield return CheckAuthorization(aDoc, new Result());
 			//if we reach there we have the update rights.
 			Result<IScore> scoreResult = new Result<IScore>();
-			yield return theStoreController.Update(aDoc, new Result<IScore>());
+			yield return theScoreDataMapper.Update(aDoc, new Result<IScore>());
 			//finally return the IScore updated
 			aResult.Return(scoreResult.Value);
 			yield break;
@@ -120,7 +120,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<bool> Delete(IScore aDoc, Result<bool> aResult)
 		{
-			theStoreController.Delete(aDoc, new Result<bool>()).WhenDone(
+			theScoreDataMapper.Delete(aDoc, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -129,7 +129,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<SearchResult<IScore>> GetAll(int offset, int max, Result<SearchResult<IScore>> aResult)
 		{
-			theStoreController.GetAllScores(offset, max, new Result<SearchResult<IScore>>()).WhenDone(
+			theScoreDataMapper.GetAllScores(offset, max, new Result<SearchResult<IScore>>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
