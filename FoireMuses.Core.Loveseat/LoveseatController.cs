@@ -12,7 +12,7 @@ namespace FoireMuses.Core.Loveseat
 	/// <summary>
 	/// An Controller that stores in CouchDb
 	/// </summary>
-	public class LoveseatController : IStoreController
+	public class LoveseatController : IScoreStoreController, IUserStoreController
 	{
 		private CouchDatabase CouchDatabase;
 		private CouchClient CouchClient;

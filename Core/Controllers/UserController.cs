@@ -11,9 +11,16 @@ namespace FoireMuses.Core.Controllers
 {
 	public class UserController : IUserController
 	{
+		private IUserStoreController theStoreController;
+
+		public  UserController(IUserStoreController aController)
+		{
+			theStoreController = aController;
+		}
+
 		public Result<IUser> GetByUsername(string username, Result<IUser> aResult)
 		{
-			Context.Current.Instance.StoreController.GetUserByUsername(username, new Result<IUser>()).WhenDone(
+			theStoreController.GetUserByUsername(username, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -22,7 +29,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<SearchResult<IUser>> GetAll(int offset, int max, Result<SearchResult<IUser>> aResult)
 		{
-			Context.Current.Instance.StoreController.GetAllUsers(offset, max, new Result<SearchResult<IUser>>()).WhenDone(
+			theStoreController.GetAllUsers(offset, max, new Result<SearchResult<IUser>>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -31,7 +38,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IUser> Create(IUser aDoc, Result<IUser> aResult)
 		{
-			Context.Current.Instance.StoreController.CreateUser(aDoc, new Result<IUser>()).WhenDone(
+			theStoreController.CreateUser(aDoc, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -40,7 +47,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IUser> Get(string id, Result<IUser> aResult)
 		{
-			Context.Current.Instance.StoreController.GetUserById(id, new Result<IUser>()).WhenDone(
+			theStoreController.GetUserById(id, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -49,7 +56,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IUser> Get(IUser aDoc, Result<IUser> aResult)
 		{
-			Context.Current.Instance.StoreController.GetUser(aDoc, new Result<IUser>()).WhenDone(
+			theStoreController.GetUser(aDoc, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -58,7 +65,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IUser> Update(IUser aDoc, Result<IUser> aResult)
 		{
-			Context.Current.Instance.StoreController.UpdateUser(aDoc, new Result<IUser>()).WhenDone(
+			theStoreController.UpdateUser(aDoc, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -67,7 +74,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<bool> Delete(IUser aDoc, Result<bool> aResult)
 		{
-			Context.Current.Instance.StoreController.DeleteUser(aDoc, new Result<bool>()).WhenDone(
+			theStoreController.DeleteUser(aDoc, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);

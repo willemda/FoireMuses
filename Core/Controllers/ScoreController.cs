@@ -34,12 +34,18 @@ namespace FoireMuses.Core.Controllers
 
 	public class ScoreController : IScoreController
 	{
-
 		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
+
+		private IScoreStoreController theStoreController;
+
+		public ScoreController(IScoreStoreController aController)
+		{
+			theStoreController = aController;
+		}
 
 		public Result<SearchResult<IScore>> GetScoresFromSource(int offset, int max, ISource aJSource, Result<SearchResult<IScore>> aResult)
 		{
-			Context.Current.Instance.StoreController.ScoresFromSource(offset, max, aJSource, new Result<SearchResult<IScore>>()).WhenDone(
+			theStoreController.ScoresFromSource(offset, max, aJSource, new Result<SearchResult<IScore>>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -48,7 +54,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
 		{
-			Context.Current.Instance.StoreController.CreateScore(aDoc, new Result<IScore>()).WhenDone(
+			theStoreController.CreateScore(aDoc, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -57,7 +63,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IScore> Get(string id, Result<IScore> aResult)
 		{
-			Context.Current.Instance.StoreController.GetScoreById(id, new Result<IScore>()).WhenDone(
+			theStoreController.GetScoreById(id, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -66,7 +72,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IScore> Get(IScore aDoc, Result<IScore> aResult)
 		{
-			Context.Current.Instance.StoreController.GetScore(aDoc, new Result<IScore>()).WhenDone(
+			theStoreController.GetScore(aDoc, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -78,7 +84,7 @@ namespace FoireMuses.Core.Controllers
 			yield return CheckAuthorization(aDoc, new Result());
 			//if we reach there we have the update rights.
 			Result<IScore> IScore = new Result<IScore>();
-			yield return Context.Current.Instance.StoreController.UpdateScore(aDoc, new Result<IScore>());
+			yield return theStoreController.UpdateScore(aDoc, new Result<IScore>());
 			//finally return the IScore updated
 			aResult.Return(IScore.Value);
 			yield break;
@@ -92,12 +98,7 @@ namespace FoireMuses.Core.Controllers
 
 		private bool IsCreator(IScore aDoc)
 		{
-			IUser current = Context.Current.User;
-			Result<IScore> result = new Result<IScore>();
-			Get(aDoc, result).Wait();
-			if (result.Value != null && result.Value.CreatorId == current.Id)
-				return true;
-			return false;
+			return aDoc.CreatorId == Context.Current.User.Id;
 		}
 
 		private bool IsCollaborator(IScore aDoc)
@@ -123,7 +124,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<bool> Delete(IScore aDoc, Result<bool> aResult)
 		{
-			Context.Current.Instance.StoreController.DeleteScore(aDoc, new Result<bool>()).WhenDone(
+			theStoreController.DeleteScore(aDoc, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -132,7 +133,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<SearchResult<IScore>> GetAll(int offset, int max, Result<SearchResult<IScore>> aResult)
 		{
-			Context.Current.Instance.StoreController.GetAllScores(offset, max, new Result<SearchResult<IScore>>()).WhenDone(
+			theStoreController.GetAllScores(offset, max, new Result<SearchResult<IScore>>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);

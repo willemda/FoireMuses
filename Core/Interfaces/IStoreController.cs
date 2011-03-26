@@ -10,7 +10,7 @@ namespace FoireMuses.Core.Interfaces
 	/// <summary>
 	/// A Interface that describes what a store controller must be able to do.
 	/// </summary>
-	public interface IStoreController
+	public interface IScoreStoreController
 	{
 		Result<IScore> CreateScore (IScore aDocument, Result<IScore> aResult);
 		Result<IScore> GetScore(IScore aDocument, Result<IScore> aResult);
@@ -21,7 +21,9 @@ namespace FoireMuses.Core.Interfaces
 		Result<SearchResult<IScore>> SearchScoreForCode(int offset, int max, string code, IScore aScore, Result<SearchResult<IScore>> aResult);
 		Result<SearchResult<IScore>> ScoresFromSource(int offset, int max, ISource aSource, Result<SearchResult<IScore>> aResult);
 		Result<SearchResult<IScore>> GetAllScores(int offset, int max, Result<SearchResult<IScore>> aResult);
-
+	}
+	public interface IUserStoreController
+	{
 		Result<IUser> CreateUser(IUser aDocument, Result<IUser> aResult);
 		Result<IUser> GetUser(IUser aDocument, Result<IUser> aResult);
 		Result<IUser> GetUserByUsername(string username, Result<IUser> aResult);

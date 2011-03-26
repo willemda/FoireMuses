@@ -16,7 +16,6 @@ namespace FoireMuses.Core
 	/// </summary>
 	public class Instance
 	{
-		internal IStoreController StoreController { get; private set; }
 		public IScoreController ScoreController { get; private set; }
 		public ISourceController SourceController { get; private set; }
 		public IUserController UserController { get; private set; }
@@ -35,11 +34,11 @@ namespace FoireMuses.Core
 				builder.Register<ScoreController>().As<IScoreController>();
 			}
 
-			if (!container.IsRegistered<IStoreController>())
-			{
-				//TODO: Specify default IStoreController
-				//builder.Register<CouchDBController>().As<IStoreController>();
-			}
+			//if (!container.IsRegistered<IStoreController>())
+			//{
+			//    //TODO: Specify default IStoreController
+			//    //builder.Register<CouchDBController>().As<IStoreController>();
+			//}
 
 			if (!container.IsRegistered<IUserController>())
 			{
@@ -54,7 +53,6 @@ namespace FoireMuses.Core
 			builder.Build(container);
 
 			ScoreController = container.Resolve<IScoreController>();
-			StoreController = container.Resolve<IStoreController>();
 			UserController = container.Resolve<IUserController>();
 			SourceController = container.Resolve<ISourceController>();
 		}
