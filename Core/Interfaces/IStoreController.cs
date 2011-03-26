@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using LoveSeat;
 using MindTouch.Tasking;
 using Newtonsoft.Json.Linq;
-using FoireMuses.Core.Business;
 
 namespace FoireMuses.Core.Interfaces
 {
 	/// <summary>
 	/// A Interface that describes what a store controller must be able to do.
 	/// </summary>
-	internal interface IStoreController
+	public interface IStoreController
 	{
 		Result<IScore> CreateScore (IScore aDocument, Result<IScore> aResult);
 		Result<IScore> GetScore(IScore aDocument, Result<IScore> aResult);
@@ -31,5 +29,6 @@ namespace FoireMuses.Core.Interfaces
 		Result<IUser> UpdateUser(IUser aDocument, Result<IUser> aResult);
 		Result<bool> DeleteUser(IUser aDocument, Result<bool> aResult);
 		Result<SearchResult<IUser>> SearchUserForText(int offset,int max, string textSearch, IUser aUser, Result<SearchResult<IUser>> aResult);
+		Result<SearchResult<IUser>> GetAllUsers(int offset, int max, Result<SearchResult<IUser>> aResult);
 	}
 }

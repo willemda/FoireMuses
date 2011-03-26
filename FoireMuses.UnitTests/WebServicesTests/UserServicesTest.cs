@@ -39,7 +39,6 @@ using TestFixtureSetUpAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.C
 using TestFixtureTearDownAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.ClassCleanupAttribute;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Interfaces;
-using FoireMuses.Core.Business;
 using System.Collections.Generic;
 using FoireMuses.UnitTests.Mock;
 #endif

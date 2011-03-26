@@ -39,7 +39,6 @@ using TestFixtureSetUpAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.C
 using TestFixtureTearDownAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.ClassCleanupAttribute;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Interfaces;
-using FoireMuses.Core.Business;
 using System.Collections.Generic;
 using LoveSeat;
 using FoireMuses.Core;
@@ -49,136 +48,136 @@ using FoireMuses.UnitTests.Mock;
 namespace MindTouch.Core.Test.Services
 {
 
-    [TestFixture]
-    public class ScoreServicesTest
-    {
-        //--- Class Fields ---
-       // private static readonly ILog _log = LogUtils.CreateLog();
+	[TestFixture]
+	public class ScoreServicesTest
+	{
+		//--- Class Fields ---
+		// private static readonly ILog _log = LogUtils.CreateLog();
 
-        //--- Fields ---
-        private static DreamHostInfo _hostInfo;
-        private static DreamServiceInfo _service;
-        private static Plug _plug;
-        private static MockScoreController msc;
+		//--- Fields ---
+		private static DreamHostInfo _hostInfo;
+		private static DreamServiceInfo _service;
+		private static Plug _plug;
+		private static MockScoreController msc;
 
-        //--- Methods ---
+		//--- Methods ---
 
-        [TestFixtureSetUp]
-        public static void GlobalSetup(TestContext testContext)
-        {
-        	var config = new XDoc("config");
+		[TestFixtureSetUp]
+		public static void GlobalSetup(TestContext testContext)
+		{
+			var config = new XDoc("config");
 
-        	var instances = new XDoc("instances")
-        		.Start("instance").Attr("webhost", "test.foiremuses.org").Attr("databaseName", "foiremusesxml").End();
+			var instances = new XDoc("instances")
+				.Start("instance").Attr("webhost", "test.foiremuses.org").Attr("databaseName", "foiremusesxml").End();
 
-            var builder = new ContainerBuilder();
-            msc = new MockScoreController();
-            builder.Register(c => msc).As<IScoreController>().ServiceScoped();
-            _hostInfo = DreamTestHelper.CreateRandomPortHost(config, builder.Build());
-            _hostInfo.Host.Self.At("load").With("name", "foiremuses.webservice").Post(DreamMessage.Ok());
-            _service = DreamTestHelper.CreateService(
-                _hostInfo,
-                "http://foiremuses.org/service",
-                "foiremuses",
+			var builder = new ContainerBuilder();
+			msc = new MockScoreController();
+			builder.Register(c => msc).As<IScoreController>().ServiceScoped();
+			_hostInfo = DreamTestHelper.CreateRandomPortHost(config, builder.Build());
+			_hostInfo.Host.Self.At("load").With("name", "foiremuses.webservice").Post(DreamMessage.Ok());
+			_service = DreamTestHelper.CreateService(
+				_hostInfo,
+				"http://foiremuses.org/service",
+				"foiremuses",
 				instances
-            );
-            _plug = _service.WithInternalKey().AtLocalHost;
-        }
+			);
+			_plug = _service.WithInternalKey().AtLocalHost;
+		}
 
 
 
-        [TestInitialize]
-        public void Setup()
-        {
-           msc = new MockScoreController();
-        }
+		[TestInitialize]
+		public void Setup()
+		{
+			msc = new MockScoreController();
+		}
 
 
-        [TestFixtureTearDown]
-        public static void GlobalTeardown()
-        {
-            _hostInfo.Dispose();
-        }
+		[TestFixtureTearDown]
+		public static void GlobalTeardown()
+		{
+			_hostInfo.Dispose();
+		}
 
-        /*[SetUp]
-        public void Setup()
-        {
-            _smtpClientFactory.Client = new SmtplClientMock();
-            _smtpClientFactory.Settings = null;
-        }*/
+		/*[SetUp]
+		public void Setup()
+		{
+			_smtpClientFactory.Client = new SmtplClientMock();
+			_smtpClientFactory.Settings = null;
+		}*/
 
-        /*[Test]
-        public void Can_send_email_with_default_settings()
-        {
-            var email = new XDoc("email")
-                .Attr("configuration", "default")
-                .Elem("to", "to@bar.com")
-                .Elem("from", "from@bar.com")
-                .Elem("subject", "subject")
-                .Elem("body", "body");
+		/*[Test]
+		public void Can_send_email_with_default_settings()
+		{
+			var email = new XDoc("email")
+				.Attr("configuration", "default")
+				.Elem("to", "to@bar.com")
+				.Elem("from", "from@bar.com")
+				.Elem("subject", "subject")
+				.Elem("body", "body");
             
-            var response = _plug.At("message").Post(email, new Result<DreamMessage>()).Wait();
-            Assert.IsTrue(response.IsSuccessful);
-            Assert.AreEqual(DEFAULT_HOST, _smtpClientFactory.Settings.Host);
-            Assert.AreEqual("from@bar.com", _smtpClientFactory.Client.Message.From.ToString());
-            Assert.AreEqual("to@bar.com", _smtpClientFactory.Client.Message.To.First().ToString());
-            Assert.AreEqual("subject", _smtpClientFactory.Client.Message.Subject);
-            Assert.AreEqual("body", _smtpClientFactory.Client.Message.Body);
-        }*/
+			var response = _plug.At("message").Post(email, new Result<DreamMessage>()).Wait();
+			Assert.IsTrue(response.IsSuccessful);
+			Assert.AreEqual(DEFAULT_HOST, _smtpClientFactory.Settings.Host);
+			Assert.AreEqual("from@bar.com", _smtpClientFactory.Client.Message.From.ToString());
+			Assert.AreEqual("to@bar.com", _smtpClientFactory.Client.Message.To.First().ToString());
+			Assert.AreEqual("subject", _smtpClientFactory.Client.Message.Subject);
+			Assert.AreEqual("body", _smtpClientFactory.Client.Message.Body);
+		}*/
 
-        [Test]
-        public void Can_create_score_from_json()
-        {
-            var score = new JObject();
-            score.Add("_id", "1");
-            score.Add("title", "la belle au bois dormant");
-            var response = _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON,score.ToString()), new Result<DreamMessage>()).Wait();
-            Assert.IsTrue(response.IsSuccessful);
-            Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
-            Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
-        }
+		[Test]
+		public void Can_create_score_from_json()
+		{
+			var score = new JObject();
+			score.Add("_id", "1");
+			score.Add("title", "la belle au bois dormant");
+			var response = _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+			Assert.IsTrue(response.IsSuccessful);
+			Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
+			Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
+		}
 
-        [Test]
-        public void Can_update_score()
-        {
-            var score = new JObject();
-            score.Add("_id", "1");
-            score.Add("title", "la belle au bois dormant");
-            _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON,score.ToString()), new Result<DreamMessage>()).Wait();
-            score.Remove("title");
-            score.Add("title", "la belle qui dors!");
-            var response = _plug.At("scores").Put(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
-            Assert.IsTrue(response.IsSuccessful);
-            Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
-            Assert.AreEqual("la belle qui dors!", JObject.Parse(response.ToText())["title"]);
-        }
+		[Test]
+		public void Can_update_score()
+		{
+			var score = new JObject();
+			score.Add("_id", "1");
+			score.Add("title", "la belle au bois dormant");
+			_plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+			score.Remove("title");
+			score.Add("title", "la belle qui dors!");
+			var response = _plug.At("scores").Put(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+			Assert.IsTrue(response.IsSuccessful);
+			Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
+			Assert.AreEqual("la belle qui dors!", JObject.Parse(response.ToText())["title"]);
+		}
 
-        [Test]
-        public void Can_read_score_by_id()
-        {
-            var score = new JObject();
-            score.Add("_id","1");
-            score.Add("title", "la belle au bois dormant");
-            _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
-            var response = _plug.At("scores","1").Get(DreamMessage.Ok(), new Result<DreamMessage>()).Wait();
-            Assert.IsTrue(response.IsSuccessful);
-            Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
-            Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
-        }
+		[Test]
+		public void Can_read_score_by_id()
+		{
+			var score = new JObject();
+			score.Add("_id", "1");
+			score.Add("title", "la belle au bois dormant");
+			_plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+			var response = _plug.At("scores", "1").Get(DreamMessage.Ok(), new Result<DreamMessage>()).Wait();
+			Assert.IsTrue(response.IsSuccessful);
+			Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
+			Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
+		}
 
-        // Delete methods not allowed
-        /*[Test]
-        public void Can_delete_score()
-        {
-            var score = new JObject();
-            score.Add("_id", "1");
-            score.Add("title", "la belle au bois dormant");
-            _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
-            var response = _plug.At("scores").Delete(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
-            Console.Write(response.ToString());
-            Assert.IsTrue(response.IsSuccessful);
-            Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
-            Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
-        }*/
-    }
+		// Delete methods not allowed
+		/*[Test]
+		public void Can_delete_score()
+		{
+			var score = new JObject();
+			score.Add("_id", "1");
+			score.Add("title", "la belle au bois dormant");
+			_plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+			var response = _plug.At("scores").Delete(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+			Console.Write(response.ToString());
+			Assert.IsTrue(response.IsSuccessful);
+			Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
+			Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
+		}*/
+	}
 }

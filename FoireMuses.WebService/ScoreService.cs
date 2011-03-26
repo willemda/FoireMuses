@@ -8,30 +8,29 @@ using MindTouch.Tasking;
 using MindTouch.Dream;
 using FoireMuses.Core.Controllers;
 using FoireMuses.Core.Interfaces;
-
+using FoireMuses.Core;
+using MindTouch.Xml;
+using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.WebService
 {
 
 	using Yield = System.Collections.Generic.IEnumerator<IYield>;
-	using FoireMuses.Core;
-	using MindTouch.Xml;
-	using Newtonsoft.Json.Linq;
-	using FoireMuses.Core.Business;
 
 	public partial class Services
 	{
 		[DreamFeature("GET:scores", "Get all scores")]
 		[DreamFeatureParam("limit", "int?", "the number of document given by the output")]
+		[DreamFeatureParam("offset", "int?", "skip the offset first results")]
 		public Yield GetScores(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			Result<SearchResult<IScore>> result = new Result<SearchResult<IScore>>();
 			int limit = context.GetParam("limit", 100);
+			int offset = context.GetParam("offset", 0);
 
-			yield return Context.Current.Instance.ScoreController.GetAll(0,limit, result);
+			yield return Context.Current.Instance.ScoreController.GetAll(offset,limit, result);
 
-			string json = ResultToJson(result.Value);
-			response.Return(DreamMessage.Ok(MimeType.JSON, json));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
 		}
 
 		[DreamFeature("GET:scores/{id}", "Get the score given by the id number")]
@@ -44,7 +43,7 @@ namespace FoireMuses.WebService
 
 			response.Return(result.Value == null
 								? DreamMessage.NotFound("No Score found for id " + id)
-								: DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
+								: DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
 		}
 
 		[DreamFeature("POST:scores", "Create new score")]
@@ -54,7 +53,7 @@ namespace FoireMuses.WebService
 			Result<IScore> result = new Result<IScore>();
 			yield return Context.Current.Instance.ScoreController.Create(score, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
 		}
 
 		[DreamFeature("PUT:scores", "Update the score")]
@@ -64,7 +63,7 @@ namespace FoireMuses.WebService
 			Result<IScore> result = new Result<IScore>();
 			yield return Context.Current.Instance.ScoreController.Update(score, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
 		}
 
 
@@ -76,40 +75,6 @@ namespace FoireMuses.WebService
 			yield return Context.Current.Instance.ScoreController.Delete(score, result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
-		}
-
-		private XDoc ResultToXml(ViewResult<string, string> result)
-		{
-			XDoc xdoc = new XDoc("scores");
-			foreach (ViewResultRow<string, string> row in result.Rows)
-			{
-				xdoc.Start("score");
-				xdoc.Attr("id", row.Key);
-				xdoc.Attr("title", row.Value);
-				xdoc.End();
-			}
-			return xdoc;
-		}
-
-		private string ResultToJson(ViewResult<string, string> result)
-		{
-			string json = "";
-			foreach (ViewResultRow<string, string> r in result.Rows)
-			{
-				json += "Id: " + r.Id + "\tKey: " + r.Key + "\n";
-			}
-			return json;
-		}
-
-
-		private string ResultToJson(SearchResult<IScore> result)
-		{
-			string json = "";
-			foreach (IScore score in result)
-			{
-				json += (score as JScore).ToString()+"\n";
-			}
-			return json;
 		}
 
 	}

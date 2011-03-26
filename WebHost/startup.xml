@@ -5,7 +5,7 @@
       <path>foiremuses</path>
       <sid>http://foiremuses.org/service</sid>
 	<instances>
-		<instance webhost="test.foiremuses.org" databaseName="test-foiremuses-org"/>
+		<instance webhost="test.foiremuses.org" databaseName="musicdatabasexml"/>
 	</instances>
     </config>
   </action>

@@ -1,4 +1,4 @@
-﻿using FoireMuses.Core.Business;
+﻿
 using MindTouch.Tasking;
 using FoireMuses.Core;
 using System;
@@ -27,7 +27,6 @@ namespace FoireMuses.ConsoleTest
 		private static void StartTests(Context context)
 		{
 			context.AttachToCurrentTaskEnv();
-
 		}
 
 

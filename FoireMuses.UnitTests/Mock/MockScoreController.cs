@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FoireMuses.Core.Business;
 using MindTouch.Tasking;
 using Newtonsoft.Json.Linq;
 using LoveSeat;
@@ -13,7 +12,7 @@ namespace FoireMuses.UnitTests.Mock
 	internal class MockScoreController : IScoreController
 	{
 
-		private JScore monScore;
+		private IScore score = null;
 
 
 
@@ -24,27 +23,35 @@ namespace FoireMuses.UnitTests.Mock
 
 		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
 		{
-			throw new NotImplementedException();
+			score = aDoc;
+			aResult.Return(score);
+			return aResult;
 		}
 
 		public Result<IScore> Update(IScore aDoc, Result<IScore> aResult)
 		{
-			throw new NotImplementedException();
+			score = aDoc;
+			aResult.Return(score);
+			return aResult;
 		}
 
 		public Result<IScore> Get(IScore aDoc, Result<IScore> aResult)
 		{
-			throw new NotImplementedException();
+			aResult.Return(score);
+			return aResult;
 		}
 
 		public Result<IScore> Get(string id, Result<IScore> aResult)
 		{
-			throw new NotImplementedException();
+			aResult.Return(score);
+			return aResult;
 		}
 
 		public Result<bool> Delete(IScore aDoc, Result<bool> aResult)
 		{
-			throw new NotImplementedException();
+			score = null;
+			aResult.Return(true);
+			return aResult;
 		}
 
 		public Result<Core.SearchResult<IScore>> GetAll(int offset, int max, Result<Core.SearchResult<IScore>> aResult)

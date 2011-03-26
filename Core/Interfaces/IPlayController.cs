@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FoireMuses.Core.Business;
 
 namespace FoireMuses.Core.Interfaces
 {
-    interface IPlayController : IBaseController<JPlay>
+    interface IPlayController : IBaseController<IPlay>
     {
     }
 }

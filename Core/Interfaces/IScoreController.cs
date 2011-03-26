@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MindTouch.Tasking;
-using FoireMuses.Core.Business;
-using LoveSeat;
-using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Interfaces
 {

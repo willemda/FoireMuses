@@ -2,19 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FoireMuses.Core.Business;
 using FoireMuses.Core.Interfaces;
 using MindTouch.Tasking;
 using FoireMuses.Core.Utils;
-using LoveSeat;
-using LoveSeat.Support;
 using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Controllers
 {
 	public class UserController : IUserController
 	{
-
 		public Result<IUser> GetByUsername(string username, Result<IUser> aResult)
 		{
 			Context.Current.Instance.StoreController.GetUserByUsername(username, new Result<IUser>()).WhenDone(
@@ -26,7 +22,11 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<SearchResult<IUser>> GetAll(int offset, int max, Result<SearchResult<IUser>> aResult)
 		{
-			throw new NotImplementedException();
+			Context.Current.Instance.StoreController.GetAllUsers(offset, max, new Result<SearchResult<IUser>>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public Result<IUser> Create(IUser aDoc, Result<IUser> aResult)

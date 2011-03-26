@@ -1,7 +1,7 @@
 
 namespace FoireMuses.Core.Interfaces
 {
-	internal interface ISettingsController
+	public interface ISettingsController
 	{
 		string Host { get; }
 		int Port { get; }

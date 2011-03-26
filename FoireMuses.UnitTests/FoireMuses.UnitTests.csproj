@@ -36,7 +36,8 @@
     <Reference Include="Autofac">
       <HintPath>..\externals\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="LoveSeat">
+    <Reference Include="LoveSeat, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\externals\LoveSeat.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />

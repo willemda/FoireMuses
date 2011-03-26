@@ -37,7 +37,8 @@ namespace FoireMuses.Core
 
 			if (!container.IsRegistered<IStoreController>())
 			{
-				builder.Register<CouchDBController>().As<IStoreController>();
+				//TODO: Specify default IStoreController
+				//builder.Register<CouchDBController>().As<IStoreController>();
 			}
 
 			if (!container.IsRegistered<IUserController>())

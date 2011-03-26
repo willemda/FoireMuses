@@ -20,13 +20,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using MindTouch.Tasking;
-using LoveSeat;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Interfaces;
 using FoireMuses.Core.Utils;
-using FoireMuses.Core.Business;
-using LoveSeat.Support;
-using Yield = System.Collections.Generic.IEnumerator<MindTouch.Tasking.IYield>;
 using FoireMuses.Core.Exceptions;
 using System.Collections.Generic;
 using System.Collections;
@@ -34,6 +30,7 @@ using System.Linq;
 
 namespace FoireMuses.Core.Controllers
 {
+	using Yield = System.Collections.Generic.IEnumerator<MindTouch.Tasking.IYield>;
 
 	public class ScoreController : IScoreController
 	{
@@ -51,7 +48,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
 		{
-			Context.Current.Instance.StoreController.CreateScore((IScore)aDoc, new Result<IScore>()).WhenDone(
+			Context.Current.Instance.StoreController.CreateScore(aDoc, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -95,7 +92,7 @@ namespace FoireMuses.Core.Controllers
 
 		private bool IsCreator(IScore aDoc)
 		{
-			JUser current = Context.Current.User;
+			IUser current = Context.Current.User;
 			Result<IScore> result = new Result<IScore>();
 			Get(aDoc, result).Wait();
 			if (result.Value != null && result.Value.CreatorId == current.Id)
@@ -105,21 +102,13 @@ namespace FoireMuses.Core.Controllers
 
 		private bool IsCollaborator(IScore aDoc)
 		{
-			JUser current = Context.Current.User;
-			JToken groupsId;
-			JArray groups = new JArray();
-			if (current.TryGetValue("groupsId", out groupsId)) // get the groups of the current user
+			IUser current = Context.Current.User;
+			
+			foreach (string collab in aDoc.CollaboratorsId)
 			{
-				groups = groupsId.Value<JArray>();
+				if (current.Groups.Contains(collab) || collab == current.Id)
+					return true;
 			}
-			Result<IScore> result = new Result<IScore>();
-			this.Get(aDoc, result).Wait();
-			if (result.Value != null)
-				foreach (string collab in result.Value.CollaboratorsId)
-				{
-					if (groups.Contains(collab) || collab == current.Id)
-						return true;
-				}
 			return false;
 		}
 
