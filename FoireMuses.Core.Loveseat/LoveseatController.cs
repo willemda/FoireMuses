@@ -12,20 +12,20 @@ namespace FoireMuses.Core.Loveseat
 	/// <summary>
 	/// An Controller that stores in CouchDb
 	/// </summary>
-	public class LoveseatController : IScoreDataMapper, IUserDataMapper
+	public class LoveseatDataMapper : IScoreDataMapper, IUserDataMapper
 	{
-		private CouchDatabase CouchDatabase;
-		private CouchClient CouchClient;
+		private readonly CouchDatabase theCouchDatabase;
+		private readonly CouchClient theCouchClient;
 
-		public LoveseatController(ISettingsController aSettingsController)
+		public LoveseatDataMapper(ISettingsController aSettingsController)
 		{
-			CouchClient = new CouchClient(aSettingsController.Host, aSettingsController.Port, aSettingsController.Username, aSettingsController.Password);
-			CouchDatabase = CouchClient.GetDatabase(aSettingsController.DatabaseName);
+			theCouchClient = new CouchClient(aSettingsController.Host, aSettingsController.Port, aSettingsController.Username, aSettingsController.Password);
+			theCouchDatabase = theCouchClient.GetDatabase(aSettingsController.DatabaseName);
 		}
 
 		public Result<IScore> Create(IScore aDocument, Result<IScore> aResult)
 		{
-			CouchDatabase.CreateDocument<JScore>(aDocument as JScore, new Result<JScore>()).WhenDone(
+			theCouchDatabase.CreateDocument<JScore>(aDocument as JScore, new Result<JScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -39,7 +39,7 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<IScore> Retrieve(string id, Result<IScore> aResult)
 		{
-			CouchDatabase.GetDocument<JScore>(id, new Result<JScore>()).WhenDone(
+			theCouchDatabase.GetDocument<JScore>(id, new Result<JScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -48,7 +48,7 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<IScore> Update(IScore aDocument, Result<IScore> aResult)
 		{
-			CouchDatabase.UpdateDocument<JScore>(aDocument as JScore, new Result<JScore>()).WhenDone(
+			theCouchDatabase.UpdateDocument<JScore>(aDocument as JScore, new Result<JScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -57,7 +57,7 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<bool> Delete(IScore aDocument, Result<bool> aResult)
 		{
-			CouchDatabase.DeleteDocument(aDocument as JScore, new Result<JObject>()).WhenDone(
+			theCouchDatabase.DeleteDocument(aDocument as JScore, new Result<JObject>()).WhenDone(
 				a =>
 				{
 					aResult.Return(true);
@@ -79,7 +79,7 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<IUser> Create(IUser aDocument, Result<IUser> aResult)
 		{
-			CouchDatabase.CreateDocument<JUser>(aDocument as JUser, new Result<JUser>()).WhenDone(
+			theCouchDatabase.CreateDocument<JUser>(aDocument as JUser, new Result<JUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -96,7 +96,7 @@ namespace FoireMuses.Core.Loveseat
 			ViewOptions viewOptions = new ViewOptions();
 			viewOptions.Key.Add(username);
 
-			CouchDatabase.GetView<string, string, JUser>(CouchViews.VIEW_USERS, CouchViews.VIEW_USERS_BY_USERNAME, viewOptions, new Result<ViewResult<string, string, JUser>>()).WhenDone(
+			theCouchDatabase.GetView<string, string, JUser>(CouchViews.VIEW_USERS, CouchViews.VIEW_USERS_BY_USERNAME, viewOptions, new Result<ViewResult<string, string, JUser>>()).WhenDone(
 				a =>
 				{
 					IUser result = null;
@@ -113,7 +113,7 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<IUser> Retrieve(string id, Result<IUser> aResult)
 		{
-			CouchDatabase.GetDocument<JUser>(id, new Result<JUser>()).WhenDone(
+			theCouchDatabase.GetDocument<JUser>(id, new Result<JUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -122,7 +122,7 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<IUser> Update(IUser aDocument, Result<IUser> aResult)
 		{
-			CouchDatabase.UpdateDocument<JUser>(aDocument as JUser, new Result<JUser>()).WhenDone(
+			theCouchDatabase.UpdateDocument<JUser>(aDocument as JUser, new Result<JUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -131,7 +131,7 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<bool> Delete(IUser aDocument, Result<bool> aResult)
 		{
-			CouchDatabase.DeleteDocument(aDocument as JUser, new Result<JObject>()).WhenDone(
+			theCouchDatabase.DeleteDocument(aDocument as JUser, new Result<JObject>()).WhenDone(
 				a=>{
 					aResult.Return(true);
 				},
@@ -153,7 +153,7 @@ namespace FoireMuses.Core.Loveseat
 			if(max > 0)
 				viewOptions.Limit = max;
 
-			CouchDatabase.GetView<string,string,JScore>(CouchViews.VIEW_SCORES,CouchViews.VIEW_SCORES_FROM_SOURCE,viewOptions, new Result<ViewResult<string,string,JScore>>()).WhenDone(
+			theCouchDatabase.GetView<string,string,JScore>(CouchViews.VIEW_SCORES,CouchViews.VIEW_SCORES_FROM_SOURCE,viewOptions, new Result<ViewResult<string,string,JScore>>()).WhenDone(
 				a =>
 				{
 					IList<IScore> results = new List<IScore>();
@@ -175,7 +175,7 @@ namespace FoireMuses.Core.Loveseat
 			if(max > 0)
 				viewOptions.Limit = max;
 
-			CouchDatabase.GetView<string, string, JScore>(CouchViews.VIEW_SCORES, CouchViews.VIEW_ALL, viewOptions, new Result<ViewResult<string, string, JScore>>()).WhenDone(
+			theCouchDatabase.GetView<string, string, JScore>(CouchViews.VIEW_SCORES, CouchViews.VIEW_ALL, viewOptions, new Result<ViewResult<string, string, JScore>>()).WhenDone(
 				a =>
 				{
 					IList<IScore> list = new List<IScore>();
@@ -198,7 +198,7 @@ namespace FoireMuses.Core.Loveseat
 			if (max > 0)
 				viewOptions.Limit = max;
 
-			CouchDatabase.GetView<string, string, JUser>(CouchViews.VIEW_USERS, CouchViews.VIEW_ALL, viewOptions, new Result<ViewResult<string, string, JUser>>()).WhenDone(
+			theCouchDatabase.GetView<string, string, JUser>(CouchViews.VIEW_USERS, CouchViews.VIEW_ALL, viewOptions, new Result<ViewResult<string, string, JUser>>()).WhenDone(
 				a =>
 				{
 					IList<IUser> list = new List<IUser>();
@@ -211,6 +211,46 @@ namespace FoireMuses.Core.Loveseat
 				aResult.Throw
 				);
 			return aResult;
+		}
+
+		IScore IDataMapper<IScore>.FromJson(string aJson)
+		{
+			return new JScore(JObject.Parse(aJson));
+		}
+
+		public string ToJson(IScore anObject)
+		{
+			return anObject.ToString();
+		}
+
+		public IScore FromXml(MindTouch.Xml.XDoc aJson)
+		{
+			throw new NotImplementedException();
+		}
+
+		public MindTouch.Xml.XDoc ToXml(IScore anObject)
+		{
+			throw new NotImplementedException();
+		}
+
+		IUser IDataMapper<IUser>.FromJson(string aJson)
+		{
+			return new JUser(JObject.Parse(aJson));
+		}
+
+		public string ToJson(IUser anObject)
+		{
+			return anObject.ToString();
+		}
+
+		IUser IDataMapper<IUser>.FromXml(MindTouch.Xml.XDoc aJson)
+		{
+			throw new NotImplementedException();
+		}
+
+		public MindTouch.Xml.XDoc ToXml(IUser anObject)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
