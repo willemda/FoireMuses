@@ -52,6 +52,8 @@ namespace FoireMuses.WebService
 			yield return res = Coroutine.Invoke(base.Start, config, new Result());
 			res.Confirm();
 
+
+
 			theFactory = new InstanceFactory(container, config);
 			result.Return();
 		}
