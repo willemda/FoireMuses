@@ -87,7 +87,7 @@
     <Compile Include="Interfaces\ISettingsController.cs" />
     <Compile Include="Controllers\XmlSettingsController.cs" />
     <Compile Include="Controllers\ScoreController.cs" />
-    <Compile Include="Interfaces\IStoreController.cs" />
+    <Compile Include="Interfaces\IDataMapper.cs" />
     <Compile Include="Interfaces\IPlayController.cs" />
     <Compile Include="Interfaces\IScoreController.cs" />
     <Compile Include="Interfaces\ISourceController.cs" />

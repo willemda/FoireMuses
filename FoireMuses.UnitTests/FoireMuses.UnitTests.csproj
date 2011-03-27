@@ -77,6 +77,10 @@
       <Project>{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}</Project>
       <Name>FoireMuses.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FoireMuses.Core.Loveseat\FoireMuses.Core.Loveseat.csproj">
+      <Project>{A6361242-BFAF-4945-8598-11D69E9696CF}</Project>
+      <Name>FoireMuses.Core.Loveseat</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FoireMuses.WebService\FoireMuses.WebService.csproj">
       <Project>{AC57E329-8530-4452-BAD3-64A5159E208C}</Project>
       <Name>FoireMuses.WebService</Name>

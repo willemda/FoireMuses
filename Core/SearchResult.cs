@@ -10,23 +10,25 @@ namespace FoireMuses.Core
 		public int Offset { get; private set; }
 		public int Max { get; private set; }
 		public int TotalCount { get; private set; }
-		public IEnumerable<T> Ienum{get; private set;}
 
-		public SearchResult(IList<T> list, int offset, int max, int totalCount){
-			Ienum = list.AsEnumerable();
-			Offset = offset;
-			Max = max;
-			TotalCount = totalCount;
+		private readonly IEnumerable<T> theResults;
+
+		public SearchResult(IEnumerable<T> aList, int anOffset, int aMax, int aTotalCount)
+		{
+			theResults = aList;
+			Offset = anOffset;
+			Max = aMax;
+			TotalCount = aTotalCount;
 		}
 
 		public IEnumerator<T> GetEnumerator()
 		{
-			return Ienum.GetEnumerator();
+			return theResults.GetEnumerator();
 		}
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return Ienum.GetEnumerator();
+			return theResults.GetEnumerator();
 		}
 	}
 }

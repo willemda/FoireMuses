@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using MindTouch.Tasking;
 using Newtonsoft.Json.Linq;
+using MindTouch.Xml;
 
 namespace FoireMuses.Core.Interfaces
 {
@@ -12,7 +13,13 @@ namespace FoireMuses.Core.Interfaces
 		Result<T> Create(T aDocument, Result<T> aResult);
 		Result<T> Retrieve(string aDocumentId, Result<T> aResult);
 		Result<T> Update(T aDocument, Result<T> aResult);
-		Result<bool> Delete(T aDocument, Result<bool> aResult);
+		Result<bool> Delete(string aDocumentId, Result<bool> aResult);
+
+		T FromJson(string aJson);
+		string ToJson(T anObject);
+
+		T FromXml(XDoc aJson);
+		XDoc ToXml(T anObject);
 	}
 
 	/// <summary>

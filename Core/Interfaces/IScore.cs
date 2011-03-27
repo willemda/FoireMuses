@@ -8,6 +8,7 @@ namespace FoireMuses.Core.Interfaces
 	public interface IScore
 	{
 		string Id { get; set; }
+		string Rev { get; }
 
 		string Title{get;set;}
 		string Code1 { get; set; }
@@ -39,14 +40,13 @@ namespace FoireMuses.Core.Interfaces
 		int SourceTextuelleVolume { get; set; }
 
 		IEnumerable<string> Tags { get; }
-
 		void AddTag(string tag);
 		void RemoveTag(string tag);
 
 		string CreatorId { get; }
 		string LastModifierId { get; }
-		IEnumerable<string> CollaboratorsId { get; }
 
+		IEnumerable<string> CollaboratorsId { get; }
 		void AddCollaborator(string collab);
 		void RemoveCollaborator(string collab);
 	}

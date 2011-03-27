@@ -61,18 +61,13 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		public Result<IScore> Get(string id, Result<IScore> aResult)
+		public Result<IScore> Retrieve(string id, Result<IScore> aResult)
 		{
 			theScoreDataMapper.Retrieve(id, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
-		}
-
-		public Result<IScore> Get(IScore aDoc, Result<IScore> aResult)
-		{
-			return Get(aDoc.Id, aResult);
 		}
 
 		private Yield UpdateHelper(IScore aDoc, Result<IScore> aResult)
@@ -109,7 +104,7 @@ namespace FoireMuses.Core.Controllers
 			return false;
 		}
 
-		public Result<IScore> Update(IScore aDoc, Result<IScore> aResult)
+		public Result<IScore> Update(string id,string rev,IScore aDoc, Result<IScore> aResult)
 		{
 			Coroutine.Invoke(UpdateHelper, aDoc, new Result<IScore>()).WhenDone(
 				aResult.Return,
@@ -118,9 +113,9 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		public Result<bool> Delete(IScore aDoc, Result<bool> aResult)
+		public Result<bool> Delete(string id, Result<bool> aResult)
 		{
-			theScoreDataMapper.Delete(aDoc, new Result<bool>()).WhenDone(
+			theScoreDataMapper.Delete(id, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -134,6 +129,15 @@ namespace FoireMuses.Core.Controllers
 				aResult.Throw
 				);
 			return aResult;
+		}
+
+		public IScore FromJson(string aJson)
+		{
+			return theScoreDataMapper.FromJson(aJson);
+		}
+		public string ToJson(IScore aScore)
+		{
+			return theScoreDataMapper.ToJson(aScore);
 		}
 	}
 }

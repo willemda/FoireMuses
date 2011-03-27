@@ -11,16 +11,16 @@ namespace FoireMuses.Core.Controllers
 {
 	public class UserController : IUserController
 	{
-		private IUserDataMapper theStoreController;
+		private IUserDataMapper theUserDataMapper;
 
 		public  UserController(IUserDataMapper aController)
 		{
-			theStoreController = aController;
+			theUserDataMapper = aController;
 		}
 
 		public Result<IUser> GetByUsername(string username, Result<IUser> aResult)
 		{
-			theStoreController.RetrieveByUsername(username, new Result<IUser>()).WhenDone(
+			theUserDataMapper.RetrieveByUsername(username, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -29,7 +29,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<SearchResult<IUser>> GetAll(int offset, int max, Result<SearchResult<IUser>> aResult)
 		{
-			theStoreController.GetAllUsers(offset, max, new Result<SearchResult<IUser>>()).WhenDone(
+			theUserDataMapper.GetAllUsers(offset, max, new Result<SearchResult<IUser>>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -38,43 +38,47 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<IUser> Create(IUser aDoc, Result<IUser> aResult)
 		{
-			theStoreController.Create(aDoc, new Result<IUser>()).WhenDone(
+			theUserDataMapper.Create(aDoc, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
 		}
 
-		public Result<IUser> Get(string id, Result<IUser> aResult)
+		public Result<IUser> Retrieve(string id, Result<IUser> aResult)
 		{
-			theStoreController.Retrieve(id, new Result<IUser>()).WhenDone(
+			theUserDataMapper.Retrieve(id, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
 		}
 
-		public Result<IUser> Update(IUser aDoc, Result<IUser> aResult)
+		public Result<IUser> Update(string id,string rev,IUser aDoc, Result<IUser> aResult)
 		{
-			theStoreController.Update(aDoc, new Result<IUser>()).WhenDone(
+			theUserDataMapper.Update(aDoc, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
 		}
 
-		public Result<bool> Delete(IUser aDoc, Result<bool> aResult)
+		public Result<bool> Delete(string id, Result<bool> aResult)
 		{
-			theStoreController.Delete(aDoc, new Result<bool>()).WhenDone(
+			theUserDataMapper.Delete(id, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
 		}
 
-		public Result<IUser> Get(IUser aDoc, Result<IUser> aResult)
+		public IUser FromJson(string aJson)
 		{
-			return Get(aDoc.Id, aResult);
+			return theUserDataMapper.FromJson(aJson);
+		}
+		public string ToJson(IUser aUser)
+		{
+			return theUserDataMapper.ToJson(aUser);
 		}
 	}
 }

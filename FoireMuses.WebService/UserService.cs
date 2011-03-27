@@ -33,9 +33,12 @@ namespace FoireMuses.WebService
 		public Yield CreateUser(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			Result<IUser> result = new Result<IUser>();
-			yield return Context.Current.Instance.UserController.Create(Factory.IUserFromJson(request.ToText()), result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
+			IUser user = Context.Current.Instance.UserController.FromJson(request.ToText());
+
+			yield return Context.Current.Instance.UserController.Create(user, result);
+
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.UserController.ToJson(result.Value)));
 		}
 
 		[DreamFeature("GET:users/username/{username}", "get the user that has the given username")]
@@ -47,7 +50,7 @@ namespace FoireMuses.WebService
 
 			response.Return(result.Value == null
 								? DreamMessage.NotFound("No User found for username " + username)
-								: DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
+								: DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.UserController.ToJson(result.Value)));
 		}
 
 		[DreamFeature("GET:users/{id}", "get the user that has the given id")]
@@ -55,11 +58,11 @@ namespace FoireMuses.WebService
 		{
 			string id = context.GetParam("id");
 			Result<IUser> result = new Result<IUser>();
-			yield return Context.Current.Instance.UserController.Get(id, result);
+			yield return Context.Current.Instance.UserController.Retrieve(id, result);
 
 			response.Return(result.Value == null
 								? DreamMessage.NotFound("No User found for id " + id)
-								: DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
+								: DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.UserController.ToJson((result.Value))));
 		}
 
 		[DreamFeature("PUT:users", "update a user")]
@@ -68,9 +71,9 @@ namespace FoireMuses.WebService
 
 			Result<IUser> result = new Result<IUser>();
 
-			yield return Context.Current.Instance.UserController.Update(Factory.IUserFromJson(request.ToText()), result);
+			yield return Context.Current.Instance.UserController.Update("","",Context.Current.Instance.UserController.FromJson(request.ToText()), result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.UserController.ToJson(result.Value)));
 		}
 	}
 }

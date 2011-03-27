@@ -56,7 +56,7 @@ namespace FoireMuses.UnitTests.CoreTests
 			JObject o = new JObject();
 			o["title"] = "la belle qui dors";
 			o["editor"] = "arnaud";
-			IScore score = Factory.IScoreFromJson(o.ToString());
+			IScore score = Context.Current.Instance.ScoreController.FromJson(o.ToString());
 			Result<IScore> result = new Result<IScore>();
 			Context.Current.Instance.ScoreController.Create(score, result).Wait();
 			Assert.IsTrue(result.HasValue);
@@ -69,21 +69,14 @@ namespace FoireMuses.UnitTests.CoreTests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void UpdateWithNullMustThrowException()
 		{
-			Context.Current.Instance.ScoreController.Update(null, new Result<IScore>()).Wait();
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void GetWithNullMustThrowException()
-		{
-			Context.Current.Instance.ScoreController.Get((IScore)null, new Result<IScore>()).Wait();
+			Context.Current.Instance.ScoreController.Update(null,null,null, new Result<IScore>()).Wait();
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void GetByIdWithNullMustThrowException()
 		{
-			Context.Current.Instance.ScoreController.Get((string)null, new Result<IScore>()).Wait();
+			Context.Current.Instance.ScoreController.Retrieve(null, new Result<IScore>()).Wait();
 		}
 
 		[TestMethod]

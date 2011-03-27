@@ -10,34 +10,37 @@ namespace FoireMuses.Core.Controllers
 {
 	class PlayController : IPlayController
 	{
-
-
 		public Result<IPlay> Create(IPlay aDoc, Result<IPlay> aResult)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Result<IPlay> Update(IPlay aDoc, Result<IPlay> aResult)
+		public Result<IPlay> Update(string id,string rev,IPlay aDoc, Result<IPlay> aResult)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Result<IPlay> Get(IPlay aDoc, Result<IPlay> aResult)
+		public Result<IPlay> Retrieve(string id, Result<IPlay> aResult)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Result<IPlay> Get(string id, Result<IPlay> aResult)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Result<bool> Delete(IPlay aDoc, Result<bool> aResult)
+		public Result<bool> Delete(string id, Result<bool> aResult)
 		{
 			throw new NotImplementedException();
 		}
 
 		public Result<SearchResult<IPlay>> GetAll(int offset, int max, Result<SearchResult<IPlay>> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public IPlay FromJson(string aJson)
+		{
+			throw new NotImplementedException();
+		}
+
+		public string ToJson(IPlay aJson)
 		{
 			throw new NotImplementedException();
 		}

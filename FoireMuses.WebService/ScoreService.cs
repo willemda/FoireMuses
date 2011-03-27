@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using LoveSeat;
-using MindTouch.Tasking;
-using MindTouch.Dream;
-using FoireMuses.Core.Controllers;
-using FoireMuses.Core.Interfaces;
+﻿using System.Collections.Generic;
 using FoireMuses.Core;
-using MindTouch.Xml;
-using Newtonsoft.Json.Linq;
+using FoireMuses.Core.Interfaces;
+using MindTouch.Dream;
+using MindTouch.Tasking;
 
 namespace FoireMuses.WebService
 {
-
-	using Yield = System.Collections.Generic.IEnumerator<IYield>;
+	using Yield = IEnumerator<IYield>;
 
 	public partial class Services
 	{
@@ -39,40 +30,42 @@ namespace FoireMuses.WebService
 			Result<IScore> result = new Result<IScore>();
 			string id = context.GetParam<string>("id");
 
-			yield return Context.Current.Instance.ScoreController.Get(id, result);
+			yield return Context.Current.Instance.ScoreController.Retrieve(id, result);
 
 			response.Return(result.Value == null
 								? DreamMessage.NotFound("No Score found for id " + id)
-								: DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
+								: DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
 		[DreamFeature("POST:scores", "Create new score")]
 		public Yield CreateScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			IScore score = Factory.IScoreFromJson(request.ToText());
+			IScore score = Context.Current.Instance.ScoreController.FromJson(request.ToText());
 			Result<IScore> result = new Result<IScore>();
 			yield return Context.Current.Instance.ScoreController.Create(score, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("PUT:scores", "Update the score")]
+		[DreamFeature("PUT:scores/{id}", "Update the score")]
+		[DreamFeatureParam("{id}", "String", "Score id")]
+		[DreamFeatureParam("{rev}", "String", "Score revision id")]
 		public Yield UpdateScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			IScore score = Factory.IScoreFromJson(request.ToText());
+			IScore score = Context.Current.Instance.ScoreController.FromJson(request.ToText());
 			Result<IScore> result = new Result<IScore>();
-			yield return Context.Current.Instance.ScoreController.Update(score, result);
+			yield return Context.Current.Instance.ScoreController.Update("","",score, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
 
-		// TODO: delete methods not allowed!
+		[DreamFeature("DELETE:scores/{id}", "Delete a score")]
+		[DreamFeatureParam("{id}", "String", "Score id")]
 		public Yield DeleteScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			IScore score= Factory.IScoreFromJson(request.ToText());
 			Result<bool> result = new Result<bool>();
-			yield return Context.Current.Instance.ScoreController.Delete(score, result);
+			yield return Context.Current.Instance.ScoreController.Delete(context.GetParam("id"), result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
 		}

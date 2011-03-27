@@ -55,9 +55,12 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public Result<bool> Delete(IScore aDocument, Result<bool> aResult)
+		public Result<bool> Delete(string id, Result<bool> aResult)
 		{
-			theCouchDatabase.DeleteDocument(aDocument as JScore, new Result<JObject>()).WhenDone(
+			JDocument d = new JDocument();
+			d.Id = id;
+
+			theCouchDatabase.DeleteDocument(d, new Result<JObject>()).WhenDone(
 				a =>
 				{
 					aResult.Return(true);
