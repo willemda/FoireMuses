@@ -46,7 +46,7 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public Result<IScore> Update(IScore aDocument, Result<IScore> aResult)
+		public Result<IScore> Update(string id, string rev, IScore aDocument, Result<IScore> aResult)
 		{
 			theCouchDatabase.UpdateDocument<JScore>(aDocument as JScore, new Result<JScore>()).WhenDone(
 				aResult.Return,
@@ -55,10 +55,11 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public Result<bool> Delete(string id, Result<bool> aResult)
+		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{
 			JDocument d = new JDocument();
 			d.Id = id;
+			d.Rev = rev;
 
 			theCouchDatabase.DeleteDocument(d, new Result<JObject>()).WhenDone(
 				a =>
@@ -123,7 +124,7 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public Result<IUser> Update(IUser aDocument, Result<IUser> aResult)
+		public Result<IUser> Update(string id, string rev, IUser aDocument, Result<IUser> aResult)
 		{
 			theCouchDatabase.UpdateDocument<JUser>(aDocument as JUser, new Result<JUser>()).WhenDone(
 				aResult.Return,

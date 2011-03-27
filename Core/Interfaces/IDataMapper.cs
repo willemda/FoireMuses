@@ -12,8 +12,8 @@ namespace FoireMuses.Core.Interfaces
 	{
 		Result<T> Create(T aDocument, Result<T> aResult);
 		Result<T> Retrieve(string aDocumentId, Result<T> aResult);
-		Result<T> Update(T aDocument, Result<T> aResult);
-		Result<bool> Delete(string aDocumentId, Result<bool> aResult);
+		Result<T> Update(string aDocumentId,string aRev,T aDocument, Result<T> aResult);
+		Result<bool> Delete(string aDocumentId, string aRev, Result<bool> aResult);
 
 		T FromJson(string aJson);
 		string ToJson(T anObject);

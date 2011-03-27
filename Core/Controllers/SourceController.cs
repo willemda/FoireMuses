@@ -26,7 +26,7 @@ namespace FoireMuses.Core.Controllers
 			throw new NotImplementedException();
 		}
 
-		public Result<bool> Delete(string id, Result<bool> aResult)
+		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{
 			throw new NotImplementedException();
 		}

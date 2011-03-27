@@ -83,7 +83,7 @@ namespace FoireMuses.UnitTests.CoreTests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void DeleteWithNullMustThrowException()
 		{
-			Context.Current.Instance.ScoreController.Delete(null, new Result<bool>()).Wait();
+			Context.Current.Instance.ScoreController.Delete(null,null, new Result<bool>()).Wait();
 		}
 
 	}

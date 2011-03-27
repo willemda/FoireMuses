@@ -62,10 +62,11 @@ namespace FoireMuses.WebService
 
 		[DreamFeature("DELETE:scores/{id}", "Delete a score")]
 		[DreamFeatureParam("{id}", "String", "Score id")]
+		[DreamFeatureParam("{rev}", "String", "Score revision id")]
 		public Yield DeleteScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			Result<bool> result = new Result<bool>();
-			yield return Context.Current.Instance.ScoreController.Delete(context.GetParam("id"), result);
+			yield return Context.Current.Instance.ScoreController.Delete(context.GetParam("id"),context.GetParam("rev"), result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
 		}

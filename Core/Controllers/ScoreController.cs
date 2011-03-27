@@ -75,7 +75,7 @@ namespace FoireMuses.Core.Controllers
 			yield return CheckAuthorization(aDoc, new Result());
 			//if we reach there we have the update rights.
 			Result<IScore> scoreResult = new Result<IScore>();
-			yield return theScoreDataMapper.Update(aDoc, new Result<IScore>());
+			yield return theScoreDataMapper.Update("","",aDoc, new Result<IScore>());
 			//finally return the IScore updated
 			aResult.Return(scoreResult.Value);
 			yield break;
@@ -113,9 +113,9 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		public Result<bool> Delete(string id, Result<bool> aResult)
+		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{
-			theScoreDataMapper.Delete(id, new Result<bool>()).WhenDone(
+			theScoreDataMapper.Delete(id,rev, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);

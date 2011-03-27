@@ -54,18 +54,18 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		public Result<IUser> Update(string id,string rev,IUser aDoc, Result<IUser> aResult)
+		public Result<IUser> Update(string id, string rev,IUser aDoc, Result<IUser> aResult)
 		{
-			theUserDataMapper.Update(aDoc, new Result<IUser>()).WhenDone(
+			theUserDataMapper.Update(id,rev, aDoc, new Result<IUser>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
 		}
 
-		public Result<bool> Delete(string id, Result<bool> aResult)
+		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{
-			theUserDataMapper.Delete(id, new Result<bool>()).WhenDone(
+			theUserDataMapper.Delete(id,rev, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);

@@ -40,7 +40,7 @@ namespace FoireMuses.UnitTests.Mock
 			return aResult;
 		}
 
-		public Result<bool> Delete(string id, Result<bool> aResult)
+		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{
 			user = null;
 			aResult.Return(true);

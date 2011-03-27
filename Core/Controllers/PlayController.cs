@@ -15,7 +15,7 @@ namespace FoireMuses.Core.Controllers
 			throw new NotImplementedException();
 		}
 
-		public Result<IPlay> Update(string id,string rev,IPlay aDoc, Result<IPlay> aResult)
+		public Result<IPlay> Update(string id,string rev, IPlay aDoc, Result<IPlay> aResult)
 		{
 			throw new NotImplementedException();
 		}
@@ -25,7 +25,7 @@ namespace FoireMuses.Core.Controllers
 			throw new NotImplementedException();
 		}
 
-		public Result<bool> Delete(string id, Result<bool> aResult)
+		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{
 			throw new NotImplementedException();
 		}
