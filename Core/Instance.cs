@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Autofac.Registrars;
 using FoireMuses.Core;
 using FoireMuses.Core.Interfaces;
 using FoireMuses.Core.Controllers;
@@ -9,6 +10,10 @@ using Autofac;
 using Autofac.Builder;
 using MindTouch.Dream;
 using MindTouch.Xml;
+using Autofac;
+using Autofac.Builder;
+using Autofac.Registrars;
+using log4net;
 
 namespace FoireMuses.Core
 {
@@ -28,7 +33,7 @@ namespace FoireMuses.Core
 			var c = new XDocAutofacContainerConfigurator(anInstanceXmlConfig["components"], DreamContainerScope.Factory);
 			c.Configure(container);
 
-			if(!container.IsRegistered<ISettingsController>())
+			if (!container.IsRegistered<ISettingsController>())
 			{
 				XmlSettingsController controller = new XmlSettingsController(anInstanceXmlConfig);
 				builder.Register<ISettingsController>(controller);

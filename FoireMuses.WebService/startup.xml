@@ -6,16 +6,16 @@
 			<sid>http://foiremuses.org/service</sid>
 			<instances>
 				<instance webhost="test.foiremuses.org" databaseName="musicdatabasexml">
-					<compoents>
+					<components>
 						<component
-							implementation="FoireMuses.Core.Interfaces.IScoreDataMapper, FoireMuses.Core"
-							type="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
+							type="FoireMuses.Core.Interfaces.IScoreDataMapper, FoireMuses.Core"
+							implementation="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
 							name="ScoreDataMapper"/>
 						<component
-							implementation="FoireMuses.Core.Interfaces.IUserDataMapper, FoireMuses.Core"
-							type="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
+							type="FoireMuses.Core.Interfaces.IUserDataMapper, FoireMuses.Core"
+							implementation="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
 							name="UserDataMapper"/>
-					</compoents>
+					</components>
 				</instance>
 			</instances>
 		</config>
