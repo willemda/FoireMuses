@@ -18,15 +18,6 @@ namespace FoireMuses.Core.Controllers
 			theUserDataMapper = aController;
 		}
 
-		public Result<IUser> GetByUsername(string username, Result<IUser> aResult)
-		{
-			theUserDataMapper.RetrieveByUsername(username, new Result<IUser>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
-			return aResult;
-		}
-
 		public Result<SearchResult<IUser>> GetAll(int offset, int max, Result<SearchResult<IUser>> aResult)
 		{
 			theUserDataMapper.GetAllUsers(offset, max, new Result<SearchResult<IUser>>()).WhenDone(

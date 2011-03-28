@@ -8,6 +8,7 @@ using LoveSeat.Interfaces;
 using LoveSeat;
 using System.Text.RegularExpressions;
 using FoireMuses.Core.Interfaces;
+using FoireMuses.Core.Loveseat.Business;
 
 namespace FoireMuses.Core.Business
 {
@@ -32,12 +33,6 @@ namespace FoireMuses.Core.Business
 			{
 				this.Add("otype", "user");
 			}
-		}
-
-		public string Username
-		{
-			get { return this["username"].Value<string>(); }
-			set { this["username"] = value; }
 		}
 
 		public string Password
@@ -84,11 +79,11 @@ namespace FoireMuses.Core.Business
 
 		private void CheckUsername()
 		{
-			if (String.IsNullOrEmpty(Username))
+			if (String.IsNullOrEmpty(Id))
 			{
 				throw new ArgumentException("username");
 			}
-			if (DoesContainBadCharacters(goodCharsForUsernameRegex, Username))
+			if (DoesContainBadCharacters(goodCharsForUsernameRegex, Id))
 			{
 				throw new ArgumentException("username");
 			}

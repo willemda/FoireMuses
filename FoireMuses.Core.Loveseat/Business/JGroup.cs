@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Interfaces;
+using FoireMuses.Core.Loveseat.Business;
 
 namespace FoireMuses.Core.Business
 {

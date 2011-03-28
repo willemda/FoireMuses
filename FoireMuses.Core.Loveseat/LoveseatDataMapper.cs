@@ -12,7 +12,7 @@ namespace FoireMuses.Core.Loveseat
 	/// <summary>
 	/// An Controller that stores in CouchDb
 	/// </summary>
-	public class LoveseatDataMapper : IScoreDataMapper, IUserDataMapper
+	public class LoveseatDataMapper : IScoreDataMapper, IUserDataMapper, ISourceDataMapper
 	{
 		private readonly CouchDatabase theCouchDatabase;
 		private readonly CouchClient theCouchClient;
@@ -21,6 +21,35 @@ namespace FoireMuses.Core.Loveseat
 		{
 			theCouchClient = new CouchClient(aSettingsController.Host, aSettingsController.Port, aSettingsController.Username, aSettingsController.Password);
 			theCouchDatabase = theCouchClient.GetDatabase(aSettingsController.DatabaseName);
+		}
+
+		public Result<ISource> Create(ISource aDocument, Result<ISource> aResult)
+		{
+			theCouchDatabase.CreateDocument<JSource>(aDocument as JSource, new Result<JSource>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
+
+		public Result<ISource> Retrieve(string aDocumentId, Result<ISource> aResult)
+		{
+			theCouchDatabase.GetDocument<JSource>(aDocumentId, new Result<JSource>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
+
+		public Result<ISource> Update(string aDocumentId, string aRev, ISource aDocument, Result<ISource> aResult)
+		{
+			aDocument.Id = aDocumentId;
+			aDocument.Rev = aRev;
+			theCouchDatabase.UpdateDocument<JSource>(aDocument as JSource, new Result<JSource>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public Result<IScore> Create(IScore aDocument, Result<IScore> aResult)
@@ -32,10 +61,6 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public Result<IScore> GetScore(IScore aDocument, Result<IScore> aResult)
-		{
-			return Retrieve((aDocument as JScore).Id, aResult);
-		}
 
 		public Result<IScore> Retrieve(string id, Result<IScore> aResult)
 		{
@@ -48,6 +73,8 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<IScore> Update(string id, string rev, IScore aDocument, Result<IScore> aResult)
 		{
+			aDocument.Id = id;
+			aDocument.Rev = rev;
 			theCouchDatabase.UpdateDocument<JScore>(aDocument as JScore, new Result<JScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
@@ -90,31 +117,6 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public Result<IUser> GetUser(IUser aDocument, Result<IUser> aResult)
-		{
-			return Retrieve((aDocument as JUser).Id, aResult);
-		}
-
-		public Result<IUser> RetrieveByUsername(string username, Result<IUser> aResult)
-		{
-			ViewOptions viewOptions = new ViewOptions();
-			viewOptions.Key.Add(username);
-
-			theCouchDatabase.GetView<string, string, JUser>(CouchViews.VIEW_USERS, CouchViews.VIEW_USERS_BY_USERNAME, viewOptions, new Result<ViewResult<string, string, JUser>>()).WhenDone(
-				a =>
-				{
-					IUser result = null;
-					foreach (ViewResultRow<string, string, JUser> row in a.Rows)
-					{
-						result = row.Doc;
-					}
-					aResult.Return(result);
-				},
-				aResult.Throw
-				);
-			return aResult;
-		}
-
 		public Result<IUser> Retrieve(string id, Result<IUser> aResult)
 		{
 			theCouchDatabase.GetDocument<JUser>(id, new Result<JUser>()).WhenDone(
@@ -126,19 +128,10 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<IUser> Update(string id, string rev, IUser aDocument, Result<IUser> aResult)
 		{
+			aDocument.Id = id;
+			aDocument.Rev = rev;
 			theCouchDatabase.UpdateDocument<JUser>(aDocument as JUser, new Result<JUser>()).WhenDone(
 				aResult.Return,
-				aResult.Throw
-				);
-			return aResult;
-		}
-
-		public Result<bool> Delete(IUser aDocument, Result<bool> aResult)
-		{
-			theCouchDatabase.DeleteDocument(aDocument as JUser, new Result<JObject>()).WhenDone(
-				a=>{
-					aResult.Return(true);
-				},
 				aResult.Throw
 				);
 			return aResult;
@@ -227,7 +220,7 @@ namespace FoireMuses.Core.Loveseat
 			return anObject.ToString();
 		}
 
-		public IScore FromXml(MindTouch.Xml.XDoc aJson)
+		public IScore FromXml(MindTouch.Xml.XDoc aXML)
 		{
 			throw new NotImplementedException();
 		}
@@ -253,6 +246,28 @@ namespace FoireMuses.Core.Loveseat
 		}
 
 		public MindTouch.Xml.XDoc ToXml(IUser anObject)
+		{
+			throw new NotImplementedException();
+		}
+
+		
+
+		ISource IDataMapper<ISource>.FromJson(string aJson)
+		{
+			return new JSource(JObject.Parse(aJson));
+		}
+
+		public string ToJson(ISource anObject)
+		{
+			return anObject.ToString();
+		}
+
+		ISource IDataMapper<ISource>.FromXml(MindTouch.Xml.XDoc aJson)
+		{
+			throw new NotImplementedException();
+		}
+
+		public MindTouch.Xml.XDoc ToXml(ISource anObject)
 		{
 			throw new NotImplementedException();
 		}

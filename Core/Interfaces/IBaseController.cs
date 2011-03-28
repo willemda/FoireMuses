@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MindTouch.Tasking;
+using MindTouch.Xml;
 
 namespace FoireMuses.Core.Interfaces
 {
@@ -10,6 +11,9 @@ namespace FoireMuses.Core.Interfaces
 	{
 		T FromJson(string aJson);
 		string ToJson(T aJson);
+
+		T FromXml(XDoc aXml);
+		XDoc ToXml(T anObject);
 
 
 		Result<T> Create(T aDoc, Result<T> aResult);

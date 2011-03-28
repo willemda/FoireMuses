@@ -34,8 +34,11 @@ namespace FoireMuses.Core.Interfaces
 	}
 	public interface IUserDataMapper : IDataMapper<IUser>
 	{
-		Result<IUser> RetrieveByUsername(string aUserName, Result<IUser> aResult);
 		Result<SearchResult<IUser>> SearchUserForText(int offset,int max, string textSearch, IUser aUser, Result<SearchResult<IUser>> aResult);
 		Result<SearchResult<IUser>> GetAllUsers(int offset, int max, Result<SearchResult<IUser>> aResult);
+	}
+
+	public interface ISourceDataMapper : IDataMapper<ISource>
+	{ 
 	}
 }

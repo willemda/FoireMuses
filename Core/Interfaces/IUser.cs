@@ -9,7 +9,8 @@ namespace FoireMuses.Core.Interfaces
 	public interface IUser
 	{
 		string Id { get; set; }
-		string Username { get; set; }
+		string Rev { get; set; }
+
 		string Password { get; set; }
 		string Email { get; set; }
 		IEnumerable<string> Groups { get; }

@@ -6,6 +6,7 @@ using LoveSeat;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Interfaces;
 using LoveSeat.Interfaces;
+using FoireMuses.Core.Loveseat.Business;
 
 namespace FoireMuses.Core.Business
 {
@@ -34,6 +35,59 @@ namespace FoireMuses.Core.Business
 			}
 		}
 
+		public string Name
+		{
+			get { return this["name"].Value<string>(); }
+			set { this["name"] = value; }
+		}
+
+		public string Publisher
+		{
+			get { return this["publisher"].Value<string>(); }
+			set { this["publisher"] = value; }
+		}
+
+		public string FreeZone
+		{
+			get { return this["free"].Value<string>(); }
+			set { this["free"] = value; }
+		}
+
+		public string Cote
+		{
+			get { return this["cote"].Value<string>(); }
+			set { this["cote"] = value; }
+		}
+
+		public string Abbreviation
+		{
+			get { return this["abbr"].Value<string>(); }
+			set { this["abbr"] = value; }
+		}
+
+		public bool ApproxDate
+		{
+			get { return this["approx"].Value<bool>(); }
+			set { this["approx"] = value; }
+		}
+
+		public bool IsMusicalSource
+		{
+			get { return this["musicalSource"].Value<bool>(); }
+			set { this["musicalSource"] = value; }
+		}
+
+		public int DateFrom
+		{
+			get { return this["dateFrom"].Value<int>(); }
+			set { this["dateFrom"] = value; }
+		}
+
+		public int DateTo
+		{
+			get { return this["dateTo"].Value<int>(); }
+			set { this["dateTo"] = value; }
+		}
 
 		public override void Created()
 		{

@@ -8,6 +8,5 @@ namespace FoireMuses.Core.Interfaces
 {
 	public interface IUserController : IBaseController<IUser>
 	{
-		Result<IUser> GetByUsername(string username, Result<IUser> aResult);
 	}
 }

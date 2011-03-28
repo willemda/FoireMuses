@@ -61,9 +61,11 @@
   <ItemGroup>
     <Compile Include="Business\Document.cs" />
     <Compile Include="Business\JGroup.cs" />
+    <Compile Include="Business\JMusicalSource.cs" />
     <Compile Include="Business\JPlay.cs" />
     <Compile Include="Business\JScore.cs" />
     <Compile Include="Business\JSource.cs" />
+    <Compile Include="Business\JTextualSource.cs" />
     <Compile Include="Business\JUser.cs" />
     <Compile Include="CouchViews.cs" />
     <Compile Include="LoveseatDataMapper.cs" />

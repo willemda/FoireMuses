@@ -6,7 +6,7 @@ using LoveSeat.Interfaces;
 using LoveSeat;
 using Newtonsoft.Json.Linq;
 
-namespace FoireMuses.Core.Business
+namespace FoireMuses.Core.Loveseat.Business
 {
 	public class Document : JDocument, IAuditableDocument
 	{

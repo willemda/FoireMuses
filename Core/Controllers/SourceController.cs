@@ -9,26 +9,51 @@ using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Controllers
 {
-	class SourceController : ISourceController
+	public class SourceController : ISourceController
 	{
+		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
+
+		private readonly ISourceDataMapper theSourceDataMapper;
+
+		public SourceController(ISourceDataMapper aController)
+		{
+			theSourceDataMapper = aController;
+		}
+
 		public Result<ISource> Create(ISource aDoc, Result<ISource> aResult)
 		{
-			throw new NotImplementedException();
+			theSourceDataMapper.Create(aDoc, new Result<ISource>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public Result<ISource> Update(string id,string rev,ISource aDoc, Result<ISource> aResult)
 		{
-			throw new NotImplementedException();
+			theSourceDataMapper.Update(id, rev, aDoc, new Result<ISource>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public Result<ISource> Retrieve(string id, Result<ISource> aResult)
 		{
-			throw new NotImplementedException();
+			theSourceDataMapper.Retrieve(id, new Result<ISource>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{
-			throw new NotImplementedException();
+			theSourceDataMapper.Delete(id, rev, new Result<bool>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public Result<SearchResult<ISource>> GetAll(int offset, int max, Result<SearchResult<ISource>> aResult)
@@ -38,12 +63,12 @@ namespace FoireMuses.Core.Controllers
 
 		public ISource FromJson(string aJson)
 		{
-			throw new NotImplementedException();
+			return theSourceDataMapper.FromJson(aJson);
 		}
 
 		public string ToJson(ISource aJson)
 		{
-			throw new NotImplementedException();
+			return theSourceDataMapper.ToJson(aJson);
 		}
 	}
 }

@@ -8,7 +8,7 @@ namespace FoireMuses.Core.Interfaces
 	public interface IScore
 	{
 		string Id { get; set; }
-		string Rev { get; }
+		string Rev { get; set;}
 
 		string Title{get;set;}
 		string Code1 { get; set; }
@@ -25,19 +25,9 @@ namespace FoireMuses.Core.Interfaces
 		string Stanza { get; set; }
 		string ScoreType { get; set; }
 
-		string SourceMusicaleId { get; set; }
-		int SourceMusicaleActNumber { get; set; }
-		string SourceMusicaleActId { get; set; }
-		int SourceMusicaleSceneNumber { get; set; }
-		string SourceMusicaleSceneId { get; set; }
-		string SourceMusicaleText { get; set; }
-		bool SourceMusicaleIsSuggested { get; set; }
+		IMusicalSource MusicalSource { get; set; }
 
-		string SourceTextuelleId { get; set; }
-		int SourceTextuelleAir { get; set; }
-		string SourceTextuellePage { get; set; }
-		int SourceTextuelleTome { get; set; }
-		int SourceTextuelleVolume { get; set; }
+		ITextualSource TextualSource { get; set; }
 
 		IEnumerable<string> Tags { get; }
 		void AddTag(string tag);
