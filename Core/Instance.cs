@@ -7,6 +7,7 @@ using FoireMuses.Core.Interfaces;
 using FoireMuses.Core.Controllers;
 using Autofac;
 using Autofac.Builder;
+using MindTouch.Dream;
 using MindTouch.Xml;
 
 namespace FoireMuses.Core
@@ -24,21 +25,19 @@ namespace FoireMuses.Core
 		{
 			ContainerBuilder builder = new ContainerBuilder();
 
+			var c = new XDocAutofacContainerConfigurator(anInstanceXmlConfig["components"], DreamContainerScope.Factory);
+			c.Configure(container);
+
 			if(!container.IsRegistered<ISettingsController>())
 			{
 				XmlSettingsController controller = new XmlSettingsController(anInstanceXmlConfig);
 				builder.Register<ISettingsController>(controller);
 			}
+
 			if (!container.IsRegistered<IScoreController>())
 			{
 				builder.Register<ScoreController>().As<IScoreController>();
 			}
-
-			//if (!container.IsRegistered<IStoreController>())
-			//{
-			//    //TODO: Specify default IStoreController
-			//    //builder.Register<CouchDBController>().As<IStoreController>();
-			//}
 
 			if (!container.IsRegistered<IUserController>())
 			{
