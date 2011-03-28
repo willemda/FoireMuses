@@ -72,7 +72,7 @@ namespace FoireMuses.Core.Controllers
 
 		private Yield UpdateHelper(IScore aDoc, Result<IScore> aResult)
 		{
-			yield return CheckAuthorization(aDoc, new Result());
+			CheckAuthorization(aDoc);
 			//if we reach there we have the update rights.
 			Result<IScore> scoreResult = new Result<IScore>();
 			yield return theScoreDataMapper.Update("","",aDoc, new Result<IScore>());
@@ -80,11 +80,10 @@ namespace FoireMuses.Core.Controllers
 			aResult.Return(scoreResult.Value);
 			yield break;
 		}
-		public Result CheckAuthorization(IScore aDoc, Result aResult)
+		public void CheckAuthorization(IScore aDoc)
 		{
 			if (Context.Current.User == null || (!IsCreator(aDoc) && !IsCollaborator(aDoc)))
 				throw new UnauthorizedAccessException();
-			return aResult;
 		}
 
 		private bool IsCreator(IScore aDoc)
