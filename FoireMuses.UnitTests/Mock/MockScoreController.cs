@@ -62,5 +62,16 @@ namespace FoireMuses.UnitTests.Mock
 		{
 			throw new NotImplementedException();
 		}
+
+
+		public IScore FromXml(MindTouch.Xml.XDoc aXml)
+		{
+			throw new NotImplementedException();
+		}
+
+		public MindTouch.Xml.XDoc ToXml(IScore anObject)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

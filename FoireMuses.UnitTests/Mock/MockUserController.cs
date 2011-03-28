@@ -62,5 +62,16 @@ namespace FoireMuses.UnitTests.Mock
 		{
 			return aJson.ToString();
 		}
+
+
+		public IUser FromXml(MindTouch.Xml.XDoc aXml)
+		{
+			throw new NotImplementedException();
+		}
+
+		public MindTouch.Xml.XDoc ToXml(IUser anObject)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

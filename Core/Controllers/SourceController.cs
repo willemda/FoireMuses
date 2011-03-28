@@ -70,5 +70,16 @@ namespace FoireMuses.Core.Controllers
 		{
 			return theSourceDataMapper.ToJson(aJson);
 		}
+
+
+		public ISource FromXml(MindTouch.Xml.XDoc aXml)
+		{
+			throw new NotImplementedException();
+		}
+
+		public MindTouch.Xml.XDoc ToXml(ISource anObject)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

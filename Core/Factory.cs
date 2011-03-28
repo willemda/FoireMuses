@@ -32,5 +32,17 @@ namespace FoireMuses.Core
 			info.Add("rows", scores);
 			return info.ToString();
 		}
+
+		public static string ResultToJson(SearchResult<ISource> result)
+		{
+			JObject info = new JObject { { "total_rows", result.TotalCount }, { "offset", result.Offset }, { "max", result.Max } };
+			JArray sources = new JArray();
+			foreach (ISource source in result)
+			{
+				sources.Add(source);
+			}
+			info.Add("rows", sources);
+			return info.ToString();
+		}
 	}
 }

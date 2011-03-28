@@ -44,5 +44,16 @@ namespace FoireMuses.Core.Controllers
 		{
 			throw new NotImplementedException();
 		}
+
+
+		public IPlay FromXml(MindTouch.Xml.XDoc aXml)
+		{
+			throw new NotImplementedException();
+		}
+
+		public MindTouch.Xml.XDoc ToXml(IPlay anObject)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
