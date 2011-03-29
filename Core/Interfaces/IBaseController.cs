@@ -20,6 +20,7 @@ namespace FoireMuses.Core.Interfaces
 		Result<T> Update(string id, string rev, T aDoc, Result<T> aResult);
 		Result<T> Retrieve(string id, Result<T> aResult);
 		Result<bool> Delete(string id, string rev, Result<bool> aResult);
+		Result<bool> Exists(string id, Result<bool> aResult);
 		Result<SearchResult<T>> GetAll(int offset, int max, Result<SearchResult<T>> aResult);
 	}
 }

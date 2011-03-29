@@ -1,23 +1,27 @@
 <script>
-	<!-- Address Book sample -->
-	<action verb="POST" path="/host/services">
-		<config>
-			<path>foiremuses</path>
-			<sid>http://foiremuses.org/service</sid>
-			<instances>
-				<instance webhost="test.foiremuses.org" databaseName="musicdatabasexml">
-					<components>
-						<component
+  <!-- Address Book sample -->
+  <action verb="POST" path="/host/services">
+    <config>
+      <path>foiremuses</path>
+      <sid>http://foiremuses.org/service</sid>
+      <instances>
+        <instance webhost="test.foiremuses.org" databaseName="musicdatabasexml">
+          <components>
+            <component
 							type="FoireMuses.Core.Interfaces.IScoreDataMapper, FoireMuses.Core"
 							implementation="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
 							name="ScoreDataMapper"/>
-						<component
+            <component
 							type="FoireMuses.Core.Interfaces.IUserDataMapper, FoireMuses.Core"
 							implementation="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
 							name="UserDataMapper"/>
-					</components>
-				</instance>
-			</instances>
-		</config>
-	</action>
+            <component
+							type="FoireMuses.Core.Interfaces.ISourceDataMapper, FoireMuses.Core"
+							implementation="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
+							name="SourceDataMapper"/>
+          </components>
+        </instance>
+      </instances>
+    </config>
+  </action>
 </script>

@@ -19,11 +19,13 @@ using TestFixtureTearDownAttribute = Microsoft.VisualStudio.TestTools.UnitTestin
 using FoireMuses.Core.Interfaces;
 using Newtonsoft.Json.Linq;
 #endif
+
 namespace FoireMuses.UnitTests.CoreTests
 {
 	[TestClass]
-	public class ScoreControllerTests
+	public class UserControllerTests
 	{
+
 		private static InstanceFactory theInstanceFactory;
 
 		[ClassInitialize]
@@ -39,7 +41,6 @@ namespace FoireMuses.UnitTests.CoreTests
 		public void Setup()
 		{
 			Context context = new Context(theInstanceFactory.GetDefaultInstance()); // TODO
-			context.User = context.Instance.UserController.Retrieve("danny",new Result<IUser>()).Wait();
 			context.AttachToCurrentTaskEnv();
 		}
 
@@ -47,44 +48,7 @@ namespace FoireMuses.UnitTests.CoreTests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void CreationWithNullMustThrowException()
 		{
-			Context.Current.Instance.ScoreController.Create(null, new Result<IScore>()).Wait();
+			Context.Current.Instance.UserController.Create(null, new Result<IUser>()).Wait();
 		}
-
-		[TestMethod]
-		public void CreationMustBeOk()
-		{
-			JObject o = new JObject();
-			o["title"] = "la belle qui dors";
-			o["editor"] = "arnaud";
-			IScore score = Context.Current.Instance.ScoreController.FromJson(o.ToString());
-			Result<IScore> result = new Result<IScore>();
-			Context.Current.Instance.ScoreController.Create(score, result).Wait();
-			Assert.IsTrue(result.HasValue);
-			Assert.AreEqual("la belle qui dors",score.Title);
-			Assert.AreEqual("arnaud",score.Editor);
-			Console.WriteLine(score.ToString());
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void UpdateWithNullMustThrowException()
-		{
-			Context.Current.Instance.ScoreController.Update(null,null,null, new Result<IScore>()).Wait();
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void GetByIdWithNullMustThrowException()
-		{
-			Context.Current.Instance.ScoreController.Retrieve(null, new Result<IScore>()).Wait();
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void DeleteWithNullMustThrowException()
-		{
-			Context.Current.Instance.ScoreController.Delete(null,null, new Result<bool>()).Wait();
-		}
-
 	}
 }

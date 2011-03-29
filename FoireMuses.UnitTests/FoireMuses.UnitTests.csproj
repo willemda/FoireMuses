@@ -66,11 +66,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoreTests\ScoreControllerTests.cs" />
+    <Compile Include="CoreTests\UserControllerTests.cs" />
     <Compile Include="Mock\MockScoreController.cs" />
     <Compile Include="Mock\MockUserController.cs" />
-    <Compile Include="WebServicesTests\ScoreServicesTest.cs" />
+    <Compile Include="WebServicesTests\ScoreServicesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebServicesTests\UserServicesTest.cs" />
+    <Compile Include="WebServicesTests\UserServicesTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\FoireMuses.Core.csproj">

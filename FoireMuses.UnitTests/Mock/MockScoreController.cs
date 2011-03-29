@@ -73,5 +73,11 @@ namespace FoireMuses.UnitTests.Mock
 		{
 			throw new NotImplementedException();
 		}
+
+
+		public Result<bool> Exists(string id, Result<bool> aResult)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

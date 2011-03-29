@@ -55,5 +55,11 @@ namespace FoireMuses.Core.Controllers
 		{
 			throw new NotImplementedException();
 		}
+
+
+		public Result<bool> Exists(string id, Result<bool> aResult)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -81,5 +81,21 @@ namespace FoireMuses.Core.Controllers
 		{
 			throw new NotImplementedException();
 		}
+
+
+		public Result<bool> Exists(string id, Result<bool> aResult)
+		{
+			this.Retrieve(id, new Result<ISource>()).WhenDone(
+				a =>
+				{
+					if (a != null)
+						aResult.Return(true);
+					else
+						aResult.Return(false);
+				},
+				aResult.Throw
+				);
+			return aResult;
+		}
 	}
 }
