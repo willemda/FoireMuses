@@ -104,5 +104,30 @@ namespace FoireMuses.Core.Loveseat.Business
 				this["pieceId"] = value;
 			}
 		}
+
+
+		public int? Tome
+		{
+			get
+			{
+				return this["tome"].Value<int?>();
+			}
+			set
+			{
+				this["tome"] = value;
+			}
+		}
+
+		public int? Volume
+		{
+			get
+			{
+				return this["volume"].Value<int?>();
+			}
+			set
+			{
+				this["volume"] = value;
+			}
+		}
 	}
 }

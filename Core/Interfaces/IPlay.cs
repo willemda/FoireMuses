@@ -5,7 +5,30 @@ using System.Text;
 
 namespace FoireMuses.Core.Interfaces
 {
-    public interface IPlay
-    {
-    }
+	public interface IPlay
+	{
+
+		string Id { get; set; }
+		string Rev { get; set; }
+
+		string Abstract { get; set; }
+		string ActionLocation { get; set; }
+		string Author { get; set; }
+		string ContemporaryComments { get; set; }
+		string CreationPlace { get; set; }
+		string CreationYear { get; set; }
+		string Critics { get; set; }
+		string Decors { get; set; }
+		string EntrepreneurName { get; set; }
+		string Genre { get; set; }
+		string Iconography { get; set; }
+		string MusicianName { get; set; }
+		string Resonances { get; set; }
+		string SourceFolio { get; set; }
+		string Title { get; set; }
+
+		string SourceId { get; set; }
+		int? SourceTome { get; set; }
+		int? SourceVolume { get; set; }
+	}
 }

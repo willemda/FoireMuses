@@ -18,5 +18,7 @@ namespace FoireMuses.Core.Utils
 		public const string VIEW_SCORES_FROM_PLAY = "fromplay";
 
 		public const string VIEW_USERS_BY_USERNAME = "byusername";
+
+		public const string VIEW_PLAYS_FROM_SOURCE = "fromsource";
 	}
 }

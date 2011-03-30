@@ -41,4 +41,9 @@ namespace FoireMuses.Core.Interfaces
 	public interface ISourceDataMapper : IDataMapper<ISource>
 	{ 
 	}
+
+	public interface IPlayDataMapper : IDataMapper<IPlay>
+	{
+		Result<SearchResult<IPlay>> GetPlaysFromSource(int offset, int max, string aSourceId, Result<SearchResult<IPlay>> aResult);
+	}
 }

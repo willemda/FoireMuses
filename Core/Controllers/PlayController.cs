@@ -8,26 +8,55 @@ using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Controllers
 {
-	class PlayController : IPlayController
+	public class PlayController : IPlayController
 	{
+
+		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
+
+		private readonly IPlayDataMapper thePlayDataMapper;
+
+		public PlayController(IPlayDataMapper aController)
+		{
+			thePlayDataMapper = aController;
+		}
 		public Result<IPlay> Create(IPlay aDoc, Result<IPlay> aResult)
 		{
-			throw new NotImplementedException();
+			if (Context.Current.User == null)
+				throw new UnauthorizedAccessException();
+			thePlayDataMapper.Create(aDoc, new Result<IPlay>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public Result<IPlay> Update(string id,string rev, IPlay aDoc, Result<IPlay> aResult)
 		{
-			throw new NotImplementedException();
+			if (Context.Current.User == null)
+				throw new UnauthorizedAccessException();
+			thePlayDataMapper.Update(id, rev, aDoc, new Result<IPlay>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public Result<IPlay> Retrieve(string id, Result<IPlay> aResult)
 		{
-			throw new NotImplementedException();
+			thePlayDataMapper.Retrieve(id, new Result<IPlay>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{
-			throw new NotImplementedException();
+			thePlayDataMapper.Delete(id, rev, new Result<bool>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public Result<SearchResult<IPlay>> GetAll(int offset, int max, Result<SearchResult<IPlay>> aResult)
@@ -37,12 +66,12 @@ namespace FoireMuses.Core.Controllers
 
 		public IPlay FromJson(string aJson)
 		{
-			throw new NotImplementedException();
+			return thePlayDataMapper.FromJson(aJson);
 		}
 
-		public string ToJson(IPlay aJson)
+		public string ToJson(IPlay anObject)
 		{
-			throw new NotImplementedException();
+			return thePlayDataMapper.ToJson(anObject);
 		}
 
 
@@ -59,7 +88,26 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<bool> Exists(string id, Result<bool> aResult)
 		{
-			throw new NotImplementedException();
+			this.Retrieve(id, new Result<IPlay>()).WhenDone(
+				a =>
+				{
+					if (a != null)
+						aResult.Return(true);
+					else
+						aResult.Return(false);
+				},
+				aResult.Throw
+				);
+			return aResult;
+		}
+
+		public Result<SearchResult<IPlay>> GetPlaysFromSource(int offset, int max, string sourceId, Result<SearchResult<IPlay>> aResult)
+		{
+			thePlayDataMapper.GetPlaysFromSource(offset, max, sourceId, new Result<SearchResult<IPlay>>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 	}
 }
