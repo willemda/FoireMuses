@@ -142,23 +142,26 @@ namespace FoireMuses.Core.Loveseat
 			throw new NotImplementedException();
 		}
 
-		public Result<SearchResult<IScore>> ScoresFromSource(int offset, int max, ISource aSource, Result<SearchResult<IScore>> aResult)
+		
+		public Result<SearchResult<IScore>> ScoresFromSource(int offset, int max, string aSourceId, Result<SearchResult<IScore>> aResult)
 		{
 			ViewOptions viewOptions = new ViewOptions();
 			viewOptions.Skip = offset;
-			viewOptions.Key.Add((aSource as JSource).Id);
-			if(max > 0)
+			viewOptions.StartKey.Add(new JRaw("[\""+aSourceId+"\"]"));
+			viewOptions.EndKey.Add(new JRaw("[\""+aSourceId+"\",{}]"));
+			viewOptions.InclusiveEnd = false;
+			if (max > 0)
 				viewOptions.Limit = max;
 
-			theCouchDatabase.GetView<string,string,JScore>(CouchViews.VIEW_SCORES,CouchViews.VIEW_SCORES_FROM_SOURCE,viewOptions, new Result<ViewResult<string,string,JScore>>()).WhenDone(
+			theCouchDatabase.GetView<string[], string, JScore>(CouchViews.VIEW_SCORES, CouchViews.VIEW_SCORES_FROM_SOURCE, viewOptions, new Result<ViewResult<string[], string, JScore>>()).WhenDone(
 				a =>
 				{
 					IList<IScore> results = new List<IScore>();
-					foreach (ViewResultRow<string,string,JScore> row in a.Rows)
+					foreach (ViewResultRow<string[], string, JScore> row in a.Rows)
 					{
 						results.Add(row.Doc);
 					}
-					aResult.Return(new SearchResult<IScore>(results,a.OffSet,max,a.TotalRows));
+					aResult.Return(new SearchResult<IScore>(results, a.OffSet, max, a.TotalRows));
 				},
 				aResult.Throw
 				);

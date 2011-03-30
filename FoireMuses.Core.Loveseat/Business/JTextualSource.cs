@@ -16,16 +16,6 @@ namespace FoireMuses.Core.Loveseat.Business
 		public JTextualSource(JObject jobject)
 			: base(jobject)
 		{
-			JToken type;
-			if (this.TryGetValue("otype", out type))
-			{
-				if (type.Value<string>() != "textualSource" || type.Value<string>() != "textualSourcePlay")
-					throw new ArgumentException();
-			}
-			else
-			{
-				throw new ArgumentException();
-			}
 		}
 
 		public string SourceId
@@ -35,7 +25,7 @@ namespace FoireMuses.Core.Loveseat.Business
 		}
 
 
-		public int AirNumber
+		public int? AirNumber
 		{
 			get
 			{
@@ -99,6 +89,19 @@ namespace FoireMuses.Core.Loveseat.Business
 			set
 			{
 				this["sceneNumber"] = value;
+			}
+		}
+
+
+		public string PieceId
+		{
+			get
+			{
+				return this["pieceId"].Value<string>();
+			}
+			set
+			{
+				this["pieceId"] = value;
 			}
 		}
 	}

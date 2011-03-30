@@ -26,11 +26,11 @@ namespace FoireMuses.Core.Loveseat.Business
 			set { this["id"] = value; }
 		}
 
-		public int AirNumber
+		public int? AirNumber
 		{
 			get
 			{
-				return this["air"].Value<int>();
+				return this["air"].Value<int?>();
 			}
 			set
 			{
@@ -50,11 +50,11 @@ namespace FoireMuses.Core.Loveseat.Business
 			}
 		}
 
-		public int Tome
+		public int? Tome
 		{
 			get
 			{
-				return this["tome"].Value<int>();
+				return this["tome"].Value<int?>();
 			}
 			set
 			{
@@ -62,11 +62,11 @@ namespace FoireMuses.Core.Loveseat.Business
 			}
 		}
 
-		public int Volume
+		public int? Volume
 		{
 			get
 			{
-				return this["volume"].Value<int>();
+				return this["volume"].Value<int?>();
 			}
 			set
 			{

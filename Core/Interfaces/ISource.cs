@@ -12,8 +12,8 @@ namespace FoireMuses.Core.Interfaces
 
 		string Name { get; set; }
 		string FreeZone { get; set; }
-		int DateFrom { get; set; }
-		int DateTo{ get; set; }
+		int? DateFrom { get; set; }
+		int? DateTo{ get; set; }
 		string Cote{ get; set; }
 		string Abbreviation { get; set; }
 		bool IsMusicalSource { get; set; }

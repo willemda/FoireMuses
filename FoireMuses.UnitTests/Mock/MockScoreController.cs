@@ -15,7 +15,7 @@ namespace FoireMuses.UnitTests.Mock
 		private IScore score = null;
 
 
-		public Result<Core.SearchResult<IScore>> GetScoresFromSource(int offset, int max, ISource aJSource, Result<Core.SearchResult<IScore>> aResult)
+		public Result<Core.SearchResult<IScore>> GetScoresFromSource(int offset, int max, string aJSource, Result<Core.SearchResult<IScore>> aResult)
 		{
 			throw new NotImplementedException();
 		}

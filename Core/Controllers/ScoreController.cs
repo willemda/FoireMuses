@@ -32,6 +32,7 @@ namespace FoireMuses.Core.Controllers
 {
 	using Yield = System.Collections.Generic.IEnumerator<MindTouch.Tasking.IYield>;
 	using MindTouch.Xml;
+	using MindTouch.Dream;
 
 	public class ScoreController : IScoreController
 	{
@@ -44,19 +45,31 @@ namespace FoireMuses.Core.Controllers
 			theScoreDataMapper = aController;
 		}
 
-		/*private Yield GetScoresFromSourceHelper(int offset, int max, ISource aJSource, Result<SearchResult<IScore> aResult){
-			
-		}*/
-
-		public Result<SearchResult<IScore>> GetScoresFromSource(int offset, int max, ISource aJSource, Result<SearchResult<IScore>> aResult)
+		private Yield GetScoresFromSourceHelper(int offset, int max, string aSourceId, Result<SearchResult<IScore>> aResult)
 		{
-			theScoreDataMapper.ScoresFromSource(offset, max, aJSource, new Result<SearchResult<IScore>>()).WhenDone(
+			Result<bool> resultExists = new Result<bool>();
+			yield return Context.Current.Instance.SourceController.Exists(aSourceId, resultExists);
+			if (resultExists.HasValue && resultExists.Value)
+			{
+				Result<SearchResult<IScore>> resultSearch = new Result<SearchResult<IScore>>();
+				yield return theScoreDataMapper.ScoresFromSource(offset, max, aSourceId, resultSearch);
+				if (resultSearch.HasValue)
+					aResult.Return(resultSearch.Value);
+			} else
+				aResult.Throw(new DreamNotFoundException("Source not found"));
+		}
+
+		public Result<SearchResult<IScore>> GetScoresFromSource(int offset, int max, string aSourceId, Result<SearchResult<IScore>> aResult)
+		{
+			ArgCheck.NotNull("aSourceId", aSourceId);
+			Coroutine.Invoke(GetScoresFromSourceHelper, offset, max, aSourceId, new Result<SearchResult<IScore>>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
 		}
 
+		
 		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
 		{
 			if (Context.Current.User == null)
@@ -198,5 +211,5 @@ namespace FoireMuses.Core.Controllers
 				);
 			return aResult;
 		}
-}
+	}
 }

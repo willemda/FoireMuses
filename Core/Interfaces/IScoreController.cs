@@ -8,6 +8,6 @@ namespace FoireMuses.Core.Interfaces
 {
 	public interface IScoreController : IBaseController<IScore>
 	{
-		Result<SearchResult<IScore>> GetScoresFromSource(int offset, int max,ISource aJSource, Result<SearchResult<IScore>> aResult);
+		Result<SearchResult<IScore>> GetScoresFromSource(int offset, int max,string aSourceId, Result<SearchResult<IScore>> aResult);
 	}
 }

@@ -260,33 +260,33 @@ namespace FoireMuses.Import
 				IPlay play = ControllerFactory.Instance.ScoreController.GetSourceAssociee(score);
 				if (play != null)
 				{
-					JObject musicalSource = new JObject();
-					AddProperty(musicalSource,play.Id,"id");
-					AddProperty(musicalSource,score.SourceAssocieeAct,"act");
-					AddProperty(musicalSource,score.SourceAssocieeActId,"actId");
-					AddProperty(musicalSource,score.SourceAssocieeAir,"air");
-					AddProperty(musicalSource,score.SourceAssocieePage,"page");
-					AddProperty(musicalSource,score.SourceAssocieeScene,"scene");
-					AddProperty(musicalSource,score.SourceAssocieeSceneId,"sceneId");
-					AddProperty(musicalSource,score.SourceAssocieeText,"text");
-					AddProperty(musicalSource,score.SuggestedMusicalSource,"isSuggested");
+					JObject textualSource = new JObject();
+					AddProperty(textualSource, play.Id, "id");
+					AddProperty(textualSource, score.SourceAssocieeAct, "act");
+					AddProperty(textualSource, score.SourceAssocieeActId, "actId");
+					AddProperty(textualSource, score.SourceAssocieeAir, "air");
+					AddProperty(textualSource, score.SourceAssocieePage, "page");
+					AddProperty(textualSource, score.SourceAssocieeScene, "scene");
+					AddProperty(textualSource, score.SourceAssocieeSceneId, "sceneId");
+					AddProperty(textualSource, score.SourceAssocieeText, "text");
+					AddProperty(textualSource, score.SuggestedMusicalSource, "isSuggested");
 
-					doc["musicalSource"] = musicalSource;
+					doc["textualSource"] = textualSource;
 				}
 
 				ISource source = ControllerFactory.Instance.ScoreController.GetSource(score);
 				if (source != null)
 				{
-					JObject textualSource = new JObject();
-					AddProperty(textualSource,source.Id,"id");
-					AddProperty(textualSource,score.SourceAir,"air");
-					AddProperty(textualSource,score.SourcePage,"page");
-					AddProperty(textualSource,score.SourceTome,"tome");
-					AddProperty(textualSource,score.SourceVolume,"volume");
+					JObject musicalSource = new JObject();
+					AddProperty(musicalSource, source.Id, "id");
+					AddProperty(musicalSource, score.SourceAir, "air");
+					AddProperty(musicalSource, score.SourcePage, "page");
+					AddProperty(musicalSource, score.SourceTome, "tome");
+					AddProperty(musicalSource, score.SourceVolume, "volume");
 					if(score.TextualSourcePageId != Guid.Empty)
-						AddProperty(textualSource,score.TextualSourcePageId.ToString("N"),"PageId");
+						AddProperty(musicalSource, score.TextualSourcePageId.ToString("N"), "PageId");
 
-					doc["textualSource"] = textualSource;
+					doc["musicalSource"] = musicalSource;
 				}
 
 				List<string> tags = new List<string>();

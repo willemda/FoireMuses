@@ -77,13 +77,13 @@ namespace FoireMuses.Core.Business
 			set { this["musicalSource"] = value; }
 		}
 
-		public int DateFrom
+		public int? DateFrom
 		{
 			get { return this["dateFrom"].Value<int>(); }
 			set { this["dateFrom"] = value; }
 		}
 
-		public int DateTo
+		public int? DateTo
 		{
 			get { return this["dateTo"].Value<int>(); }
 			set { this["dateTo"] = value; }

@@ -40,10 +40,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\externals\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="LoveSeat, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\externals\LoveSeat.dll</HintPath>
-    </Reference>
     <Reference Include="mindtouch.dream">
       <HintPath>..\externals\mindtouch.dream.dll</HintPath>
       <Private>False</Private>
