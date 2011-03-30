@@ -19,6 +19,10 @@
 							type="FoireMuses.Core.Interfaces.ISourceDataMapper, FoireMuses.Core"
 							implementation="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
 							name="SourceDataMapper"/>
+            <component
+							type="FoireMuses.Core.Interfaces.IPlayDataMapper, FoireMuses.Core"
+							implementation="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
+							name="PlayDataMapper"/>
           </components>
         </instance>
       </instances>

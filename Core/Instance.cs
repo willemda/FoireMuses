@@ -25,6 +25,7 @@ namespace FoireMuses.Core
 		public IScoreController ScoreController { get; private set; }
 		public ISourceController SourceController { get; private set; }
 		public IUserController UserController { get; private set; }
+        public IPlayController PlayController { get; private set; }
 
 		public Instance(IContainer container, XDoc anInstanceXmlConfig)
 		{
@@ -54,11 +55,17 @@ namespace FoireMuses.Core
 				builder.Register<SourceController>().As<ISourceController>();
 			}
 
+            if (!container.IsRegistered<IPlayController>())
+            {
+                builder.Register<PlayController>().As<IPlayController>();
+            }
+
 			builder.Build(container);
 
 			ScoreController = container.Resolve<IScoreController>();
 			UserController = container.Resolve<IUserController>();
 			SourceController = container.Resolve<ISourceController>();
+            PlayController = container.Resolve<IPlayController>();
 		}
 	}
 }

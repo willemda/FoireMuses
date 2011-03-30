@@ -8,6 +8,9 @@ using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Controllers
 {
+    using Yield = System.Collections.Generic.IEnumerator<MindTouch.Tasking.IYield>;
+    using MindTouch.Dream;
+
 	public class PlayController : IPlayController
 	{
 
@@ -19,27 +22,87 @@ namespace FoireMuses.Core.Controllers
 		{
 			thePlayDataMapper = aController;
 		}
+
+
+        private Yield CreateHelper(IPlay aDoc, Result<IPlay> aResult)
+        {
+            Result<bool> resultExists = new Result<bool>();
+            yield return Context.Current.Instance.SourceController.Exists(aDoc.SourceId, resultExists);
+            if (resultExists.HasValue && resultExists.Value)
+            {
+                Result<IPlay> resultCreate = new Result<IPlay>();
+                yield return thePlayDataMapper.Create(aDoc, resultCreate);
+                aResult.Return(resultCreate.Value);
+            }
+            else
+                aResult.Throw(new DreamNotFoundException("Source not found"));
+        }
 		public Result<IPlay> Create(IPlay aDoc, Result<IPlay> aResult)
 		{
 			if (Context.Current.User == null)
 				throw new UnauthorizedAccessException();
-			thePlayDataMapper.Create(aDoc, new Result<IPlay>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
-			return aResult;
+
+            Coroutine.Invoke(CreateHelper, aDoc, new Result<IPlay>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
 		}
 
-		public Result<IPlay> Update(string id,string rev, IPlay aDoc, Result<IPlay> aResult)
-		{
-			if (Context.Current.User == null)
-				throw new UnauthorizedAccessException();
-			thePlayDataMapper.Update(id, rev, aDoc, new Result<IPlay>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
-			return aResult;
-		}
+        private Yield UpdateHelper(string id, string rev, IPlay aDoc, Result<IPlay> aResult)
+        {
+            Result<IPlay> validPlayResult = new Result<IPlay>();
+            yield return thePlayDataMapper.Retrieve(aDoc.Id, validPlayResult);
+            if (validPlayResult.Value == null)
+                aResult.Throw(new DreamNotFoundException("Play not found"));
+            CheckAuthorization(validPlayResult.Value);
+            //if we reach there we have the update rights.
+
+            //check if source exist
+            Result<bool> resultExists = new Result<bool>();
+			yield return Context.Current.Instance.SourceController.Exists(aDoc.SourceId, resultExists);
+            if (resultExists.HasValue && resultExists.Value)
+            {
+                Result<IPlay> playResult = new Result<IPlay>();
+                yield return thePlayDataMapper.Update(id, rev, aDoc, new Result<IPlay>());
+                //finally return the IScore updated
+                aResult.Return(playResult.Value);
+                yield break;
+            }else
+                aResult.Throw(new DreamNotFoundException("Source not found"));
+        }
+
+        public void CheckAuthorization(IPlay aDoc)
+        {
+            if (Context.Current.User == null || (!IsCreator(aDoc) && !IsCollaborator(aDoc)))
+                throw new UnauthorizedAccessException();
+        }
+
+        private bool IsCreator(IPlay aDoc)
+        {
+            return aDoc.CreatorId == Context.Current.User.Id;
+        }
+
+        private bool IsCollaborator(IPlay aDoc)
+        {
+            IUser current = Context.Current.User;
+
+            foreach (string collab in aDoc.CollaboratorsId)
+            {
+                if (current.Groups.Contains(collab) || collab == current.Id)
+                    return true;
+            }
+            return false;
+        }
+
+        public Result<IPlay> Update(string id, string rev, IPlay aDoc, Result<IPlay> aResult)
+        {
+            Coroutine.Invoke(UpdateHelper, id, rev, aDoc, new Result<IPlay>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
+        }
 
 		public Result<IPlay> Retrieve(string id, Result<IPlay> aResult)
 		{

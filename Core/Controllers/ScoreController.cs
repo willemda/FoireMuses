@@ -70,62 +70,82 @@ namespace FoireMuses.Core.Controllers
 		}
 
 
-		public Yield CreateHelper(IScore aDoc, Result<IScore> aResult)
+        private Yield CheckSources(IScore aScore, Result aResult)
+        {
+            if (aScore.TextualSource == null && aScore.MusicalSource == null)
+                aResult.Throw(new ArgumentException());
+            if (aScore.TextualSource != null)
+            {
+                if (aScore.TextualSource.SourceId == null)
+                {
+                    aResult.Throw(new ArgumentException());
+                    yield break;
+                }
+                Result<bool> validSourceResult = new Result<bool>();
+                yield return Context.Current.Instance.SourceController.Exists(aScore.TextualSource.SourceId, validSourceResult);
+                if (!validSourceResult.Value)
+                {
+                    aResult.Throw(new DreamNotFoundException("Textual source not found"));
+                    yield break;
+                }
+                else
+                {
+                    if (aScore.TextualSource.PieceId != null)
+                    {
+                        Result<bool> validPlayResult = new Result<bool>();
+                        yield return Context.Current.Instance.PlayController.Exists(aScore.TextualSource.PieceId, validPlayResult);
+                        if (!validPlayResult.Value)
+                        {
+                            aResult.Throw(new DreamNotFoundException("Play not found"));
+                            yield break;
+                        }
+                    }
+                }
+            }
+
+            if (aScore.MusicalSource != null)
+            {
+                if (aScore.MusicalSource.SourceId == null)
+                {
+                    aResult.Throw(new ArgumentException());
+                    yield break;
+                }
+                Result<bool> validSourceResult = new Result<bool>();
+                yield return Context.Current.Instance.SourceController.Exists(aScore.MusicalSource.SourceId, validSourceResult);
+                if (!validSourceResult.Value)
+                {
+                    aResult.Throw(new DreamNotFoundException("Musical source not found"));
+                    yield break;
+                }
+            }
+            aResult.Return();
+        }
+
+
+		private Yield CreateHelper(IScore aScore, Result<IScore> aResult)
 		{
-			Result<bool> resultCheckSource = new Result<bool>();
-			CheckSources(aDoc, resultCheckSource);
+            Result validSource = new Result();
+            CheckSources(aScore, validSource);
+            if (validSource.HasException)
+            {
+                aResult.Throw(validSource.Exception);
+                yield break;
+            }
 			Result<IScore> resultCreate = new Result<IScore>();
-			yield return theScoreDataMapper.Create(aDoc, resultCreate);
+			yield return theScoreDataMapper.Create(aScore, resultCreate);
 		}
 
-		private Yield CheckSources(IScore aScore, Result<bool> aResult)
-		{
-			if (aScore.TextualSource != null)
-			{
-				if (aScore.TextualSource.SourceId == null)
-				{
-					aResult.Throw(new ArgumentException());
-					yield break;
-				}
-				Result<bool> validSourceResult = new Result<bool>();
-				yield return Context.Current.Instance.SourceController.Exists(aScore.TextualSource.SourceId, validSourceResult);
-				if (!validSourceResult.Value)
-				{
-					aResult.Throw(new ArgumentException());
-					yield break;
-				}
-			}
-
-			if (aScore.MusicalSource != null)
-			{
-				if (aScore.MusicalSource.SourceId == null)
-				{
-					aResult.Throw(new ArgumentException());
-					yield break;
-				}
-				Result<bool> validSourceResult = new Result<bool>();
-				yield return Context.Current.Instance.SourceController.Exists(aScore.MusicalSource.SourceId, validSourceResult);
-				if (!validSourceResult.Value)
-				{
-					aResult.Throw(new ArgumentException());
-					yield break;
-				}
-			}
-			aResult.Return(true);
-		}
 
 		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
 		{
 			if (Context.Current.User == null)
 				throw new UnauthorizedAccessException();
-			if (aDoc.TextualSource == null && aDoc.MusicalSource == null)
-				throw new ArgumentException();
 
-			theScoreDataMapper.Create(aDoc, new Result<IScore>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
-			return aResult;
+            Coroutine.Invoke(CreateHelper, aDoc, new Result<IScore>()).WhenDone(
+                aResult.Return,
+                aResult.Throw
+                );
+            return aResult;
 		}
 
 		public Result<IScore> Retrieve(string id, Result<IScore> aResult)
@@ -147,7 +167,13 @@ namespace FoireMuses.Core.Controllers
 			//if we reach there we have the update rights.
 
 			//check if source textuelle relationship exist
-
+            Result validSource = new Result();
+            CheckSources(aDoc, validSource);
+            if (validSource.HasException)
+            {
+                aResult.Throw(validSource.Exception);
+                yield break;
+            }
 			
 
 			Result<IScore> scoreResult = new Result<IScore>();
@@ -156,6 +182,7 @@ namespace FoireMuses.Core.Controllers
 			aResult.Return(scoreResult.Value);
 			yield break;
 		}
+
 		public void CheckAuthorization(IScore aDoc)
 		{
 			if (Context.Current.User == null || (!IsCreator(aDoc) && !IsCollaborator(aDoc)))
