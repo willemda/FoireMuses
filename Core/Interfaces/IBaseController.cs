@@ -10,7 +10,8 @@ namespace FoireMuses.Core.Interfaces
 	public interface IBaseController<T>
 	{
 		T FromJson(string aJson);
-		string ToJson(T aJson);
+		string ToJson(T anObject);
+		string ToJson(SearchResult<T> aSearchResult);
 
 		T FromXml(XDoc aXml);
 		XDoc ToXml(T anObject);

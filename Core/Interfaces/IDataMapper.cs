@@ -21,6 +21,9 @@ namespace FoireMuses.Core.Interfaces
 
 		T FromXml(XDoc aJson);
 		XDoc ToXml(T anObject);
+
+		string ToJson(SearchResult<T> aSearchResult);
+		string ToXml(SearchResult<T> aSearchResult);
 	}
 
 	/// <summary>

@@ -9,19 +9,19 @@
           <components>
             <component
 							type="FoireMuses.Core.Interfaces.IScoreDataMapper, FoireMuses.Core"
-							implementation="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
+							implementation="FoireMuses.Core.Loveseat.LoveseatScoreDataMapper, FoireMuses.Core.Loveseat"
 							name="ScoreDataMapper"/>
             <component
 							type="FoireMuses.Core.Interfaces.IUserDataMapper, FoireMuses.Core"
-							implementation="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
+							implementation="FoireMuses.Core.Loveseat.LoveseatUserDataMapper, FoireMuses.Core.Loveseat"
 							name="UserDataMapper"/>
             <component
 							type="FoireMuses.Core.Interfaces.ISourceDataMapper, FoireMuses.Core"
-							implementation="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
+							implementation="FoireMuses.Core.Loveseat.LoveseatSourceDataMapper, FoireMuses.Core.Loveseat"
 							name="SourceDataMapper"/>
             <component
 							type="FoireMuses.Core.Interfaces.IPlayDataMapper, FoireMuses.Core"
-							implementation="FoireMuses.Core.Loveseat.LoveseatDataMapper, FoireMuses.Core.Loveseat"
+							implementation="FoireMuses.Core.Loveseat.LoveseatPlayDataMapper, FoireMuses.Core.Loveseat"
 							name="PlayDataMapper"/>
           </components>
         </instance>

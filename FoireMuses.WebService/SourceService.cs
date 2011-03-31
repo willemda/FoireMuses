@@ -25,7 +25,7 @@ namespace FoireMuses.WebService
 
 			yield return Context.Current.Instance.SourceController.GetAll(offset, limit, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourceController.ToJson(result.Value)));
 		}
 
 		[DreamFeature("GET:sources/{id}", "Get the source given by the id number")]

@@ -22,7 +22,7 @@ namespace FoireMuses.WebService
 
 			yield return Context.Current.Instance.ScoreController.GetAll(offset,limit, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
 		[DreamFeature("GET:scores/source/{id}", "Get all scores from this source")]
@@ -37,7 +37,7 @@ namespace FoireMuses.WebService
 
 			yield return Context.Current.Instance.ScoreController.GetScoresFromSource(offset, limit, id, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, Factory.ResultToJson(result.Value)));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
 		[DreamFeature("GET:scores/{id}", "Get the score given by the id number")]

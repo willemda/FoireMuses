@@ -79,5 +79,11 @@ namespace FoireMuses.UnitTests.Mock
 		{
 			throw new NotImplementedException();
 		}
+
+
+		public string ToJson(SearchResult<IUser> aSearchResult)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

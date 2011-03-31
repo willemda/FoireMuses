@@ -69,7 +69,6 @@
     <Compile Include="Exceptions\EmptyFieldException.cs" />
     <Compile Include="Exceptions\InternalError.cs" />
     <Compile Include="Exceptions\NoRightException.cs" />
-    <Compile Include="Factory.cs" />
     <Compile Include="Instance.cs" />
     <Compile Include="InstanceFactory.cs" />
     <Compile Include="Interfaces\IBaseController.cs" />

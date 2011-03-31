@@ -70,6 +70,11 @@ namespace FoireMuses.Core.Controllers
 			aResult.Return(sourceResult.Value);
 		}
 
+		public string ToJson(SearchResult<ISource> aSearchResult)
+		{
+			return theSourceDataMapper.ToJson(aSearchResult);
+		}
+
 		public bool HasAuthorization(ISource aDoc)
 		{
 			//Check if user isn't set, or if he isn't creator or collaborator.

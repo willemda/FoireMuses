@@ -68,8 +68,12 @@
     <Compile Include="Business\JSource.cs" />
     <Compile Include="Business\JTextualSource.cs" />
     <Compile Include="Business\JUser.cs" />
+    <Compile Include="Convert.cs" />
     <Compile Include="CouchViews.cs" />
-    <Compile Include="LoveseatDataMapper.cs" />
+    <Compile Include="LoveseatScoreDataMapper.cs" />
+    <Compile Include="LoveseatPlayDataMapper.cs" />
+    <Compile Include="LoveseatSourceDataMapper.cs" />
+    <Compile Include="LoveseatUserDataMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

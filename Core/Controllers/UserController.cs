@@ -18,6 +18,11 @@ namespace FoireMuses.Core.Controllers
 			theUserDataMapper = aController;
 		}
 
+		public string ToJson(SearchResult<IUser> aSearchResult)
+		{
+			return theUserDataMapper.ToJson(aSearchResult);
+		}
+
 		public Result<SearchResult<IUser>> GetAll(int offset, int max, Result<SearchResult<IUser>> aResult)
 		{
 			theUserDataMapper.GetAll(offset, max, new Result<SearchResult<IUser>>()).WhenDone(
