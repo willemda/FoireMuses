@@ -47,14 +47,15 @@ namespace FoireMuses.Core.Controllers
 
 		private Yield GetScoresFromSourceHelper(int offset, int max, string aSourceId, Result<SearchResult<IScore>> aResult)
 		{
+			//Check if the source exists
 			Result<bool> resultExists = new Result<bool>();
 			yield return Context.Current.Instance.SourceController.Exists(aSourceId, resultExists);
-			if (resultExists.HasValue && resultExists.Value)
+			if (resultExists.Value)
 			{
+				//Get the scores that have this source id as textual or musical source.
 				Result<SearchResult<IScore>> resultSearch = new Result<SearchResult<IScore>>();
 				yield return theScoreDataMapper.ScoresFromSource(offset, max, aSourceId, resultSearch);
-				if (resultSearch.HasValue)
-					aResult.Return(resultSearch.Value);
+				aResult.Return(resultSearch.Value);
 			} else
 				aResult.Throw(new DreamNotFoundException("Source not found"));
 		}
@@ -72,14 +73,32 @@ namespace FoireMuses.Core.Controllers
 
 		public Yield CreateHelper(IScore aDoc, Result<IScore> aResult)
 		{
-			Result<bool> resultCheckSource = new Result<bool>();
-			CheckSources(aDoc, resultCheckSource);
+			//Check if user is set as we need to know the creator.
+			if (Context.Current.User == null)
+			{
+				aResult.Throw(new UnauthorizedAccessException());
+				yield break;
+			}
+
+			//Check that the sources aren't null and does exists
+			yield return Coroutine.Invoke(CheckSources,aDoc, new Result());
+
+			//Create a the score and return
 			Result<IScore> resultCreate = new Result<IScore>();
 			yield return theScoreDataMapper.Create(aDoc, resultCreate);
+			aResult.Return(resultCreate.Value);
 		}
 
-		private Yield CheckSources(IScore aScore, Result<bool> aResult)
+		private Yield CheckSources(IScore aScore, Result aResult)
 		{
+			//both can't be null, it must have at least one source
+			if (aScore.TextualSource == null && aScore.MusicalSource == null)
+			{
+				aResult.Throw(new ArgumentException());
+				yield break;
+			}
+
+			// if this source exists
 			if (aScore.TextualSource != null)
 			{
 				if (aScore.TextualSource.SourceId == null)
@@ -95,7 +114,7 @@ namespace FoireMuses.Core.Controllers
 					yield break;
 				}
 			}
-
+			//if this source exists
 			if (aScore.MusicalSource != null)
 			{
 				if (aScore.MusicalSource.SourceId == null)
@@ -111,17 +130,12 @@ namespace FoireMuses.Core.Controllers
 					yield break;
 				}
 			}
-			aResult.Return(true);
+			aResult.Return();
 		}
 
 		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
 		{
-			if (Context.Current.User == null)
-				throw new UnauthorizedAccessException();
-			if (aDoc.TextualSource == null && aDoc.MusicalSource == null)
-				throw new ArgumentException();
-
-			theScoreDataMapper.Create(aDoc, new Result<IScore>()).WhenDone(
+			Coroutine.Invoke(CreateHelper, aDoc, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -139,27 +153,37 @@ namespace FoireMuses.Core.Controllers
 
 		private Yield UpdateHelper(string id, string rev, IScore aDoc, Result<IScore> aResult)
 		{
+			//Check if a score with this id exists.
 			Result<IScore> validScoreResult = new Result<IScore>();
 			yield return theScoreDataMapper.Retrieve(aDoc.Id, validScoreResult);
 			if (validScoreResult.Value == null)
+			{
 				aResult.Throw(new ArgumentException());
-			CheckAuthorization(validScoreResult.Value);
-			//if we reach there we have the update rights.
+				yield break;
+			}
 
-			//check if source textuelle relationship exist
-
+			//Check if the current user has the update rights.
+			if (!HasAuthorization(validScoreResult.Value))
+			{
+				aResult.Throw(new UnauthorizedAccessException());
+				yield break;
+			}
 			
+			//Check if the sources in the score exists and are not null.
+			Coroutine.Invoke(CheckSources, aDoc, new Result());
 
+			//Update and return the updated score.
 			Result<IScore> scoreResult = new Result<IScore>();
 			yield return theScoreDataMapper.Update(id,rev,aDoc, new Result<IScore>());
-			//finally return the IScore updated
 			aResult.Return(scoreResult.Value);
-			yield break;
 		}
-		public void CheckAuthorization(IScore aDoc)
+
+		public bool HasAuthorization(IScore aDoc)
 		{
+			//Check if user isn't set, or if he isn't creator or collaborator.
 			if (Context.Current.User == null || (!IsCreator(aDoc) && !IsCollaborator(aDoc)))
-				throw new UnauthorizedAccessException();
+				return false;
+			return true;
 		}
 
 		private bool IsCreator(IScore aDoc)

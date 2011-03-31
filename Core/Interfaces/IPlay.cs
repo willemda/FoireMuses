@@ -30,5 +30,16 @@ namespace FoireMuses.Core.Interfaces
 		string SourceId { get; set; }
 		int? SourceTome { get; set; }
 		int? SourceVolume { get; set; }
+
+		IEnumerable<string> Tags { get; }
+		void AddTag(string tag);
+		void RemoveTag(string tag);
+
+		string CreatorId { get; }
+		string LastModifierId { get; }
+
+		IEnumerable<string> CollaboratorsId { get; }
+		void AddCollaborator(string collab);
+		void RemoveCollaborator(string collab);
 	}
 }
