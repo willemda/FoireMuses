@@ -170,57 +170,5 @@ namespace FoireMuses.Core.Business
 		{
 			base.Updating();
 		}
-
-		public IEnumerable<string> Tags
-		{
-			get { return this["tags"].Values<string>(); }
-		}
-
-		public void AddTag(string tag)
-		{
-			if (!Tags.Contains(tag))
-			{
-				JArray temp = this["tags"].Value<JArray>();
-				temp.Add(tag);
-				this["tags"] = temp;
-			}
-		}
-
-		public void RemoveTag(string tag)
-		{
-			this["tags"] = this["tags"].Value<JArray>().Remove(tag);
-		}
-
-		public string CreatorId
-		{
-			get { return this["creatorId"].Value<string>(); }
-			private set { this["creatorId"] = value; }
-		}
-
-		public string LastModifierId
-		{
-			get { return this["lastModifierId"].Value<string>(); }
-			private set { this["lastModifierId"] = value; }
-		}
-
-		public IEnumerable<string> CollaboratorsId
-		{
-			get { return this["collaboratorsId"].Values<string>(); }
-		}
-
-		public void AddCollaborator(string collab)
-		{
-			if (!Tags.Contains(collab))
-			{
-				JArray temp = this["collaboratorsId"].Value<JArray>();
-				temp.Add(collab);
-				this["collaboratorsId"] = temp;
-			}
-		}
-
-		public void RemoveCollaborator(string collab)
-		{
-			this["collaboratorsId"] = this["collaboratorsId"].Value<JArray>().Remove(collab);
-		}
 	}
 }

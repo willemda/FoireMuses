@@ -14,6 +14,7 @@ namespace FoireMuses.Core.Interfaces
 		Result<T> Retrieve(string aDocumentId, Result<T> aResult);
 		Result<T> Update(string aDocumentId,string aRev,T aDocument, Result<T> aResult);
 		Result<bool> Delete(string aDocumentId, string aRev, Result<bool> aResult);
+		Result<SearchResult<T>> GetAll(int offset, int max, Result<SearchResult<T>> aResult);
 
 		T FromJson(string aJson);
 		string ToJson(T anObject);
@@ -30,12 +31,10 @@ namespace FoireMuses.Core.Interfaces
 		Result<SearchResult<IScore>> SearchScoreForText(int offset, int max, string textSearch, IScore aScore, Result<SearchResult<IScore>> aResult);
 		Result<SearchResult<IScore>> SearchScoreForCode(int offset, int max, string code, IScore aScore, Result<SearchResult<IScore>> aResult);
 		Result<SearchResult<IScore>> ScoresFromSource(int offset, int max, string aSourceId, Result<SearchResult<IScore>> aResult);
-		Result<SearchResult<IScore>> GetAllScores(int offset, int max, Result<SearchResult<IScore>> aResult);
 	}
 	public interface IUserDataMapper : IDataMapper<IUser>
 	{
 		Result<SearchResult<IUser>> SearchUserForText(int offset,int max, string textSearch, IUser aUser, Result<SearchResult<IUser>> aResult);
-		Result<SearchResult<IUser>> GetAllUsers(int offset, int max, Result<SearchResult<IUser>> aResult);
 	}
 
 	public interface ISourceDataMapper : IDataMapper<ISource>

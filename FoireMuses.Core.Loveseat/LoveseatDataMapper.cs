@@ -168,7 +168,7 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public Result<SearchResult<IScore>> GetAllScores(int offset, int max, Result<SearchResult<IScore>> aResult)
+		public Result<SearchResult<IScore>> GetAll(int offset, int max, Result<SearchResult<IScore>> aResult)
 		{
 			ViewOptions viewOptions = new ViewOptions();
 			viewOptions.Skip = offset;
@@ -191,7 +191,7 @@ namespace FoireMuses.Core.Loveseat
 		}
 
 
-		public Result<SearchResult<IUser>> GetAllUsers(int offset, int max, Result<SearchResult<IUser>> aResult)
+		public Result<SearchResult<IUser>> GetAll(int offset, int max, Result<SearchResult<IUser>> aResult)
 		{
 			ViewOptions viewOptions = new ViewOptions();
 			viewOptions.Skip = offset;
@@ -347,6 +347,50 @@ namespace FoireMuses.Core.Loveseat
 		public MindTouch.Xml.XDoc ToXml(IPlay anObject)
 		{
 			throw new NotImplementedException();
+		}
+
+		public Result<SearchResult<ISource>> GetAll(int offset, int max, Result<SearchResult<ISource>> aResult)
+		{
+			ViewOptions viewOptions = new ViewOptions();
+			viewOptions.Skip = offset;
+			if (max > 0)
+				viewOptions.Limit = max;
+
+			theCouchDatabase.GetView<string, string, JSource>(CouchViews.VIEW_SOURCES, CouchViews.VIEW_ALL, viewOptions, new Result<ViewResult<string, string, JSource>>()).WhenDone(
+				a =>
+				{
+					IList<ISource> list = new List<ISource>();
+					foreach (ViewResultRow<string, string, JSource> row in a.Rows)
+					{
+						list.Add(row.Doc);
+					}
+					aResult.Return(new SearchResult<ISource>(list, a.OffSet, max, a.TotalRows));
+				},
+				aResult.Throw
+				);
+			return aResult;
+		}
+
+		public Result<SearchResult<IPlay>> GetAll(int offset, int max, Result<SearchResult<IPlay>> aResult)
+		{
+			ViewOptions viewOptions = new ViewOptions();
+			viewOptions.Skip = offset;
+			if (max > 0)
+				viewOptions.Limit = max;
+
+			theCouchDatabase.GetView<string, string, JPlay>(CouchViews.VIEW_PLAYS, CouchViews.VIEW_ALL, viewOptions, new Result<ViewResult<string, string, JPlay>>()).WhenDone(
+				a =>
+				{
+					IList<IPlay> list = new List<IPlay>();
+					foreach (ViewResultRow<string, string, JPlay> row in a.Rows)
+					{
+						list.Add(row.Doc);
+					}
+					aResult.Return(new SearchResult<IPlay>(list, a.OffSet, max, a.TotalRows));
+				},
+				aResult.Throw
+				);
+			return aResult;
 		}
 	}
 }

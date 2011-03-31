@@ -20,7 +20,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<SearchResult<IUser>> GetAll(int offset, int max, Result<SearchResult<IUser>> aResult)
 		{
-			theUserDataMapper.GetAllUsers(offset, max, new Result<SearchResult<IUser>>()).WhenDone(
+			theUserDataMapper.GetAll(offset, max, new Result<SearchResult<IUser>>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
