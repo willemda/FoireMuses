@@ -14,55 +14,20 @@ namespace FoireMuses.UnitTests.Mock
 	{
 		public IUser user = null;
 
-		public Result<IUser> GetByUsername(string username, Result<IUser> aResult)
-		{
-			aResult.Return(user);
-			return aResult;
-		}
-
-		public Result<IUser> Create(IUser aDoc, Result<IUser> aResult)
-		{
-			user = aDoc;
-			aResult.Return(user);
-			return aResult;
-		}
-
-		public Result<IUser> Update(string id, string rev, IUser aDoc, Result<IUser> aResult)
-		{
-			user = aDoc;
-			aResult.Return(user);
-			return aResult;
-		}
-
-		public Result<IUser> Retrieve(string id, Result<IUser> aResult)
-		{
-			aResult.Return(user);
-			return aResult;
-		}
-
-		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
-		{
-			user = null;
-			aResult.Return(true);
-			return aResult;
-		}
-
-		public Result<SearchResult<IUser>> GetAll(int offset, int max, Result<SearchResult<IUser>> aResult)
-		{
-			aResult.Return(new SearchResult<IUser>(new IUser[] { user }, offset, max, 1));
-			return aResult;
-		}
-
 		public IUser FromJson(string aJson)
 		{
-			return new JUser(JObject.Parse(aJson));
+			throw new NotImplementedException();
 		}
 
-		public string ToJson(IUser aJson)
+		public string ToJson(IUser anObject)
 		{
-			return aJson.ToString();
+			throw new NotImplementedException();
 		}
 
+		public string ToJson(SearchResult<IUser> aSearchResult)
+		{
+			throw new NotImplementedException();
+		}
 
 		public IUser FromXml(MindTouch.Xml.XDoc aXml)
 		{
@@ -74,14 +39,39 @@ namespace FoireMuses.UnitTests.Mock
 			throw new NotImplementedException();
 		}
 
+		public Result<IUser> Create(IUser aDoc, Result<IUser> aResult)
+		{
+			user = aDoc;
+			aResult.Return(user);
+			return aResult;
+		}
+
+		public Result<IUser> Update(string id, string rev, IUser aDoc, Result<IUser> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<IUser> Retrieve(string id, Result<IUser> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
+		{
+			throw new NotImplementedException();
+		}
 
 		public Result<bool> Exists(string id, Result<bool> aResult)
 		{
 			throw new NotImplementedException();
 		}
 
+		public Result<SearchResult<IUser>> GetAll(int offset, int max, Result<SearchResult<IUser>> aResult)
+		{
+			throw new NotImplementedException();
+		}
 
-		public string ToJson(SearchResult<IUser> aSearchResult)
+		public Result<IUser> Login(string username, string password, Result<IUser> aResult)
 		{
 			throw new NotImplementedException();
 		}

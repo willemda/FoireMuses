@@ -99,32 +99,6 @@ namespace MindTouch.Core.Test.Services
 			_hostInfo.Dispose();
 		}
 
-		/*[SetUp]
-		public void Setup()
-		{
-			_smtpClientFactory.Client = new SmtplClientMock();
-			_smtpClientFactory.Settings = null;
-		}*/
-
-		/*[Test]
-		public void Can_send_email_with_default_settings()
-		{
-			var email = new XDoc("email")
-				.Attr("configuration", "default")
-				.Elem("to", "to@bar.com")
-				.Elem("from", "from@bar.com")
-				.Elem("subject", "subject")
-				.Elem("body", "body");
-            
-			var response = _plug.At("message").Post(email, new Result<DreamMessage>()).Wait();
-			Assert.IsTrue(response.IsSuccessful);
-			Assert.AreEqual(DEFAULT_HOST, _smtpClientFactory.Settings.Host);
-			Assert.AreEqual("from@bar.com", _smtpClientFactory.Client.Message.From.ToString());
-			Assert.AreEqual("to@bar.com", _smtpClientFactory.Client.Message.To.First().ToString());
-			Assert.AreEqual("subject", _smtpClientFactory.Client.Message.Subject);
-			Assert.AreEqual("body", _smtpClientFactory.Client.Message.Body);
-		}*/
-
 		[Test]
 		public void Can_create_score_from_json()
 		{

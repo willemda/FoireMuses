@@ -108,5 +108,10 @@ namespace FoireMuses.Core.Loveseat
 		{
 			throw new NotImplementedException();
 		}
+
+		public IUser FromJson(string json)
+		{
+			return new JUser(JObject.Parse(json));
+		}
 	}
 }

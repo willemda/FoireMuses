@@ -128,5 +128,11 @@ namespace FoireMuses.Core.Loveseat
 		{
 			throw new NotImplementedException();
 		}
+
+		public IPlay FromJson(string json)
+		{
+			return new JPlay(JObject.Parse(json));
+		}
+
 	}
 }

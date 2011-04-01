@@ -6,6 +6,7 @@ using FoireMuses.Core.Interfaces;
 using MindTouch.Tasking;
 using FoireMuses.Core.Utils;
 using Newtonsoft.Json.Linq;
+using System.Security;
 
 namespace FoireMuses.Core.Controllers
 {
@@ -98,6 +99,26 @@ namespace FoireMuses.Core.Controllers
 						aResult.Return(true);
 					else
 						aResult.Return(false);
+				},
+				aResult.Throw
+				);
+			return aResult;
+		}
+
+		public Result<IUser> Login(string username, string password, Result<IUser> aResult)
+		{
+			this.Retrieve(username, new Result<IUser>()).WhenDone(
+				a =>
+				{
+					if (a != null)
+					{
+						if (a.Password == password)
+							aResult.Return(a);
+						else
+							aResult.Throw(new SecurityException());
+					}
+					else
+						aResult.Throw(new SecurityException());
 				},
 				aResult.Throw
 				);

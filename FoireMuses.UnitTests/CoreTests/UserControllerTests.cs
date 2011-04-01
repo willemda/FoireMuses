@@ -32,8 +32,21 @@ namespace FoireMuses.UnitTests.CoreTests
 		public static void Setup(TestContext testContext)
 		{
 			var instances = new XDoc("instances")
-				.Start("instance").Attr("webhost", "test.foiremuses.org").Attr("databaseName", "foiremusesxml").End();
-
+				.Start("instance").Attr("webhost", "test.foiremuses.org").Attr("databaseName", "foiremusesxml")
+				.Start("components")
+				.Start("component").Attr("type", "FoireMuses.Core.Interfaces.IScoreDataMapper, FoireMuses.Core")
+				.Attr("implementation", "FoireMuses.Core.Loveseat.LoveseatScoreDataMapper, FoireMuses.Core.Loveseat")
+				.Attr("name", "ScoreDataMapper").End()
+				.Start("component").Attr("type", "FoireMuses.Core.Interfaces.IPlayDataMapper, FoireMuses.Core")
+				.Attr("implementation", "FoireMuses.Core.Loveseat.LoveseatPlayDataMapper, FoireMuses.Core.Loveseat")
+				.Attr("name", "PlayDataMapper").End()
+				.Start("component").Attr("type", "FoireMuses.Core.Interfaces.ISourceDataMapper, FoireMuses.Core")
+				.Attr("implementation", "FoireMuses.Core.Loveseat.LoveseatSourceDataMapper, FoireMuses.Core.Loveseat")
+				.Attr("name", "SourceDataMapper").End()
+				.Start("component").Attr("type", "FoireMuses.Core.Interfaces.IUserDataMapper, FoireMuses.Core")
+				.Attr("implementation", "FoireMuses.Core.Loveseat.LoveseatUserDataMapper, FoireMuses.Core.Loveseat")
+				.Attr("name", "UserDataMapper").End()
+				.End().End();
 			theInstanceFactory = new InstanceFactory(new ContainerBuilder().Build(), instances);
 		}
 
@@ -49,6 +62,21 @@ namespace FoireMuses.UnitTests.CoreTests
 		public void CreationWithNullMustThrowException()
 		{
 			Context.Current.Instance.UserController.Create(null, new Result<IUser>()).Wait();
+		}
+
+		[TestMethod]
+		public void CreationUserMustBeOk()
+		{
+			JObject jo = new JObject { {"_id","popol"},{"otype","user"},{"password","azerty"},{"email","salut@gmail.com"}};
+			string joString = jo.ToString();
+			IUser user = Context.Current.Instance.UserController.FromJson(joString);
+			Result<IUser> result = new Result<IUser>();
+			Context.Current.Instance.UserController.Create(user, result).Wait();
+			Assert.IsTrue(result.HasValue);
+			IUser user2 = result.Value;
+			Assert.AreEqual("popol", user2.Id);
+			Assert.AreEqual("azerty", user2.Password);
+			Assert.AreEqual("salut@gmail.com", user2.Email);
 		}
 	}
 }

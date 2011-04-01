@@ -26,16 +26,5 @@ namespace FoireMuses.Core.Loveseat
 			return anObject.ToString();
 		}
 
-		public T FromJson(string json)
-		{
-			Type type = typeof(T);
-			Type[] argTypes = new Type[] { typeof(JObject) };
-
-			ConstructorInfo cInfo = type.GetConstructor(argTypes);
-
-			object[] argVals = new object[] { JObject.Parse(json) };
-			return (T)cInfo.Invoke(argVals);
-		}
-
 	}
 }

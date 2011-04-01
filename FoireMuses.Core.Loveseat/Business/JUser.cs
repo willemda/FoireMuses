@@ -17,7 +17,7 @@ namespace FoireMuses.Core.Business
 
 		public JUser()
 		{
-			this.Add("type", "user");
+			this.Add("otype", "user");
 		}
 
 		public JUser(JObject jobject)

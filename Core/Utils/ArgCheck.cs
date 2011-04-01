@@ -23,6 +23,12 @@ namespace FoireMuses.Core.Utils
 			}
 		}
 
+		public static void SuperiorOrEqualsTo0(string paramName, int num)
+		{
+			if(num < 0)
+				throw new ArgumentException(paramName);
+		}
+
 		// For asynchronous methods, you have to throw exception using the Result object
 
 		//public static void NotNull(object o, string paramName)

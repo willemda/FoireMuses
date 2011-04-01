@@ -103,5 +103,10 @@ namespace FoireMuses.Core.Loveseat
 		{
 			throw new NotImplementedException();
 		}
+
+		public ISource FromJson(string json)
+		{
+			return new JSource(JObject.Parse(json));
+		}
 	}
 }

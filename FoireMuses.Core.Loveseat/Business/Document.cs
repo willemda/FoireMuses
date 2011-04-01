@@ -10,8 +10,29 @@ namespace FoireMuses.Core.Loveseat.Business
 {
 	public class Document : JDocument, IAuditableDocument
 	{
-		public DateTimeOffset CreationDate { get; private set; }
-		public DateTimeOffset LastUpdateDate { get; private set; }
+		public DateTimeOffset? CreationDate {
+			get { 
+				string creationString = this["creationDate"].Value<string>();
+				if (!String.IsNullOrEmpty(creationString))
+				{
+					return DateTimeOffset.Parse(creationString);
+				}
+				return null;
+			}
+			private set { this["creationDate"] = value.ToString(); }
+		}
+		public DateTimeOffset? LastUpdateDate {
+			get
+			{
+				string lastUpdateString = this["lastUpdateDate"].Value<string>();
+				if (!String.IsNullOrEmpty(lastUpdateString))
+				{
+					return DateTimeOffset.Parse(lastUpdateString);
+				}
+				return null;
+			}
+			private set { this["lastUpdateDate"] = value.ToString(); }
+		}
 
 		public Document() { }
 

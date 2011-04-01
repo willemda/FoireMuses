@@ -144,5 +144,9 @@ namespace FoireMuses.Core.Loveseat{
 			throw new NotImplementedException();
 		}
 
+		public IScore FromJson(string json)
+		{
+			return new JScore(JObject.Parse(json));
+		}
 	}
 }
