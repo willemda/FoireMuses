@@ -251,7 +251,7 @@ namespace FoireMuses.Core.Controllers
 		}
 	
 
-		public Result<bool>  Exists(string id, Result<bool> aResult)
+		public Result<bool> Exists(string id, Result<bool> aResult)
 		{
  			this.Retrieve(id, new Result<IScore>()).WhenDone(
 				a=>{

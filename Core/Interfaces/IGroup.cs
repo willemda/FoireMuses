@@ -7,5 +7,9 @@ namespace FoireMuses.Core.Interfaces
 {
 	public interface IGroup
 	{
+		string Name { get; set; }
+
+		bool IsPublic { get; set; }
+		string CreatorId { get; set; }
 	}
 }
