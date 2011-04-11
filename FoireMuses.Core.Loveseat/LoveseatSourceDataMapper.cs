@@ -8,6 +8,7 @@ using LoveSeat;
 using FoireMuses.Core.Utils;
 using FoireMuses.Core.Business;
 using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace FoireMuses.Core.Loveseat
 {
@@ -97,6 +98,19 @@ namespace FoireMuses.Core.Loveseat
 		ISource IDataMapper<ISource>.FromXml(MindTouch.Xml.XDoc aJson)
 		{
 			throw new NotImplementedException();
+		}
+
+		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)
+		{
+
+			theCouchDatabase.AddAttachment(id, file, fileName, new Result<JObject>()).WhenDone(
+				a =>
+				{
+					aResult.Return(true);
+				},
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public MindTouch.Xml.XDoc ToXml(ISource anObject)

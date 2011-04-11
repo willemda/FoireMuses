@@ -79,6 +79,16 @@ namespace FoireMuses.WebService
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
+		[DreamFeature("POST:scores/xml", "Create a score")]
+		public Yield CreateScoreFromMusicXml(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+		{
+			IScore score = Context.Current.Instance.ScoreController.CreateNew();
+			Result<IScore> result = new Result<IScore>();
+			yield return Context.Current.Instance.ScoreController.AttachMusicXml(score, request.ToDocument(),true, result);
+
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
+		}
+
 
 		[DreamFeature("DELETE:scores/{id}", "Delete a score")]
 		[DreamFeatureParam("{id}", "String", "Score id")]

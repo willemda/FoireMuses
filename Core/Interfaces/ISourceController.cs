@@ -7,8 +7,7 @@ using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Interfaces
 {
-    public interface ISourceController : IBaseController<ISource>
-    {
-        //+ Search methods
-    }
+	public interface ISourceController : IBaseController<ISource>
+	{
+	}
 }

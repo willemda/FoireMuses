@@ -33,6 +33,7 @@ using MindTouch.Dream;
 namespace FoireMuses.Core.Controllers
 {
 	using Yield = System.Collections.Generic.IEnumerator<MindTouch.Tasking.IYield>;
+	using System.IO;
 	
 	public class ScoreController : IScoreController
 	{
@@ -249,6 +250,11 @@ namespace FoireMuses.Core.Controllers
 		{
 			return theScoreDataMapper.ToXml(aScore);
 		}
+
+		public IScore CreateNew()
+		{
+			return theScoreDataMapper.CreateNew();
+		}
 	
 
 		public Result<bool> Exists(string id, Result<bool> aResult)
@@ -269,5 +275,42 @@ namespace FoireMuses.Core.Controllers
 		{
 			return theScoreDataMapper.ToJson(aSearchResult);
 		}
+
+		public Result<IScore> AttachMusicXml(IScore aScore, XDoc xdoc, bool overwriteMusicXmlValues, Result<IScore> aResult)
+		{
+			/*
+			if (!overwriteMusicXmlValues)
+			{
+				IScore themusicxmlScore = theScoreDataMapper.FromXml(xdoc);
+				aScore.Code1 = themusicxmlScore.Code1;
+				aScore.Code2 = themusicxmlScore.Code2;
+				aScore.Title = themusicxmlScore.Title;
+				aScore.Composer = themusicxmlScore.Composer;
+				aScore.Verses = themusicxmlScore.Verses;
+			}
+			IScore score;
+			if (aScore.Id != null)
+			{
+				Update(aScore.Id, aScore.Rev, aScore, new Result<IScore>()).WhenDone(
+					//a => AddAttachment
+					aResult.Throw
+					);
+			}
+			else
+			{
+				//create score
+			}
+			//attach music xml to the created /updated score*/
+			return aResult;
+		}
+
+		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)
+		{
+			theScoreDataMapper.AddAttachment(id, file, fileName, new Result<bool>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
 	}
-}                                                                                                                                                                                                                                                     
+}

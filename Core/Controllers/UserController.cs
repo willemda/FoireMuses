@@ -124,5 +124,10 @@ namespace FoireMuses.Core.Controllers
 				);
 			return aResult;
 		}
+
+		public IUser CreateNew()
+		{
+			return theUserDataMapper.CreateNew();
+		}
 	}
 }

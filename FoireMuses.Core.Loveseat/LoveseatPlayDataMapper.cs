@@ -8,6 +8,7 @@ using MindTouch.Tasking;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Utils;
 using FoireMuses.Core.Business;
+using System.IO;
 
 namespace FoireMuses.Core.Loveseat
 {
@@ -105,6 +106,19 @@ namespace FoireMuses.Core.Loveseat
 			d.Rev = rev;
 
 			theCouchDatabase.DeleteDocument(d, new Result<JObject>()).WhenDone(
+				a =>
+				{
+					aResult.Return(true);
+				},
+				aResult.Throw
+				);
+			return aResult;
+		}
+
+		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)
+		{
+
+			theCouchDatabase.AddAttachment(id, file, fileName, new Result<JObject>()).WhenDone(
 				a =>
 				{
 					aResult.Return(true);

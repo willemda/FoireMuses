@@ -37,6 +37,11 @@ namespace FoireMuses.Core.Controllers
 			aResult.Return(resultCreate.Value);
 		}
 
+		public ISource CreateNew()
+		{
+			return theSourceDataMapper.CreateNew();
+		}
+
 		public Result<ISource> Create(ISource aDoc, Result<ISource> aResult)
 		{
 			Coroutine.Invoke(CreateHelper,aDoc, new Result<ISource>()).WhenDone(

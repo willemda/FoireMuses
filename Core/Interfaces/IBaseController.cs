@@ -16,6 +16,7 @@ namespace FoireMuses.Core.Interfaces
 		T FromXml(XDoc aXml);
 		XDoc ToXml(T anObject);
 
+		T CreateNew();
 
 		Result<T> Create(T aDoc, Result<T> aResult);
 		Result<T> Update(string id, string rev, T aDoc, Result<T> aResult);

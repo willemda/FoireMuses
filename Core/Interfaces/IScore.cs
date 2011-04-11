@@ -29,6 +29,7 @@ namespace FoireMuses.Core.Interfaces
 
 		ITextualSource TextualSource { get; set; }
 
+		//TODO: replace by list
 		IEnumerable<string> Tags { get; }
 		void AddTag(string tag);
 		void RemoveTag(string tag);
@@ -36,6 +37,7 @@ namespace FoireMuses.Core.Interfaces
 		string CreatorId { get; }
 		string LastModifierId { get; }
 
+		//TODO: replace by list
 		IEnumerable<string> CollaboratorsId { get; }
 		void AddCollaborator(string collab);
 		void RemoveCollaborator(string collab);
