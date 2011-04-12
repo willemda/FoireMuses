@@ -276,9 +276,8 @@ namespace FoireMuses.Core.Controllers
 			return theScoreDataMapper.ToJson(aSearchResult);
 		}
 
-		public Result<IScore> AttachMusicXml(IScore aScore, XDoc xdoc, bool overwriteMusicXmlValues, Result<IScore> aResult)
+		private Yield AttachMusicXmlHelper(IScore aScore, XDoc xdoc, bool overwriteMusicXmlValues, Result<IScore> aResult)
 		{
-			/*
 			if (!overwriteMusicXmlValues)
 			{
 				IScore themusicxmlScore = theScoreDataMapper.FromXml(xdoc);
@@ -289,19 +288,31 @@ namespace FoireMuses.Core.Controllers
 				aScore.Verses = themusicxmlScore.Verses;
 			}
 			IScore score;
+			Result<IScore> result = new Result<IScore>();
 			if (aScore.Id != null)
 			{
-				Update(aScore.Id, aScore.Rev, aScore, new Result<IScore>()).WhenDone(
-					//a => AddAttachment
-					aResult.Throw
-					);
+				yield return Update(aScore.Id, aScore.Rev, aScore, result);
 			}
 			else
 			{
-				//create score
+				yield return Create(aScore, result);
 			}
-			//attach music xml to the created /updated score*/
+			score = result.Value;
+			//attach music xml to the created /updated score
+			Stream stream = new MemoryStream(xdoc.ToBytes());
+			yield return AddAttachment(score.Id, stream, "$musicxml.xml", new Result<bool>());
+			yield return Retrieve(score.Id, result);
+			aResult.Return(result.Value);
+		}
+
+		public Result<IScore> AttachMusicXml(IScore aScore, XDoc xdoc, bool overwriteMusicXmlValues, Result<IScore> aResult)
+		{
+			Coroutine.Invoke(AttachMusicXmlHelper, aScore, xdoc, overwriteMusicXmlValues, new Result<IScore>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
 			return aResult;
+			
 		}
 
 		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)

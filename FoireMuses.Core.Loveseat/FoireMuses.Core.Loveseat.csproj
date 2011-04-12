@@ -48,6 +48,10 @@
     <Reference Include="mindtouch.dream">
       <HintPath>..\externals\mindtouch.dream.dll</HintPath>
     </Reference>
+    <Reference Include="MusicXML, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\externals\MusicXML.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\externals\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -78,10 +82,6 @@
     <Compile Include="XScoreHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MusicXml.Net\MusicXml\MusicXml.csproj">
-      <Project>{42ACDD70-26DA-4737-B490-282A21B170E6}</Project>
-      <Name>MusicXml</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Core\FoireMuses.Core.csproj">
       <Project>{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}</Project>
       <Name>FoireMuses.Core</Name>
