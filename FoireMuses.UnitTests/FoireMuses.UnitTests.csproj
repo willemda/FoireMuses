@@ -50,6 +50,10 @@
     <Reference Include="mindtouch.dream.test">
       <HintPath>..\externals\mindtouch.dream.test.dll</HintPath>
     </Reference>
+    <Reference Include="MusicXML, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\externals\MusicXML.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\externals\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -67,7 +71,9 @@
   <ItemGroup>
     <Compile Include="CoreTests\ScoreControllerTests.cs" />
     <Compile Include="CoreTests\UserControllerTests.cs" />
+    <Compile Include="Mock\MockPlayController.cs" />
     <Compile Include="Mock\MockScoreController.cs" />
+    <Compile Include="Mock\MockSourceController.cs" />
     <Compile Include="Mock\MockUserController.cs" />
     <Compile Include="WebServicesTests\ScoreServicesTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

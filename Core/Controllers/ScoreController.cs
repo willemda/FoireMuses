@@ -92,13 +92,6 @@ namespace FoireMuses.Core.Controllers
 
 		private Yield CheckSources(IScore aScore, Result aResult)
 		{
-			//both can't be null, it must have at least one source
-			if (aScore.TextualSource == null && aScore.MusicalSource == null)
-			{
-				aResult.Throw(new ArgumentException());
-				yield break;
-			}
-
 			// if this source exists
 			if (aScore.TextualSource != null)
 			{
@@ -281,13 +274,12 @@ namespace FoireMuses.Core.Controllers
 			if (!overwriteMusicXmlValues)
 			{
 				IScore themusicxmlScore = theScoreDataMapper.FromXml(xdoc);
-				aScore.Code1 = themusicxmlScore.Code1;
-				aScore.Code2 = themusicxmlScore.Code2;
+				aScore.CodageMelodiqueRISM = themusicxmlScore.CodageMelodiqueRISM;
+				aScore.CodageParIntervalle = themusicxmlScore.CodageParIntervalle;
 				aScore.Title = themusicxmlScore.Title;
 				aScore.Composer = themusicxmlScore.Composer;
 				aScore.Verses = themusicxmlScore.Verses;
 			}
-			IScore score;
 			Result<IScore> result = new Result<IScore>();
 			if (aScore.Id != null)
 			{
@@ -297,11 +289,11 @@ namespace FoireMuses.Core.Controllers
 			{
 				yield return Create(aScore, result);
 			}
-			score = result.Value;
 			//attach music xml to the created /updated score
 			Stream stream = new MemoryStream(xdoc.ToBytes());
-			yield return AddAttachment(score.Id, stream, "$musicxml.xml", new Result<bool>());
-			yield return Retrieve(score.Id, result);
+			yield return AddAttachment(result.Value.Id, stream, "$musicxml.xml", new Result<bool>());
+            Result<IScore> score = new Result<IScore>();
+			yield return Retrieve(result.Value.Id, score);
 			aResult.Return(result.Value);
 		}
 
@@ -312,7 +304,6 @@ namespace FoireMuses.Core.Controllers
 				aResult.Throw
 				);
 			return aResult;
-			
 		}
 
 		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)

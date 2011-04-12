@@ -73,7 +73,14 @@ namespace FoireMuses.UnitTests.Mock
 
 		public Result<IUser> Login(string username, string password, Result<IUser> aResult)
 		{
-			throw new NotImplementedException();
+            aResult.Return(new JUser() { { "_id",username},{"password",password} });
+            return aResult;
 		}
-	}
+
+
+        public IUser CreateNew()
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

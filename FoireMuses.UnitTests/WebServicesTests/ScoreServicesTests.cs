@@ -43,6 +43,7 @@ using System.Collections.Generic;
 using LoveSeat;
 using FoireMuses.Core;
 using FoireMuses.UnitTests.Mock;
+using FoireMuses.Core.Business;
 #endif
 
 namespace MindTouch.Core.Test.Services
@@ -58,7 +59,10 @@ namespace MindTouch.Core.Test.Services
 		private static DreamHostInfo _hostInfo;
 		private static DreamServiceInfo _service;
 		private static Plug _plug;
-		private static MockScoreController msc;
+		private static MockScoreController mscore;
+        private static MockSourceController msource;
+        private static MockPlayController mplay;
+        private static MockUserController muser;
 
 		//--- Methods ---
 
@@ -67,12 +71,32 @@ namespace MindTouch.Core.Test.Services
 		{
 			var config = new XDoc("config");
 
-			var instances = new XDoc("instances")
-				.Start("instance").Attr("webhost", "test.foiremuses.org").Attr("databaseName", "foiremusesxml").End();
+            var instances = new XDoc("instances")
+                .Start("instance").Attr("webhost", "test.foiremuses.org").Attr("databaseName", "foiremusesxml")
+                .Start("components")
+                .Start("component").Attr("type", "FoireMuses.Core.Interfaces.IScoreDataMapper, FoireMuses.Core")
+                .Attr("implementation", "FoireMuses.Core.Loveseat.LoveseatScoreDataMapper, FoireMuses.Core.Loveseat")
+                .Attr("name", "ScoreDataMapper").End()
+                .Start("component").Attr("type", "FoireMuses.Core.Interfaces.IPlayDataMapper, FoireMuses.Core")
+                .Attr("implementation", "FoireMuses.Core.Loveseat.LoveseatPlayDataMapper, FoireMuses.Core.Loveseat")
+                .Attr("name", "PlayDataMapper").End()
+                .Start("component").Attr("type", "FoireMuses.Core.Interfaces.ISourceDataMapper, FoireMuses.Core")
+                .Attr("implementation", "FoireMuses.Core.Loveseat.LoveseatSourceDataMapper, FoireMuses.Core.Loveseat")
+                .Attr("name", "SourceDataMapper").End()
+                .Start("component").Attr("type", "FoireMuses.Core.Interfaces.IUserDataMapper, FoireMuses.Core")
+                .Attr("implementation", "FoireMuses.Core.Loveseat.LoveseatUserDataMapper, FoireMuses.Core.Loveseat")
+                .Attr("name", "UserDataMapper").End()
+                .End().End();
 
 			var builder = new ContainerBuilder();
-			msc = new MockScoreController();
-			builder.Register(c => msc).As<IScoreController>().ServiceScoped();
+			mscore = new MockScoreController();
+            msource = new MockSourceController();
+            mplay = new MockPlayController();
+            muser = new MockUserController();
+			builder.Register(c => mscore).As<IScoreController>().ServiceScoped();
+            builder.Register(c => mplay).As<IPlayController>().ServiceScoped();
+            builder.Register(c => msource).As<ISourceController>().ServiceScoped();
+            builder.Register(c => muser).As<IUserController>().ServiceScoped();
 			_hostInfo = DreamTestHelper.CreateRandomPortHost(config, builder.Build());
 			_hostInfo.Host.Self.At("load").With("name", "foiremuses.webservice").Post(DreamMessage.Ok());
 			_service = DreamTestHelper.CreateService(
@@ -89,7 +113,10 @@ namespace MindTouch.Core.Test.Services
 		[TestInitialize]
 		public void Setup()
 		{
-			msc = new MockScoreController();
+            mscore = new MockScoreController();
+            msource = new MockSourceController();
+            mplay = new MockPlayController();
+            muser = new MockUserController();
 		}
 
 
@@ -105,7 +132,7 @@ namespace MindTouch.Core.Test.Services
 			var score = new JObject();
 			score.Add("_id", "1");
 			score.Add("title", "la belle au bois dormant");
-			var response = _plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+			var response = _plug.At("scores").WithCredentials("danny","azerty").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
 			Assert.IsTrue(response.IsSuccessful);
 			Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
 			Assert.AreEqual("la belle au bois dormant", JObject.Parse(response.ToText())["title"]);
@@ -117,10 +144,10 @@ namespace MindTouch.Core.Test.Services
 			var score = new JObject();
 			score.Add("_id", "1");
 			score.Add("title", "la belle au bois dormant");
-			_plug.At("scores").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+            _plug.At("scores").WithCredentials("danny", "azerty").Post(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
 			score.Remove("title");
 			score.Add("title", "la belle qui dors!");
-			var response = _plug.At("scores").Put(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
+            var response = _plug.At("scores").WithCredentials("danny", "azerty").With("id","1").With("rev","1").Put(DreamMessage.Ok(MimeType.JSON, score.ToString()), new Result<DreamMessage>()).Wait();
 			Assert.IsTrue(response.IsSuccessful);
 			Assert.AreEqual("1", JObject.Parse(response.ToText())["_id"]);
 			Assert.AreEqual("la belle qui dors!", JObject.Parse(response.ToText())["title"]);

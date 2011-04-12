@@ -172,5 +172,10 @@ namespace FoireMuses.Core.Loveseat{
 		{
 			return new JScore(JObject.Parse(json));
 		}
+
+        public IScore CreateNew()
+        {
+            return new JScore();
+        }
 	}
 }

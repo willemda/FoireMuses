@@ -18,6 +18,8 @@ using TestFixtureSetUpAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.C
 using TestFixtureTearDownAttribute = Microsoft.VisualStudio.TestTools.UnitTesting.ClassCleanupAttribute;
 using FoireMuses.Core.Interfaces;
 using Newtonsoft.Json.Linq;
+using System.IO;
+using MindTouch.Dream;
 #endif
 namespace FoireMuses.UnitTests.CoreTests
 {
@@ -71,8 +73,7 @@ namespace FoireMuses.UnitTests.CoreTests
 			o["editor"] = "arnaud";
 			IScore score = Context.Current.Instance.ScoreController.FromJson(o.ToString());
 			Result<IScore> result = new Result<IScore>();
-			Context.Current.Instance.ScoreController.Create(score, result).Wait();
-			Assert.IsTrue(result.HasValue);
+			score = Context.Current.Instance.ScoreController.Create(score, result).Wait();
 			Assert.AreEqual("la belle qui dors",score.Title);
 			Assert.AreEqual("arnaud",score.Editor);
 			Console.WriteLine(score.ToString());
@@ -98,6 +99,17 @@ namespace FoireMuses.UnitTests.CoreTests
 		{
 			Context.Current.Instance.ScoreController.Delete(null,null, new Result<bool>()).Wait();
 		}
+
+        [TestMethod]
+        public void CreationFromMusicXmlMustBeOk()
+        {
+            XDoc xdoc = XDocFactory.From(File.OpenRead(@"C:\Projects\FoireMuses\Dichterliebe01.xml"),MimeType.XML);
+            IScore score  = Context.Current.Instance.ScoreController.CreateNew();
+            Result<IScore> result = new Result<IScore>();
+            score = Context.Current.Instance.ScoreController.AttachMusicXml(score, xdoc, false, result).Wait();
+            Assert.AreEqual("Im wunderschönen Monat Mai", score.Title);
+            Assert.AreEqual("Robert Schumann", score.Composer);
+        }
 
 	}
 }

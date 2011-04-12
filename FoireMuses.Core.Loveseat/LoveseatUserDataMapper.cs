@@ -113,5 +113,10 @@ namespace FoireMuses.Core.Loveseat
 		{
 			return new JUser(JObject.Parse(json));
 		}
+
+        public IUser CreateNew()
+        {
+            return new JUser();
+        }
 	}
 }

@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace FoireMuses.Core.Loveseat
 {
-	public class Convert<T> where T : new()
+	public class Convert<T>
 	{
 		public string ToJson(SearchResult<T> aSearchResult)
 		{
@@ -25,12 +25,6 @@ namespace FoireMuses.Core.Loveseat
 		{
 			return anObject.ToString();
 		}
-
-		public T CreateNew()
-		{
-			return new T();
-		}
-
 
 	}
 }

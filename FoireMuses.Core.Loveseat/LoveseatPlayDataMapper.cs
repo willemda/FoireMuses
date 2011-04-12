@@ -148,5 +148,10 @@ namespace FoireMuses.Core.Loveseat
 			return new JPlay(JObject.Parse(json));
 		}
 
+        public IPlay CreateNew()
+        {
+            return new JPlay();
+        }
+
 	}
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
+using FoireMuses.Core.Loveseat.Business;
+using FoireMuses.Core.Interfaces;
 using LoveSeat;
 using FoireMuses.Core.Interfaces;
 using LoveSeat.Interfaces;
@@ -11,14 +13,14 @@ using FoireMuses.Core.Loveseat.Business;
 namespace FoireMuses.Core.Business
 {
 	/// <summary>
-	/// represent a Score(un air) object in json
+	/// represent a Score(un air) object in this
 	/// </summary>
 	public class JScore : Document, IScore
 	{
 
 		public JScore()
 		{
-			this.Add("type", "score");
+			this.Add("otype", "score");
 		}
 
 		public JScore(JObject jobject)
@@ -36,100 +38,191 @@ namespace FoireMuses.Core.Business
 			}
 		}
 
-		public string Title
-		{
-			get { return this["title"].Value<string>(); }
-			set { this["title"] = value; }
-		}
+        public string Title
+        {
+            get
+            {
+                if (this["title"] == null)
+                    return null;
+                return this["title"].Value<string>();
+            }
+            set { this["title"] = value; }
+        }
 
-		public string Code1
-		{
-			get { return this["code1"].Value<string>(); }
-			set { this["code1"] = value; }
-		}
+        public string CodageMelodiqueRISM
+        {
+            get
+            {
+                if (this["codageMelodiqueRISM"] == null)
+                    return null;
+                return this["codageMelodiqueRISM"].Value<string>();
+            }
+            set { this["codageMelodiqueRISM"] = value; }
+        }
 
-		public string Code2
-		{
-			get { return this["code2"].Value<string>(); }
-			set { this["code2"] = value; }
-		}
+        public string CodageParIntervalle
+        {
+            get
+            {
+                if (this["codageParIntervalle"] == null)
+                    return null;
+                return this["codageParIntervalle"].Value<string>();
+            }
+            set { this["codageParIntervalle"] = value; }
+        }
 
-		public string Coirault
-		{
-			get { return this["coirault"].Value<string>(); }
-			set { this["coirault"] = value; }
-		}
+        public string CodageRythmique
+        {
+            get
+            {
+                if (this["codageRythmique"] == null)
+                    return null;
+                return this["codageRythmique"].Value<string>();
+            }
+            set { this["codageRythmique"] = value; }
+        }
 
-		public string Composer
-		{
-			get { return this["composer"].Value<string>(); }
-			set { this["composer"] = value; }
-		}
+        public string Coirault
+        {
+            get
+            {
+                if (this["coirault"] == null)
+                    return null;
+                return this["coirault"].Value<string>();
+            }
+            set { this["coirault"] = value; }
+        }
 
-		public string CoupeMetrique
-		{
-			get { return this["coupeMetrique"].Value<string>(); }
-			set { this["coupeMetrique"] = value; }
-		}
+        public string Composer
+        {
+            get
+            {
+                if (this["composer"] == null)
+                    return null;
+                return this["composer"].Value<string>();
+            }
+            set { this["composer"] = value; }
+        }
 
-		public string Verses
-		{
-			get { return this["verses"].Value<string>(); }
-			set { this["verses"] = value; }
-		}
+        public string CoupeMetrique
+        {
+            get
+            {
+                if (this["coupeMetrique"] == null)
+                    return null;
+                return this["coupeMetrique"].Value<string>();
+            }
+            set { this["coupeMetrique"] = value; }
+        }
 
-		public string Delarue
-		{
-			get { return this["delarue"].Value<string>(); }
-			set { this["delarue"] = value; }
-		}
+        public string Verses
+        {
+            get
+            {
+                if (this["verses"] == null)
+                    return null;
+                return this["verses"].Value<string>();
+            }
+            set { this["verses"] = value; }
+        }
 
-		public string Comments
-		{
-			get { return this["comments"].Value<string>(); }
-			set { this["comments"] = value; }
-		}
+        public string Delarue
+        {
+            get
+            {
+                if (this["delarue"] == null)
+                    return null;
+                return this["delarue"].Value<string>();
+            }
+            set { this["delarue"] = value; }
+        }
 
-		public string Editor
-		{
-			get { return this["editor"].Value<string>(); }
-			set { this["editor"] = value; }
-		}
+        public string Comments
+        {
+            get
+            {
+                if (this["comments"] == null)
+                    return null;
+                return this["comments"].Value<string>();
+            }
+            set { this["comments"] = value; }
+        }
 
-		public string RythmSignature
-		{
-			get { return this["rythmSignature"].Value<string>(); }
-			set { this["rythmSignature"] = value; }
-		}
+        public string Editor
+        {
+            get
+            {
+                if (this["editor"] == null)
+                    return null;
+                return this["editor"].Value<string>();
+            }
+            set { this["editor"] = value; }
+        }
 
-		public string OtherTitles
-		{
-			get { return this["otherTitles"].Value<string>(); }
-			set { this["otherTitles"] = value; }
-		}
+        public string RythmSignature
+        {
+            get
+            {
+                if (this["rythmSignature"] == null)
+                    return null;
+                return this["rythmSignature"].Value<string>();
+            }
+            set { this["rythmSignature"] = value; }
+        }
 
-		public string Stanza
-		{
-			get { return this["stanza"].Value<string>(); }
-			set { this["stanza"] = value; }
-		}
+        public string OtherTitles
+        {
+            get
+            {
+                if (this["otherTitles"] == null)
+                    return null;
+                return this["otherTitles"].Value<string>();
+            }
+            set { this["otherTitles"] = value; }
+        }
 
-		public string ScoreType
-		{
-			get { return this["type"].Value<string>(); }
-			set { this["type"] = value; }
-		}
+        public string Stanza
+        {
+            get
+            {
+                if (this["stanza"] == null)
+                    return null;
+                return this["stanza"].Value<string>();
+            }
+            set { this["stanza"] = value; }
+        }
+
+        public string ScoreType
+        {
+            get
+            {
+                if (this["type"] == null)
+                    return null;
+                return this["type"].Value<string>();
+            }
+            set { this["type"] = value; }
+        }
 
 		public ITextualSource TextualSource
 		{
-			get { return this["textualSource"].Value<JTextualSource>(); }
-			set { this["textualSource"] = value as JTextualSource; }
+            get
+            {
+                if (this["textualSource"] == null)
+                    return null;
+                return new JTextualSource(this["textualSource"].Value<JObject>());
+            }
+            set { this["textualSource"] = value as JTextualSource; }
 		}
 
 		public IMusicalSource MusicalSource
 		{
-			get { return this["musicalSource"].Value<JMusicalSource>(); }
-			set { this["musicalSource"] = value as JTextualSource; }
+            get
+            {
+                if (this["musicalSource"] == null)
+                    return null;
+                return new JMusicalSource(this["musicalSource"].Value<JObject>());
+            }
+            set { this["musicalSource"] = value as JTextualSource; }
 		}
 
 		public IEnumerable<string> Tags

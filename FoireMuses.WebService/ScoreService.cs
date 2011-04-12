@@ -67,27 +67,44 @@ namespace FoireMuses.WebService
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("PUT:scores/{id}", "Update the score")]
+		[DreamFeature("PUT:scores", "Update the score")]
 		[DreamFeatureParam("{id}", "String", "Score id")]
 		[DreamFeatureParam("{rev}", "String", "Score revision id")]
 		public Yield UpdateScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			IScore score = Context.Current.Instance.ScoreController.FromJson(request.ToText());
 			Result<IScore> result = new Result<IScore>();
+            if(context.GetParam("id") == null || context.GetParam("rev") == null)
+                response.Return(DreamMessage.BadRequest("not id or rev specified"));
 			yield return Context.Current.Instance.ScoreController.Update(context.GetParam("id"), context.GetParam("rev"), score, result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("POST:scores/xml", "Create a score")]
-		public Yield CreateScoreFromMusicXml(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+		[DreamFeature("POST:scores/xml", "Create a score with music xml")]
+		public Yield CreateScoreWithMusicXml(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			IScore score = Context.Current.Instance.ScoreController.CreateNew();
 			Result<IScore> result = new Result<IScore>();
-			yield return Context.Current.Instance.ScoreController.AttachMusicXml(score, request.ToDocument(),true, result);
+			yield return Context.Current.Instance.ScoreController.AttachMusicXml(score, request.ToDocument(), false, result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
+
+        [DreamFeature("PUT:scores/xml", "Edit an existing score with music xml")]
+        [DreamFeatureParam("{id}", "String", "Score id")]
+        [DreamFeatureParam("{rev}", "String", "Score rev id")]
+        [DreamFeatureParam("{overwrite}", "bool", "overwrite xml attributes or not")]
+        public Yield UpdateScoreWithMusicXml(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+        {
+            Result<IScore> resultRetrieve = new Result<IScore>();
+            yield return Context.Current.Instance.ScoreController.Retrieve(context.GetParam("id"), resultRetrieve);
+            IScore score = resultRetrieve.Value;
+            Result<IScore> result = new Result<IScore>();
+            yield return Context.Current.Instance.ScoreController.AttachMusicXml(score, request.ToDocument(), context.GetParam("overwrite",true), result);
+
+            response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
+        }
 
 
 		[DreamFeature("DELETE:scores/{id}", "Delete a score")]

@@ -122,5 +122,10 @@ namespace FoireMuses.Core.Loveseat
 		{
 			return new JSource(JObject.Parse(json));
 		}
+
+        public ISource CreateNew()
+        {
+            return new JSource();
+        }
 	}
 }
