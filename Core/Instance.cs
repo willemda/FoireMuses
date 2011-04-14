@@ -10,9 +10,6 @@ using Autofac;
 using Autofac.Builder;
 using MindTouch.Dream;
 using MindTouch.Xml;
-using Autofac;
-using Autofac.Builder;
-using Autofac.Registrars;
 using log4net;
 
 namespace FoireMuses.Core
@@ -26,6 +23,7 @@ namespace FoireMuses.Core
 		public ISourceController SourceController { get; private set; }
 		public IUserController UserController { get; private set; }
 		public IPlayController PlayController { get; private set; }
+		public IConverterFactory ConverterFactory { get; private set; }
 
 		public Instance(IContainer container, XDoc anInstanceXmlConfig)
 		{
@@ -60,12 +58,18 @@ namespace FoireMuses.Core
 				builder.Register<PlayController>().As<IPlayController>();
 			}
 
+			if (!container.IsRegistered<IConverterFactory>())
+			{
+				builder.Register<ConverterFactory>().As<IConverterFactory>();
+			}
+
 			builder.Build(container);
 
 			ScoreController = container.Resolve<IScoreController>();
 			UserController = container.Resolve<IUserController>();
 			SourceController = container.Resolve<ISourceController>();
 			PlayController = container.Resolve<IPlayController>();
+			ConverterFactory = container.Resolve<IConverterFactory>();
 		}
 	}
 }

@@ -46,6 +46,9 @@ namespace FoireMuses.UnitTests.CoreTests
 				.Start("component").Attr("type", "FoireMuses.Core.Interfaces.IUserDataMapper, FoireMuses.Core")
 				.Attr("implementation", "FoireMuses.Core.Loveseat.LoveseatUserDataMapper, FoireMuses.Core.Loveseat")
 				.Attr("name", "UserDataMapper").End()
+				.Start("component").Attr("type", "FoireMuses.Core.Interfaces.IConverterFactory, FoireMuses.Core")
+				.Attr("implementation", "FoireMuses.Core.ConverterFactory, FoireMuses.Core")
+				.Attr("name", "UserDataMapper").End()
 				.End().End();
 			theInstanceFactory = new InstanceFactory(new ContainerBuilder().Build(), instances);
 		}

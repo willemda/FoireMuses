@@ -61,6 +61,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConverterFactory.cs" />
+    <Compile Include="Converters\MIDIConverter.cs" />
+    <Compile Include="Converters\LILYConverter.cs" />
+    <Compile Include="Converters\PDFConverter.cs" />
+    <Compile Include="Converters\PNGConverter.cs" />
     <Compile Include="Exceptions\BadCharacterException.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Controllers\PlayController.cs" />
@@ -72,6 +77,8 @@
     <Compile Include="Instance.cs" />
     <Compile Include="InstanceFactory.cs" />
     <Compile Include="Interfaces\IBaseController.cs" />
+    <Compile Include="Interfaces\IConverter.cs" />
+    <Compile Include="Interfaces\IConverterFactory.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
     <Compile Include="Interfaces\IMusicalSource.cs" />
     <Compile Include="Interfaces\IPlay.cs" />
@@ -91,6 +98,7 @@
     <Compile Include="Interfaces\IPlayController.cs" />
     <Compile Include="Interfaces\IScoreController.cs" />
     <Compile Include="Interfaces\ISourceController.cs" />
+    <Compile Include="Utils\Const.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

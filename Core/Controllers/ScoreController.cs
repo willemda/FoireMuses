@@ -34,7 +34,7 @@ namespace FoireMuses.Core.Controllers
 {
 	using Yield = System.Collections.Generic.IEnumerator<MindTouch.Tasking.IYield>;
 	using System.IO;
-	
+
 	public class ScoreController : IScoreController
 	{
 		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(ScoreController));
@@ -57,7 +57,8 @@ namespace FoireMuses.Core.Controllers
 				Result<SearchResult<IScore>> resultSearch = new Result<SearchResult<IScore>>();
 				yield return theScoreDataMapper.ScoresFromSource(offset, max, aSourceId, resultSearch);
 				aResult.Return(resultSearch.Value);
-			} else
+			}
+			else
 				aResult.Throw(new DreamNotFoundException("Source not found"));
 		}
 
@@ -72,7 +73,7 @@ namespace FoireMuses.Core.Controllers
 		}
 
 
-		public Yield CreateHelper(IScore aDoc, Result<IScore> aResult)
+		private Yield CreateHelper(IScore aDoc, Result<IScore> aResult)
 		{
 			//Check if user is set as we need to know the creator.
 			if (Context.Current.User == null)
@@ -82,7 +83,7 @@ namespace FoireMuses.Core.Controllers
 			}
 
 			//Check that the sources aren't null and does exists
-			yield return Coroutine.Invoke(CheckSources,aDoc, new Result());
+			yield return Coroutine.Invoke(CheckSources, aDoc, new Result());
 
 			//Create a the score and return
 			Result<IScore> resultCreate = new Result<IScore>();
@@ -162,13 +163,13 @@ namespace FoireMuses.Core.Controllers
 				aResult.Throw(new UnauthorizedAccessException());
 				yield break;
 			}
-			
+
 			//Check if the sources in the score exists and are not null.
 			Coroutine.Invoke(CheckSources, aDoc, new Result());
 
 			//Update and return the updated score.
 			Result<IScore> scoreResult = new Result<IScore>();
-			yield return theScoreDataMapper.Update(id,rev,aDoc, new Result<IScore>());
+			yield return theScoreDataMapper.Update(id, rev, aDoc, scoreResult);
 			aResult.Return(scoreResult.Value);
 		}
 
@@ -188,7 +189,7 @@ namespace FoireMuses.Core.Controllers
 		private bool IsCollaborator(IScore aDoc)
 		{
 			IUser current = Context.Current.User;
-			
+
 			foreach (string collab in aDoc.CollaboratorsId)
 			{
 				if (current.Groups.Contains(collab) || collab == current.Id)
@@ -197,7 +198,7 @@ namespace FoireMuses.Core.Controllers
 			return false;
 		}
 
-		public Result<IScore> Update(string id,string rev,IScore aDoc, Result<IScore> aResult)
+		public Result<IScore> Update(string id, string rev, IScore aDoc, Result<IScore> aResult)
 		{
 			Coroutine.Invoke(UpdateHelper, id, rev, aDoc, new Result<IScore>()).WhenDone(
 				aResult.Return,
@@ -208,7 +209,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{
-			theScoreDataMapper.Delete(id,rev, new Result<bool>()).WhenDone(
+			theScoreDataMapper.Delete(id, rev, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -248,13 +249,14 @@ namespace FoireMuses.Core.Controllers
 		{
 			return theScoreDataMapper.CreateNew();
 		}
-	
+
 
 		public Result<bool> Exists(string id, Result<bool> aResult)
 		{
- 			this.Retrieve(id, new Result<IScore>()).WhenDone(
-				a=>{
-					if(a != null)
+			this.Retrieve(id, new Result<IScore>()).WhenDone(
+				a =>
+				{
+					if (a != null)
 						aResult.Return(true);
 					else
 						aResult.Return(false);
@@ -289,12 +291,16 @@ namespace FoireMuses.Core.Controllers
 			{
 				yield return Create(aScore, result);
 			}
+			
+			Result<IScore> score = new Result<IScore>();
+			yield return Retrieve(result.Value.Id, score);
+			aResult.Return(result.Value);
+			xdoc.Save("test");
+			//yield return Context.Current.Instance.SourceController.Exists("bla", new Result<bool>());
+			IList<string> lilyFileName = Context.Current.Instance.ConverterFactory.GetConverter(new MimeType("text/x-lilypond")).Convert("test");
 			//attach music xml to the created /updated score
 			Stream stream = new MemoryStream(xdoc.ToBytes());
 			yield return AddAttachment(result.Value.Id, stream, "$musicxml.xml", new Result<bool>());
-            Result<IScore> score = new Result<IScore>();
-			yield return Retrieve(result.Value.Id, score);
-			aResult.Return(result.Value);
 		}
 
 		public Result<IScore> AttachMusicXml(IScore aScore, XDoc xdoc, bool overwriteMusicXmlValues, Result<IScore> aResult)
