@@ -8,6 +8,6 @@ namespace FoireMuses.Core.Utils
 {
 	public class Const
 	{
-		const MimeType LilyPond = new MimeType("text/x-lilypond");
+		public static MimeType LilyPond = new MimeType("text/x-lilypond");
 	}
 }

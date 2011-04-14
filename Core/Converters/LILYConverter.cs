@@ -12,7 +12,7 @@ namespace FoireMuses.Core.Converters
 	{
 		public IList<string> Convert(string filePath)
 		{
-			Async.ExecuteProcess("python.exe", @"G:\Program Files\LilyPond\usr\bin\musicxml2ly " + filePath, Stream.Null, Stream.Null, Stream.Null, new Result<int>()).Wait();
+            Async.ExecuteProcess("python.exe", @"C:\Program Files (x86)\LilyPond\usr\bin\musicxml2ly " + filePath, Stream.Null, Stream.Null, Stream.Null, new Result<int>()).Wait();
 			IList<string> convertedFilesPaths = new List<string>();
 			if (File.Exists(filePath + ".ly"))
 			{

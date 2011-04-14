@@ -297,7 +297,7 @@ namespace FoireMuses.Core.Controllers
 			aResult.Return(result.Value);
 			xdoc.Save("test");
 			//yield return Context.Current.Instance.SourceController.Exists("bla", new Result<bool>());
-			IList<string> lilyFileName = Context.Current.Instance.ConverterFactory.GetConverter(new MimeType("text/x-lilypond")).Convert("test");
+			IList<string> lilyFileName = Context.Current.Instance.ConverterFactory.GetConverter(Const.LilyPond).Convert("test");
 			//attach music xml to the created /updated score
 			Stream stream = new MemoryStream(xdoc.ToBytes());
 			yield return AddAttachment(result.Value.Id, stream, "$musicxml.xml", new Result<bool>());

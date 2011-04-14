@@ -9,6 +9,7 @@ using Autofac;
 using FoireMuses.Core.Interfaces;
 using FoireMuses.Core.Converters;
 using System.Net.Mime;
+using FoireMuses.Core.Utils;
 
 namespace FoireMuses.Core
 {
@@ -29,19 +30,9 @@ namespace FoireMuses.Core
 
 		public IConverter GetConverter(MimeType type)
 		{
-			ContentType ct = new ContentType("text/lily");
-			switch (type.MainType)
-			{
-				case "PDF":
-					return PDFConverter;
-				case "PNG":
-					return PNGConverter;
-				case "LILY":
-					return LILYConverter;
-				case "MIDI":
-					return MIDIConverter;
-			}
-			throw new Exception();
+            if (type == Const.LilyPond)
+                return LILYConverter;
+            return null;
 		}
 	}
 }
