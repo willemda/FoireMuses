@@ -15,24 +15,28 @@ namespace FoireMuses.Core
 {
 	public class ConverterFactory : IConverterFactory
 	{
-		public IConverter PNGConverter { get; private set; }
-		public IConverter PDFConverter { get; private set; }
-		public IConverter LILYConverter { get; private set; }
-		public IConverter MIDIConverter { get; private set; }
+		IDictionary<MimeType,IConverter> Converters = new Dictionary<MimeType,IConverter>();
 
 		public ConverterFactory()
 		{
-			PNGConverter = new PNGConverter();
-			PDFConverter = new PDFConverter();
-			LILYConverter = new LILYConverter();
-			MIDIConverter = new MIDIConverter();
-		}
+			IConverter XmlToLilyPoundConverter = new Converter(ConvertHelper.ToLyCommand, ConvertHelper.ToLyArgs, ConvertHelper.ToLyExpectedFile);
+			IConverter LilyPoundToPdfConverter = new Converter(ConvertHelper.LilyPondCommand, ConvertHelper.ToPdfArgs, ConvertHelper.ToPdfExpectedFile);
+			IConverter LilyPoundToPostScriptConverter = new Converter(ConvertHelper.LilyPondCommand, ConvertHelper.ToPsArgs, ConvertHelper.ToPsExpectedFile);
+			IConverter PostScriptToPngConverter = new Converter(ConvertHelper.ToPngCommand, ConvertHelper.ToPngArgs, ConvertHelper.ToPngExpectedFile);
+			IConverter XmlToPostScriptConverter = new AndConverter(XmlToLilyPoundConverter, LilyPoundToPostScriptConverter);
+			IConverter XmlToPngConverter = new AndConverter(XmlToPostScriptConverter, PostScriptToPngConverter);
+			IConverter XmlToPdfConverter = new AndConverter(XmlToLilyPoundConverter, LilyPoundToPdfConverter);
 
+			Converters.Add(ConvertHelper.LilyPond, XmlToLilyPoundConverter);
+			Converters.Add(MimeType.PDF, XmlToPdfConverter);
+			Converters.Add(MimeType.PNG, XmlToPngConverter);
+		}
+		
 		public IConverter GetConverter(MimeType type)
 		{
-            if (type == Const.LilyPond)
-                return LILYConverter;
-            return null;
+			IConverter converter;
+			Converters.TryGetValue(type, out converter);
+			return converter;
 		}
 	}
 }

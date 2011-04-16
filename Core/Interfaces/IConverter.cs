@@ -7,6 +7,6 @@ namespace FoireMuses.Core.Interfaces
 {
 	public interface IConverter
 	{
-		IList<string> Convert(string filePath);
+		IList<string> Convert(string inputFilePath, string outputFilePath);
 	}
 }

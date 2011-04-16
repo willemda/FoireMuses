@@ -295,9 +295,20 @@ namespace FoireMuses.Core.Controllers
 			Result<IScore> score = new Result<IScore>();
 			yield return Retrieve(result.Value.Id, score);
 			aResult.Return(result.Value);
-			xdoc.Save("test");
-			//yield return Context.Current.Instance.SourceController.Exists("bla", new Result<bool>());
-			IList<string> lilyFileName = Context.Current.Instance.ConverterFactory.GetConverter(Const.LilyPond).Convert("test");
+			using(TemporaryFile inputFile = new TemporaryFile())
+			using(TemporaryFile outputFile = new TemporaryFile())
+			{
+				xdoc.Save(inputFile.Path);
+				//yield return Context.Current.Instance.SourceController.Exists("bla", new Result<bool>());
+				IList<string> pngsFilePath = Context.Current.Instance.ConverterFactory.GetConverter(MimeType.PNG).Convert(inputFile.Path, outputFile.Path);
+				int i = 1;
+				foreach (string pngFile in pngsFilePath)
+				{
+					yield return AddAttachment(result.Value.Id, File.OpenRead(pngFile), "$partition" + i + ".png", new Result<bool>());
+					File.Delete(pngFile);
+					i++;
+				}
+			}
 			//attach music xml to the created /updated score
 			Stream stream = new MemoryStream(xdoc.ToBytes());
 			yield return AddAttachment(result.Value.Id, stream, "$musicxml.xml", new Result<bool>());

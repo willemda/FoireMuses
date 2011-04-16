@@ -62,10 +62,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConverterFactory.cs" />
-    <Compile Include="Converters\MIDIConverter.cs" />
-    <Compile Include="Converters\LILYConverter.cs" />
-    <Compile Include="Converters\PDFConverter.cs" />
-    <Compile Include="Converters\PNGConverter.cs" />
+    <Compile Include="Converters\Converter.cs" />
+    <Compile Include="Converters\AndConverter.cs" />
     <Compile Include="Exceptions\BadCharacterException.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Controllers\PlayController.cs" />
@@ -98,10 +96,14 @@
     <Compile Include="Interfaces\IPlayController.cs" />
     <Compile Include="Interfaces\IScoreController.cs" />
     <Compile Include="Interfaces\ISourceController.cs" />
-    <Compile Include="Utils\Const.cs" />
+    <Compile Include="Utils\ConvertHelper.cs" />
+    <Compile Include="Utils\TemporaryFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ConfigConverters.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
