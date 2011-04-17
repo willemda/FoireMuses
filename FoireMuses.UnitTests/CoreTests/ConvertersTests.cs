@@ -65,13 +65,13 @@ namespace FoireMuses.UnitTests.CoreTests
 		[TestMethod]
 		public void ConvertToLilyMustBeOk()
 		{
-			XDoc xdoc = XDocFactory.From(File.OpenRead(@"G:\MozaVeilSample.xml"), MimeType.XML);
+			XDoc xdoc = XDocFactory.From(File.OpenRead(@"C:\Projects\MozaVeilSample.xml"), MimeType.XML);
 			using (TemporaryFile inputFile = new TemporaryFile())
 			using (TemporaryFile outputFile = new TemporaryFile())
 			{
 				xdoc.Save(inputFile.Path);
 				//yield return Context.Current.Instance.SourceController.Exists("bla", new Result<bool>());
-				IList<string> pngFilePath = Context.Current.Instance.ConverterFactory.GetConverter(MimeType.PDF).Convert(inputFile.Path, outputFile.Path);
+				IList<string> pngFilePath = Context.Current.Instance.ConverterFactory.GetConverter(MimeType.PNG).Convert(inputFile.Path, outputFile.Path);
 				foreach (string ooh in pngFilePath)
 				{
 					ooh.ToString();
