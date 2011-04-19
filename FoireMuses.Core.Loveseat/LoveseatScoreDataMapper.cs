@@ -88,6 +88,16 @@ namespace FoireMuses.Core.Loveseat{
 			return aResult;
 		}
 
+
+		public Result<Stream> GetAttachment(string id, string fileName, Result<Stream> aResult)
+		{
+			theCouchDatabase.GetAttachment(id, fileName, new Result<Stream>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
+
 		public Result<SearchResult<IScore>> SearchScoreForText(int offset, int max, string textSearch, IScore aScore, Result<SearchResult<IScore>> aResult)
 		{
 			throw new NotImplementedException();

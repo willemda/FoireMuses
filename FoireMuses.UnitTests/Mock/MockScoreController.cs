@@ -127,5 +127,17 @@ namespace FoireMuses.UnitTests.Mock
         {
             throw new NotImplementedException();
         }
-    }
+
+
+		public Result<Stream> GetAttachedFile(string scoreId, string fileName, Result<Stream> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+
+		public Result<Stream> GetConvertedScore(MindTouch.Dream.MimeType mimetype, string id, Result<Stream> aResult)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

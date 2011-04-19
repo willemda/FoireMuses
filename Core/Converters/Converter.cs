@@ -21,7 +21,7 @@ namespace FoireMuses.Core.Converters
 			this.ExpectedFileName = expectedName;
 		}
 
-		public IList<string> Convert(string inputFilePath, string outputFilePath)
+		public virtual IList<string> Convert(string inputFilePath, string outputFilePath)
 		{
 			System.Diagnostics.Process proc = new System.Diagnostics.Process();
 			proc.StartInfo.FileName = Command;

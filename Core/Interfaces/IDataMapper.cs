@@ -37,7 +37,8 @@ namespace FoireMuses.Core.Interfaces
 		Result<SearchResult<IScore>> SearchScoreForText(int offset, int max, string textSearch, IScore aScore, Result<SearchResult<IScore>> aResult);
 		Result<SearchResult<IScore>> SearchScoreForCode(int offset, int max, string code, IScore aScore, Result<SearchResult<IScore>> aResult);
 		Result<SearchResult<IScore>> ScoresFromSource(int offset, int max, string aSourceId, Result<SearchResult<IScore>> aResult);
-		Result<bool> AddAttachment(string aDocumentId, Stream file, string fileName, Result<bool> aResult); 
+		Result<bool> AddAttachment(string aDocumentId, Stream file, string fileName, Result<bool> aResult);
+		Result<Stream> GetAttachment(string scoreId, string FileName, Result<Stream> aResult);
 	}
 	public interface IUserDataMapper : IDataMapper<IUser>
 	{

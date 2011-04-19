@@ -331,5 +331,37 @@ namespace FoireMuses.Core.Controllers
 				);
 			return aResult;
 		}
+
+
+		public Result<Stream> GetAttachedFile(string scoreId, string fileName, Result<Stream> aResult)
+		{
+			theScoreDataMapper.GetAttachment(scoreId, fileName, new Result<Stream>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
+
+		public Result<Stream> GetConvertedScore(MimeType type, string scoreId, Result<Stream> aResult)
+		{
+			this.GetAttachedFile(scoreId, "$musicxml.xml", new Result<Stream>()).WhenDone(
+				a =>
+				{
+					using(TemporaryFile input = new TemporaryFile())
+					using(TemporaryFile output = new TemporaryFile())
+					{
+						XDoc doc = XDocFactory.From(a,MimeType.XML);
+						doc.Save(input.Path);
+						IConverter conv = Context.Current.Instance.ConverterFactory.GetConverter(type);
+						IList<string> res = conv.Convert(input.Path, output.Path);
+						string filePath = res.First();
+						aResult.Return(new MemoryStream(File.ReadAllBytes(filePath)));
+						File.Delete(filePath);
+					}
+				},
+				aResult.Throw
+				);
+			return aResult;
+		}
 	}
 }
