@@ -6,6 +6,8 @@ _ReSharper*
 *.suo
 *.user
 */TestResults/*
+/TestResults/*
+TestResults/*
 FoireMuses.5.1.ReSharper.user
 WebHost/services/*
 *.dat

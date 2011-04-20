@@ -227,7 +227,10 @@ namespace FoireMuses.Core.Business
 
 		public IEnumerable<string> Tags
 		{
-			get { return this["tags"].Values<string>(); }
+			get {
+				if (this["tags"] == null)
+					return null;
+				return this["tags"].Values<string>(); }
 		}
 
 		public void AddTag(string tag)
@@ -247,7 +250,10 @@ namespace FoireMuses.Core.Business
 
 		public string CreatorId
 		{
-			get { return this["creatorId"].Value<string>(); }
+			get {
+				if (this["creatorId"] == null)
+					return null;
+				return this["creatorId"].Value<string>(); }
 			private set { this["creatorId"] = value; }
 		}
 
