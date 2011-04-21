@@ -75,9 +75,10 @@ namespace FoireMuses.UnitTests.CoreTests
 			{
 				Offset = 0,
 				Max = 10,
-				Title = "belle"
+				Title = "belle",
+				Editor = "arnaud"
 			};
-			SearchResult<ScoreSearchResult> result = Context.Current.Instance.IndexController.SearchScore(q, new Result<SearchResult<ScoreSearchResult>>()).Wait();
+			SearchResult<IScoreSearchResult> result = Context.Current.Instance.IndexController.SearchScore(q, new Result<SearchResult<IScoreSearchResult>>()).Wait();
 		}
 
 	}

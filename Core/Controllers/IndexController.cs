@@ -13,6 +13,7 @@ using FoireMuses.Core.Interfaces;
 using Lucene.Net.QueryParsers;
 using FoireMuses.Core.Querys;
 using System.Collections;
+using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Controllers
 {
@@ -71,10 +72,10 @@ namespace FoireMuses.Core.Controllers
 		}
 
 
-		public Result DeleteScore(IScore score, Result aResult)
+		public Result DeleteScore(string id, Result aResult)
 		{
 			QueryParser queryParser = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "Id",perFieldAnalyzer);
-			Query query = queryParser.Parse(score.Id);
+			Query query = queryParser.Parse(id);
 			writer.DeleteDocuments(query);
 			aResult.Return();
 			return aResult;
@@ -83,30 +84,50 @@ namespace FoireMuses.Core.Controllers
 
 		public Result UpdateScore(IScore score, Result aResult)
 		{
-			this.DeleteScore(score, new Result());
+			this.DeleteScore(score.Id, new Result());
 			this.AddScore(score, new Result());
 			aResult.Return();
 			return aResult;
 		}
 
-		public Result<SearchResult<ScoreSearchResult>> SearchScore(ScoreQuery query, Result<SearchResult<ScoreSearchResult>> aResult)
+		public string ToJson<T>(SearchResult<T> aSearchResult) where T : ISearchResultItem
+		{
+			JObject jo = new JObject();
+			jo.Add("Offset", aSearchResult.Offset);
+			jo.Add("Max", aSearchResult.Max);
+			jo.Add("TotalCount", aSearchResult.TotalCount);
+			JArray ja = new JArray();
+			foreach (ISearchResultItem row in aSearchResult)
+			{
+				ja.Add(row.ToJson());
+			}
+			jo.Add("Rows", ja);
+			return jo.ToString();
+		}
+
+		public Result<SearchResult<IScoreSearchResult>> SearchScore(ScoreQuery query, Result<SearchResult<IScoreSearchResult>> aResult)
 		{
 			BooleanQuery q = new Lucene.Net.Search.BooleanQuery();
+			
 			if (query.Title != null)
 			{
-				q.Add(new TermQuery(new Term("Title", query.Title)), BooleanClause.Occur.MUST);
+				QueryParser qp = new QueryParser("Title", perFieldAnalyzer);
+				q.Add(qp.Parse(query.Title), BooleanClause.Occur.MUST);
 			}
 			if (query.Composer != null)
 			{
-				q.Add(new TermQuery(new Term("Composer", query.Composer)), BooleanClause.Occur.MUST);
+				QueryParser qp = new QueryParser("Composer", perFieldAnalyzer);
+				q.Add(qp.Parse(query.Composer), BooleanClause.Occur.MUST);
 			}
 			if (query.Editor != null)
 			{
-				q.Add(new TermQuery(new Term("Editor", query.Title)), BooleanClause.Occur.MUST);
+				QueryParser qp = new QueryParser("Editor", perFieldAnalyzer);
+				q.Add(qp.Parse(query.Editor), BooleanClause.Occur.MUST);
 			}
 			if (query.Verses != null)
 			{
-				q.Add(new TermQuery(new Term("Verses", query.Verses)), BooleanClause.Occur.MUST);
+				QueryParser qp = new QueryParser("Verses", perFieldAnalyzer);
+				q.Add(qp.Parse(query.Verses), BooleanClause.Occur.MUST);
 			}
 			if (query.Music != null)
 			{
@@ -117,13 +138,14 @@ namespace FoireMuses.Core.Controllers
 			Searcher indexSearch = new IndexSearcher(reader);
 			
 			TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
-			IList<ScoreSearchResult> results = new List<ScoreSearchResult>();
+			IList<IScoreSearchResult> results = new List<IScoreSearchResult>();
 			if(query.Offset < 0 || query.Offset > topDocs.totalHits)
 				throw new Exception();
 			int ToGo = (query.Offset + query.Max) > topDocs.totalHits? topDocs.totalHits:(query.Offset + query.Max);
 			for(int i = query.Offset; i<ToGo;i++){
 				Document d = reader.Document(topDocs.scoreDocs[i].doc);
 				ScoreSearchResult score = new ScoreSearchResult();
+				score.Id = d.ExtractValue("Id");
 				score.Title = d.ExtractValue("Title");
 				score.Composer = d.ExtractValue("Composer");
 				score.Editor = d.ExtractValue("Editor");
@@ -131,7 +153,7 @@ namespace FoireMuses.Core.Controllers
 				score.Music = d.ExtractValue("Music");
 				results.Add(score);
 			}
-			SearchResult<ScoreSearchResult> searchResult = new SearchResult<ScoreSearchResult>(results,query.Offset,query.Max,topDocs.totalHits);
+			SearchResult<IScoreSearchResult> searchResult = new SearchResult<IScoreSearchResult>(results, query.Offset, query.Max, topDocs.totalHits);
 			aResult.Return(searchResult);
 			return aResult;
 		}

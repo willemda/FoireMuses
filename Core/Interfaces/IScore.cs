@@ -12,7 +12,7 @@ namespace FoireMuses.Core.Interfaces
 
 		string Title{get;set;}
 		string CodageMelodiqueRISM { get; set; }
-		string CodageParIntervalle { get; set; }
+		string CodageParIntervalles { get; set; }
         string CodageRythmique { get; set; }
 		string Coirault { get; set; }
 		string Composer { get; set; }

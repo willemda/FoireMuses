@@ -89,6 +89,7 @@ namespace FoireMuses.Core.Controllers
 			Result<IScore> resultCreate = new Result<IScore>();
 			yield return theScoreDataMapper.Create(aDoc, resultCreate);
 			aResult.Return(resultCreate.Value);
+			yield return Context.Current.Instance.IndexController.AddScore(resultCreate.Value, new Result());
 		}
 
 		private Yield CheckSources(IScore aScore, Result aResult)
@@ -171,6 +172,7 @@ namespace FoireMuses.Core.Controllers
 			Result<IScore> scoreResult = new Result<IScore>();
 			yield return theScoreDataMapper.Update(id, rev, aDoc, scoreResult);
 			aResult.Return(scoreResult.Value);
+			yield return Context.Current.Instance.IndexController.UpdateScore(scoreResult.Value, new Result());
 		}
 
 		public bool HasAuthorization(IScore aDoc)
@@ -210,7 +212,10 @@ namespace FoireMuses.Core.Controllers
 		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{
 			theScoreDataMapper.Delete(id, rev, new Result<bool>()).WhenDone(
-				aResult.Return,
+				a => {
+					aResult.Return(a);
+					Context.Current.Instance.IndexController.DeleteScore(id, new Result());
+				},
 				aResult.Throw
 				);
 			return aResult;
@@ -277,7 +282,7 @@ namespace FoireMuses.Core.Controllers
 			{
 				IScore themusicxmlScore = theScoreDataMapper.FromXml(xdoc);
 				aScore.CodageMelodiqueRISM = themusicxmlScore.CodageMelodiqueRISM;
-				aScore.CodageParIntervalle = themusicxmlScore.CodageParIntervalle;
+				aScore.CodageParIntervalles = themusicxmlScore.CodageParIntervalles;
 				aScore.Title = themusicxmlScore.Title;
 				aScore.Composer = themusicxmlScore.Composer;
 				aScore.Verses = themusicxmlScore.Verses;

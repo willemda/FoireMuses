@@ -11,7 +11,8 @@ namespace FoireMuses.Core.Interfaces
 	{
 		Result AddScore(IScore score, Result aResult);
 		Result UpdateScore(IScore score, Result aResult);
-		Result DeleteScore(IScore score, Result aResult);
-		Result<SearchResult<ScoreSearchResult>> SearchScore(ScoreQuery query, Result<SearchResult<ScoreSearchResult>> aResult);
+		Result DeleteScore(string scoreId, Result aResult);
+		Result<SearchResult<IScoreSearchResult>> SearchScore(ScoreQuery query, Result<SearchResult<IScoreSearchResult>> aResult);
+		string ToJson<T>(SearchResult<T> aSearchResult)where T : ISearchResultItem;
 	}
 }

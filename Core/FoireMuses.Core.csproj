@@ -78,6 +78,7 @@
     <Compile Include="Exceptions\EmptyFieldException.cs" />
     <Compile Include="Exceptions\InternalError.cs" />
     <Compile Include="Exceptions\NoRightException.cs" />
+    <Compile Include="Helpers\Helpers.cs" />
     <Compile Include="Instance.cs" />
     <Compile Include="InstanceFactory.cs" />
     <Compile Include="Interfaces\IBaseController.cs" />
@@ -88,15 +89,17 @@
     <Compile Include="Interfaces\IMusicalSource.cs" />
     <Compile Include="Interfaces\IPlay.cs" />
     <Compile Include="Interfaces\IScore.cs" />
+    <Compile Include="Interfaces\IScoreSearchResult.cs" />
     <Compile Include="Interfaces\ISource.cs" />
     <Compile Include="Interfaces\ITextualSource.cs" />
     <Compile Include="Interfaces\IUser.cs" />
     <Compile Include="Interfaces\IUserController.cs" />
     <Compile Include="Exceptions\NoResultException.cs" />
+    <Compile Include="Interfaces\ISearchResultItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Querys\ScoreQuery.cs" />
-    <Compile Include="ScoreSearchResult.cs" />
-    <Compile Include="SearchResult.cs" />
+    <Compile Include="Search\ScoreSearchResult.cs" />
+    <Compile Include="Search\SearchResult.cs" />
     <Compile Include="Utils\ArgCheck.cs" />
     <Compile Include="Interfaces\ISettingsController.cs" />
     <Compile Include="Controllers\XmlSettingsController.cs" />

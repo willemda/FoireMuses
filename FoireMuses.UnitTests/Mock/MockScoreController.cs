@@ -111,7 +111,7 @@ namespace FoireMuses.UnitTests.Mock
             {
                 IScore themusicxmlScore = FromXml(xdoc);
                 aScore.CodageMelodiqueRISM = themusicxmlScore.CodageMelodiqueRISM;
-                aScore.CodageParIntervalle = themusicxmlScore.CodageParIntervalle;
+                aScore.CodageParIntervalles = themusicxmlScore.CodageParIntervalles;
                 aScore.Title = themusicxmlScore.Title;
                 aScore.Composer = themusicxmlScore.Composer;
                 aScore.Verses = themusicxmlScore.Verses;

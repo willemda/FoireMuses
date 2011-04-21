@@ -60,15 +60,15 @@ namespace FoireMuses.Core.Business
             set { this["codageMelodiqueRISM"] = value; }
         }
 
-        public string CodageParIntervalle
+        public string CodageParIntervalles
         {
             get
             {
-                if (this["codageParIntervalle"] == null)
+                if (this["codageParIntervalles"] == null)
                     return null;
-                return this["codageParIntervalle"].Value<string>();
+                return this["codageParIntervalles"].Value<string>();
             }
-            set { this["codageParIntervalle"] = value; }
+            set { this["codageParIntervalles"] = value; }
         }
 
         public string CodageRythmique

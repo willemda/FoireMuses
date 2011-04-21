@@ -10,6 +10,7 @@ namespace FoireMuses.WebService
 	using Yield = IEnumerator<IYield>;
 	using System.IO;
 	using FoireMuses.Core.Utils;
+	using FoireMuses.Core.Querys;
 
 	public partial class Services
 	{
@@ -79,6 +80,32 @@ namespace FoireMuses.WebService
 			}
 			
 		}
+
+		[DreamFeature("GET:scores/search", "Search for a  score")]
+		[DreamFeatureParam("music","string","music partition to search for")]
+		[DreamFeatureParam("title", "string", "the title")]
+		[DreamFeatureParam("composer", "string", "the composer")]
+		[DreamFeatureParam("editor", "string", "the editor")]
+		[DreamFeatureParam("verses", "string", "verses in the score to search for")]
+		[DreamFeatureParam("offset", "int", "result to start with")]
+		[DreamFeatureParam("max", "int", "max results")]
+		public Yield SearchScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+		{
+			ScoreQuery query = new ScoreQuery()
+			{
+				Composer = context.GetParam("composer",null),
+				Editor = context.GetParam("editor",null),
+				Title = context.GetParam("title",null),
+				Verses = context.GetParam("verses",null),
+				Music = context.GetParam("music",null),
+				Offset = context.GetParam<int>("offset", 0),
+				Max = context.GetParam<int>("max", 20)
+			};
+			Result<SearchResult<IScoreSearchResult>> result = new Result<SearchResult<IScoreSearchResult>>();
+			yield return Context.Current.Instance.IndexController.SearchScore(query, result);
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.IndexController.ToJson(result.Value)));
+		}
+
 
 		[DreamFeature("POST:scores", "Create new score")]
 		public Yield CreateScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
