@@ -297,13 +297,15 @@ namespace FoireMuses.Core.Controllers
 				yield return Create(aScore, result);
 			}
 			
-			Result<IScore> score = new Result<IScore>();
-			yield return Retrieve(result.Value.Id, score);
 			aResult.Return(result.Value);
 			using(TemporaryFile inputFile = new TemporaryFile())
 			using(TemporaryFile outputFile = new TemporaryFile())
 			{
+				theLogger.Info("Saving xdoc to " + inputFile.Path);
+				File.Delete(inputFile.Path);
 				xdoc.Save(inputFile.Path);
+				theLogger.Info("XDoc saved");
+				theLogger.Info("Getting Converter and converting");
 				//yield return Context.Current.Instance.SourceController.Exists("bla", new Result<bool>());
 				IList<string> pngsFilePath = Context.Current.Instance.ConverterFactory.GetConverter(MimeType.PNG).Convert(inputFile.Path, outputFile.Path);
 				int i = 1;

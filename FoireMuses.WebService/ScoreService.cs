@@ -19,6 +19,7 @@ namespace FoireMuses.WebService
 		[DreamFeatureParam("offset", "int?", "skip the offset first results")]
 		public Yield GetScores(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
+			theLogger.Info("GetScores");
 			Result<SearchResult<IScore>> result = new Result<SearchResult<IScore>>();
 			int limit = context.GetParam("max", 20);
 			int offset = context.GetParam("offset", 0);
@@ -33,6 +34,7 @@ namespace FoireMuses.WebService
 		[DreamFeatureParam("offset", "int?", "skip the offset first results")]
 		public Yield GetScoresFromSource(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
+			theLogger.Info("GetScoresFromSource");
 			Result<SearchResult<IScore>> result = new Result<SearchResult<IScore>>();
 			int limit = context.GetParam("max", 20);
 			int offset = context.GetParam("offset", 0);
@@ -47,6 +49,7 @@ namespace FoireMuses.WebService
 		[DreamFeature("GET:scores/{id}/{fileName}", "Get the score given by the id number")]
 		public Yield GetScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
+			theLogger.Info("GetScore");
 			string id = context.GetParam("id");
 			string fileName = context.GetParam("fileName",".json").ToLower();
 			string fileType = Path.GetExtension(fileName);
@@ -91,6 +94,7 @@ namespace FoireMuses.WebService
 		[DreamFeatureParam("max", "int", "max results")]
 		public Yield SearchScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
+			theLogger.Info("SearchScore");
 			ScoreQuery query = new ScoreQuery()
 			{
 				Composer = context.GetParam("composer",null),

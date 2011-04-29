@@ -159,7 +159,7 @@ namespace FoireMuses.Core.Loveseat{
 		{
 			XScore xscore = new XScore(aXML);
 			JScore js = new JScore();
-			js["codageParIntervalle"] = xscore.GetCodageParIntervalle();
+			js["codageParIntervalles"] = xscore.GetCodageParIntervalle();
 			js["codageMelodiqueRISM"] = xscore.GetCodageMelodiqueRISM();
 			js["verses"] = xscore.GetText();
 			js["title"] = xscore.MovementTitle;

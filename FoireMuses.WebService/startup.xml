@@ -27,6 +27,10 @@
 							type="FoireMuses.Core.Interfaces.IConverterFactory, FoireMuses.Core"
 							implementation="FoireMuses.Core.ConverterFactory, FoireMuses.Core"
 							name="ConverterFactory"/>
+            <component
+							type="FoireMuses.Core.Interfaces.INotificationManager, FoireMuses.Core"
+							implementation="FoireMuses.Core.Loveseat.NotificationManager, FoireMuses.Core.Loveseat"
+							name="NotificationManager"/>
           </components>
         </instance>
       </instances>

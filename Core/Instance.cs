@@ -69,6 +69,7 @@ namespace FoireMuses.Core
 				builder.Register<IndexController>().As<IIndexController>();
 			}
 
+
 			builder.Build(container);
 
 			ScoreController = container.Resolve<IScoreController>();

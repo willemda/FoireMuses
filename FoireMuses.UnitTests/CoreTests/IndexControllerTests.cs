@@ -22,6 +22,8 @@ using System.IO;
 using MindTouch.Dream;
 using FoireMuses.Core.Utils;
 using FoireMuses.Core.Querys;
+using MusicXml;
+using FoireMuses.MusicXMLImport;
 #endif
 namespace FoireMuses.UnitTests.CoreTests
 {
@@ -50,7 +52,10 @@ namespace FoireMuses.UnitTests.CoreTests
 				.Attr("name", "UserDataMapper").End()
 				.Start("component").Attr("type", "FoireMuses.Core.Interfaces.IConverterFactory, FoireMuses.Core")
 				.Attr("implementation", "FoireMuses.Core.ConverterFactory, FoireMuses.Core")
-				.Attr("name", "UserDataMapper").End()
+				.Attr("name", "ConverterFactory").End()
+				.Start("component").Attr("type", "FoireMuses.Core.Interfaces.INotificationManager, FoireMuses.Core")
+				.Attr("implementation", "FoireMuses.Core.Loveseat.NotificationManager, FoireMuses.Core.Loveseat")
+				.Attr("name", "ConverterFactory").End()
 				.End().End();
 			theInstanceFactory = new InstanceFactory(new ContainerBuilder().Build(), instances);
 		}
@@ -81,5 +86,17 @@ namespace FoireMuses.UnitTests.CoreTests
 			SearchResult<IScoreSearchResult> result = Context.Current.Instance.IndexController.SearchScore(q, new Result<SearchResult<IScoreSearchResult>>()).Wait();
 		}
 
+
+		[TestMethod]
+		public void ConvertLilyToCodeMustBeOk()
+		{
+			XDoc doc = XDocFactory.From(File.OpenRead(@"G:\test.xml"), MimeType.XML);
+			string lily = "c' d' e' f' dis'";
+			XScore score = new XScore(doc);
+			string codage = score.GetCodageMelodiqueRISM();
+			string codage2 = score.GetCodageParIntervalle();
+			string code = Context.Current.Instance.IndexController.LilyToCodageMelodiqueRISM(lily);
+			string code2 = Context.Current.Instance.IndexController.LilyToCodageParIntervalles(lily);
+		}
 	}
 }

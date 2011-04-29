@@ -14,5 +14,7 @@ namespace FoireMuses.Core.Interfaces
 		Result DeleteScore(string scoreId, Result aResult);
 		Result<SearchResult<IScoreSearchResult>> SearchScore(ScoreQuery query, Result<SearchResult<IScoreSearchResult>> aResult);
 		string ToJson<T>(SearchResult<T> aSearchResult)where T : ISearchResultItem;
+		string LilyToCodageMelodiqueRISM(string lily);
+		string LilyToCodageParIntervalles(string lily);
 	}
 }

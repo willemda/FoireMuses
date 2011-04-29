@@ -82,6 +82,28 @@ namespace FoireMuses.Core.Business
             set { this["codageRythmique"] = value; }
         }
 
+		public string Code1
+		{
+			get
+			{
+				if (this["code1"] == null)
+					return null;
+				return this["code1"].Value<string>();
+			}
+			set { this["code1"] = value; }
+		}
+
+		public string Code2
+		{
+			get
+			{
+				if (this["code2"] == null)
+					return null;
+				return this["code2"].Value<string>();
+			}
+			set { this["code2"] = value; }
+		}
+
         public string Coirault
         {
             get

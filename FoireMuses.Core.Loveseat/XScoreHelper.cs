@@ -32,7 +32,8 @@ namespace FoireMuses.MusicXMLImport
 							code2.Append(value);
 							code2.Append(" ");
 						}
-						lastPitch = pitch;
+						if(pitch!=null)
+							lastPitch = pitch;
 					}
 				}
 				break;

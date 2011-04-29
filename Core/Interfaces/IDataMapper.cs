@@ -9,6 +9,20 @@ using System.IO;
 
 namespace FoireMuses.Core.Interfaces
 {
+
+	public class EventArgs<T> : EventArgs{
+		public T Item{get;set;}
+	}
+
+	public interface INotificationManager
+	{
+		event EventHandler<EventArgs<IScore>> ScoreChanged;
+		event EventHandler<EventArgs<IPlay>> PlayChanged;
+		event EventHandler<EventArgs<ISource>> SourceChanged;
+		void Start();
+		void Stop();
+	}
+
 	public interface IDataMapper<T>
 	{
 		Result<T> Create(T aDocument, Result<T> aResult);

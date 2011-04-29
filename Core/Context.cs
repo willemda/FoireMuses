@@ -90,6 +90,7 @@ namespace FoireMuses.Core
 
 		public void Dispose()
 		{
+			theLogger.Info("Disposing");
 			if (isTaskDisposed)
 			{
 				Console.WriteLine("disposing already disposed context");

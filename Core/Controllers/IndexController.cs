@@ -14,6 +14,7 @@ using Lucene.Net.QueryParsers;
 using FoireMuses.Core.Querys;
 using System.Collections;
 using Newtonsoft.Json.Linq;
+using System.Text.RegularExpressions;
 
 namespace FoireMuses.Core.Controllers
 {
@@ -24,9 +25,13 @@ namespace FoireMuses.Core.Controllers
 		private PerFieldAnalyzerWrapper perFieldAnalyzer;
 		private Analyzer keywordAnalyzer;
 		private Analyzer standardAnalyzer;
+		private INotificationManager theNotificationManager;
+		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(IndexController));
 
-		public IndexController()
+		public IndexController(INotificationManager notif)
 		{
+			theLogger.Info("Creation of the IndexController");
+			theNotificationManager = notif;
 			directory = FSDirectory.Open(new System.IO.DirectoryInfo(Environment.CurrentDirectory + "\\LuceneIndex"));
 			keywordAnalyzer = new KeywordAnalyzer();
 			standardAnalyzer = new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29);
@@ -35,6 +40,28 @@ namespace FoireMuses.Core.Controllers
 			perFieldAnalyzer.AddAnalyzer("codageMelodiqueRISM", keywordAnalyzer);
 			perFieldAnalyzer.AddAnalyzer("codageParIntervalles", keywordAnalyzer);
 			writer = new IndexWriter(directory, perFieldAnalyzer, true, IndexWriter.MaxFieldLength.LIMITED);
+			theNotificationManager.ScoreChanged += new EventHandler<EventArgs<IScore>>(theNotificationManager_ScoreChanged);
+			theNotificationManager.PlayChanged += new EventHandler<EventArgs<IPlay>>(theNotificationManager_PlayChanged);
+			theNotificationManager.SourceChanged += new EventHandler<EventArgs<ISource>>(theNotificationManager_SourceChanged);
+			theNotificationManager.Start();
+		}
+
+		void  theNotificationManager_SourceChanged(object sender, EventArgs<ISource> e)
+		{
+			theLogger.Info("Source Changed - updating index");
+ 			//throw new NotImplementedException();
+		}
+
+		void  theNotificationManager_PlayChanged(object sender, EventArgs<IPlay> e)
+		{
+			theLogger.Info("Play Changed - updating index");
+ 			//throw new NotImplementedException();
+		}
+
+		void  theNotificationManager_ScoreChanged(object sender, EventArgs<IScore> e)
+		{
+			theLogger.Info("Score Changed - updating index");
+ 			UpdateScore(e.Item, new Result()).Wait();
 		}
 
 
@@ -42,6 +69,11 @@ namespace FoireMuses.Core.Controllers
 			Document d = new Document();
 			d.AddCheck("Id",score.Id,Field.Store.YES, Field.Index.NOT_ANALYZED);
 			d.AddCheck("Rev", score.Rev, Field.Store.YES, Field.Index.NOT_ANALYZED);
+			d.AddCheck("CodageMelodiqueRISM", score.CodageMelodiqueRISM, Field.Store.NO, Field.Index.ANALYZED);
+			d.AddCheck("CodageParIntervalles", score.CodageParIntervalles, Field.Store.NO, Field.Index.ANALYZED);
+			d.AddCheck("CodageRythmique", score.CodageRythmique, Field.Store.NO, Field.Index.ANALYZED);
+			d.AddCheck("CodageMelodiqueRISM", score.Code1, Field.Store.NO, Field.Index.ANALYZED);
+			d.AddCheck("CodageParIntervalles", score.Code2, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("Composer", score.Composer, Field.Store.YES, Field.Index.ANALYZED);
 			d.AddCheck("Editor", score.Editor, Field.Store.YES, Field.Index.ANALYZED);
 			d.AddCheck("Comments", score.Comments, Field.Store.NO, Field.Index.ANALYZED);
@@ -65,7 +97,6 @@ namespace FoireMuses.Core.Controllers
 			{
 				writer.AddDocument(d, perFieldAnalyzer);
 				writer.Commit();
-				writer.Flush();
 			}
 			aResult.Return();
 			return aResult;
@@ -93,50 +124,53 @@ namespace FoireMuses.Core.Controllers
 		public string ToJson<T>(SearchResult<T> aSearchResult) where T : ISearchResultItem
 		{
 			JObject jo = new JObject();
-			jo.Add("Offset", aSearchResult.Offset);
-			jo.Add("Max", aSearchResult.Max);
-			jo.Add("TotalCount", aSearchResult.TotalCount);
+			jo.Add("offset", aSearchResult.Offset);
+			jo.Add("max", aSearchResult.Max);
+			jo.Add("total_rows", aSearchResult.TotalCount);
 			JArray ja = new JArray();
 			foreach (ISearchResultItem row in aSearchResult)
 			{
-				ja.Add(row.ToJson());
+				ja.Add(JObject.Parse(row.ToJson()));
 			}
-			jo.Add("Rows", ja);
+			jo.Add("rows", ja);
 			return jo.ToString();
 		}
 
 		public Result<SearchResult<IScoreSearchResult>> SearchScore(ScoreQuery query, Result<SearchResult<IScoreSearchResult>> aResult)
 		{
-			BooleanQuery q = new Lucene.Net.Search.BooleanQuery();
-			
-			if (query.Title != null)
+			theLogger.Info("Searching Score");
+			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "Title", perFieldAnalyzer);
+
+			StringBuilder queryString = new StringBuilder();
+			if (!String.IsNullOrEmpty(query.Title))
 			{
-				QueryParser qp = new QueryParser("Title", perFieldAnalyzer);
-				q.Add(qp.Parse(query.Title), BooleanClause.Occur.MUST);
+				queryString.AppendFormat("Title:\"{0}\" ", query.Title);
 			}
-			if (query.Composer != null)
+			if (!String.IsNullOrEmpty(query.Composer))
 			{
-				QueryParser qp = new QueryParser("Composer", perFieldAnalyzer);
-				q.Add(qp.Parse(query.Composer), BooleanClause.Occur.MUST);
+				queryString.AppendFormat("Composer:\"{0}\"", query.Composer);
 			}
-			if (query.Editor != null)
+			if (!String.IsNullOrEmpty(query.Editor))
 			{
-				QueryParser qp = new QueryParser("Editor", perFieldAnalyzer);
-				q.Add(qp.Parse(query.Editor), BooleanClause.Occur.MUST);
+				queryString.AppendFormat("Editor:\"{0}\"", query.Editor);
 			}
-			if (query.Verses != null)
+			if (!String.IsNullOrEmpty(query.Verses))
 			{
-				QueryParser qp = new QueryParser("Verses", perFieldAnalyzer);
-				q.Add(qp.Parse(query.Verses), BooleanClause.Occur.MUST);
+				queryString.AppendFormat("Verses:\"{0}\"", query.Verses);
 			}
-			if (query.Music != null)
+			if (!String.IsNullOrEmpty(query.Music))
 			{
-				//convertir et ajouter comme terme de recherche
+				queryString.AppendFormat("CodageMelodiqueRISM:\"{0}\"", LilyToCodageMelodiqueRISM(query.Music));
+
+				queryString.AppendFormat("CodageParIntervalles:\"{0}\"", LilyToCodageParIntervalles(query.Music));
 			}
+
+			Query q = qp.Parse(queryString.ToString());
+			string toto = q.ToString();
 
 			IndexReader reader = IndexReader.Open(directory,true);
 			Searcher indexSearch = new IndexSearcher(reader);
-			
+
 			TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
 			IList<IScoreSearchResult> results = new List<IScoreSearchResult>();
 			if(query.Offset < 0 || query.Offset > topDocs.totalHits)
@@ -157,6 +191,95 @@ namespace FoireMuses.Core.Controllers
 			aResult.Return(searchResult);
 			return aResult;
 		}
+
+		private string[] pitches = new string[] {"c", "ces", "cis", "d", "des", "dis", "e", "f", "fes", "fis", "g", "ges", "gis", "a", "aes", "ais", "b" };
+		private int[] pitchesValue = new int[] {0, 1, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 8, 9, 10, 10, 11};
+
+
+
+		public string LilyToCodageParIntervalles(string lily)
+		{
+			string cpi = "";
+			string[] notes = lily.Split(new char[] { ' ' });
+			int lastNoteValue = -1;
+			foreach (string note in notes)
+			{
+				int valeur = 0;
+				string maNote = note;
+				Match m = Regex.Match(maNote, @"\w+'*");
+				if (!m.Success)
+					break;
+				maNote = m.Value;
+				while (maNote.Substring(maNote.Length - 1) == "'")
+				{
+					valeur += 12;
+					maNote = maNote.Substring(0, maNote.Length - 1);
+				}
+				if (maNote == "r")
+					break;
+				for (int i = 0; i < pitches.Length; i++)
+				{
+					if (pitches[i] == maNote)
+					{
+						valeur += pitchesValue[i];
+						if (lastNoteValue == -1)
+						{
+							lastNoteValue = valeur;
+						}
+						else
+						{
+							cpi += " ";
+							cpi += valeur - lastNoteValue;
+							lastNoteValue = valeur;
+						}
+						break;
+					}
+				}
+			}
+			return cpi;
+		}
+
+		public string LilyToCodageMelodiqueRISM(string lily)
+		{
+			string cpi = "0";
+			string [] notes = lily.Split(new char[]{' '});
+			int lastNoteValue = -1;
+			foreach (string note in notes)
+			{
+				int valeur = 0;
+				string maNote = note;
+				Match m = Regex.Match(maNote,@"\w+'*");
+				if (!m.Success)
+					break;
+				maNote = m.Value;
+				while (maNote.Substring(maNote.Length - 1) == "'")
+				{
+					valeur += 12;
+					maNote = maNote.Substring(0, maNote.Length - 1);
+				}
+				if (maNote == "r")
+					break;
+				for (int i = 0; i < pitches.Length; i++)
+				{
+					if (pitches[i] == maNote)
+					{
+						valeur += pitchesValue[i];
+						if (lastNoteValue == -1)
+						{
+							lastNoteValue = valeur;
+						}
+						else
+						{
+							cpi += " ";
+							cpi += valeur - lastNoteValue;
+						}
+						break;
+					}	
+				}
+			}
+			return cpi;
+		}
+
 	}
 
 	public static class DocumentHelper
