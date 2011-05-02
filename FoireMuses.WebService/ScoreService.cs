@@ -90,8 +90,9 @@ namespace FoireMuses.WebService
 		[DreamFeatureParam("composer", "string", "the composer")]
 		[DreamFeatureParam("editor", "string", "the editor")]
 		[DreamFeatureParam("verses", "string", "verses in the score to search for")]
-		[DreamFeatureParam("offset", "int", "result to start with")]
-		[DreamFeatureParam("max", "int", "max results")]
+        [DreamFeatureParam("isMaster","bool?", "is master or not")]
+		[DreamFeatureParam("offset", "int?", "result to start with")]
+		[DreamFeatureParam("max", "int?", "max results")]
 		public Yield SearchScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			theLogger.Info("SearchScore");
@@ -102,6 +103,7 @@ namespace FoireMuses.WebService
 				Title = context.GetParam("title",null),
 				Verses = context.GetParam("verses",null),
 				Music = context.GetParam("music",null),
+                IsMaster = context.GetParam("isMaster",null),
 				Offset = context.GetParam<int>("offset", 0),
 				Max = context.GetParam<int>("max", 20)
 			};

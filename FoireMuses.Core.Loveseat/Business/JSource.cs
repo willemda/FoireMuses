@@ -143,34 +143,36 @@ namespace FoireMuses.Core.Business
             this["collaboratorsId"] = this["collaboratorsId"].Value<JArray>().Remove(collab);
         }
 
-		public override void Created()
-		{
-			base.Created();
-		}
+        public override void Created()
+        {
+            base.Created();
+        }
 
-		public override void Creating()
-		{
-			base.Creating();
-		}
+        public override void Creating()
+        {
+            base.Creating();
+            CreatorId = Context.Current.User.Id;
+        }
 
-		public override void Deleted()
-		{
-			base.Deleted();
-		}
+        public override void Deleted()
+        {
+            base.Deleted();
+        }
 
-		public override void Deleting()
-		{
-			base.Deleting();
-		}
+        public override void Deleting()
+        {
+            base.Deleting();
+        }
 
-		public override void Updated()
-		{
-			base.Updated();
-		}
+        public override void Updated()
+        {
+            base.Updated();
+        }
 
-		public override void Updating()
-		{
-			base.Updating();
-		}
+        public override void Updating()
+        {
+            base.Updating();
+            LastModifierId = Context.Current.User.Id;
+        }
 	}
 }

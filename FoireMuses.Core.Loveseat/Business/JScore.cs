@@ -36,6 +36,28 @@ namespace FoireMuses.Core.Business
 			}
 		}
 
+        public bool IsMaster
+        {
+            get
+            {
+                if (this["isMaster"] == null)
+                    return false;
+                return this["isMaster"].Value<bool>();
+            }
+            set { this["isMaster"] = value; }
+        }
+
+        public string MasterId
+        {
+            get
+            {
+                if (this["masterId"] == null)
+                    return null;
+                return this["masterId"].Value<string>();
+            }
+            set { this["masterId"] = value; }
+        }
+
         public string Title
         {
             get

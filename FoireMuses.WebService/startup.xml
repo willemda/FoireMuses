@@ -24,6 +24,10 @@
 							implementation="FoireMuses.Core.Loveseat.LoveseatPlayDataMapper, FoireMuses.Core.Loveseat"
 							name="PlayDataMapper"/>
             <component
+							type="FoireMuses.Core.Interfaces.ISourcePageDataMapper, FoireMuses.Core"
+							implementation="FoireMuses.Core.Loveseat.LoveseatSourcePageDataMapper, FoireMuses.Core.Loveseat"
+							name="SourcePageDataMapper"/>
+            <component
 							type="FoireMuses.Core.Interfaces.IConverterFactory, FoireMuses.Core"
 							implementation="FoireMuses.Core.ConverterFactory, FoireMuses.Core"
 							name="ConverterFactory"/>

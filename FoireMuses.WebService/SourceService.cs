@@ -55,7 +55,7 @@ namespace FoireMuses.WebService
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourceController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("PUT:sources/{id}", "Update the source")]
+		[DreamFeature("PUT:sources", "Update the source")]
 		[DreamFeatureParam("{id}", "String", "Source id")]
 		[DreamFeatureParam("{rev}", "String", "Source revision id")]
 		public Yield UpdateSource(DreamContext context, DreamMessage request, Result<DreamMessage> response)

@@ -69,6 +69,7 @@ namespace FoireMuses.Core.Controllers
 			Document d = new Document();
 			d.AddCheck("Id",score.Id,Field.Store.YES, Field.Index.NOT_ANALYZED);
 			d.AddCheck("Rev", score.Rev, Field.Store.YES, Field.Index.NOT_ANALYZED);
+            d.AddCheck("IsMaster", score.IsMaster, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("CodageMelodiqueRISM", score.CodageMelodiqueRISM, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("CodageParIntervalles", score.CodageParIntervalles, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("CodageRythmique", score.CodageRythmique, Field.Store.NO, Field.Index.ANALYZED);
@@ -144,26 +145,30 @@ namespace FoireMuses.Core.Controllers
 			StringBuilder queryString = new StringBuilder();
 			if (!String.IsNullOrEmpty(query.Title))
 			{
-				queryString.AppendFormat("Title:\"{0}\" ", query.Title);
+				queryString.AppendFormat("(Title:\"{0}\" + ", query.Title);
 			}
 			if (!String.IsNullOrEmpty(query.Composer))
 			{
-				queryString.AppendFormat("Composer:\"{0}\"", query.Composer);
+				queryString.AppendFormat("Composer:\"{0}\" + ", query.Composer);
 			}
 			if (!String.IsNullOrEmpty(query.Editor))
 			{
-				queryString.AppendFormat("Editor:\"{0}\"", query.Editor);
+				queryString.AppendFormat("Editor:\"{0}\" + ", query.Editor);
 			}
 			if (!String.IsNullOrEmpty(query.Verses))
 			{
-				queryString.AppendFormat("Verses:\"{0}\"", query.Verses);
+				queryString.AppendFormat("Verses:\"{0}\" + ", query.Verses);
 			}
 			if (!String.IsNullOrEmpty(query.Music))
 			{
-				queryString.AppendFormat("CodageMelodiqueRISM:\"{0}\"", LilyToCodageMelodiqueRISM(query.Music));
+				queryString.AppendFormat("CodageMelodiqueRISM:\"{0}\" + ", LilyToCodageMelodiqueRISM(query.Music));
 
-				queryString.AppendFormat("CodageParIntervalles:\"{0}\"", LilyToCodageParIntervalles(query.Music));
+				queryString.AppendFormat("CodageParIntervalles:\"{0}\" + ", LilyToCodageParIntervalles(query.Music));
 			}
+            if (!String.IsNullOrEmpty(query.IsMaster))
+            {
+                queryString.AppendFormat("IsMaster:\"{0}\")", query.IsMaster);
+            }
 
 			Query q = qp.Parse(queryString.ToString());
 			string toto = q.ToString();
@@ -289,6 +294,12 @@ namespace FoireMuses.Core.Controllers
 			if (fieldValue != null)
 				doc.Add(new Field(fieldName, fieldValue, fieldStore, fieldIndex));
 		}
+
+        public static void AddCheck(this Document doc, string fieldName, bool fieldValue, Field.Store fieldStore, Field.Index fieldIndex)
+        {
+            if (fieldValue != null)
+                doc.Add(new Field(fieldName, fieldValue.ToString(), fieldStore, fieldIndex));
+        }
 
 		public static string ExtractValue(this Document doc, string fieldName)
 		{

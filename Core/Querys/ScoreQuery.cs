@@ -12,6 +12,7 @@ namespace FoireMuses.Core.Querys
 		public string Composer { get; set; }
 		public string Music { get; set; }
 		public string Verses { get; set; }
+        public string IsMaster { get; set; }
 		public int Offset { get; set; }
 		public int Max { get; set; }
 	}

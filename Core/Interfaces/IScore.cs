@@ -10,6 +10,9 @@ namespace FoireMuses.Core.Interfaces
 		string Id { get; set; }
 		string Rev { get; set;}
 
+        string MasterId { get; set; }
+        bool IsMaster { get; set; }
+
 		string Title{get;set;}
 		string CodageMelodiqueRISM { get; set; }
 		string CodageParIntervalles { get; set; }
