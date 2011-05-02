@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\SourcePageController.cs" />
     <Compile Include="Controllers\IndexController.cs" />
     <Compile Include="ConverterFactory.cs" />
     <Compile Include="Converters\Converter.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Helpers\Helpers.cs" />
     <Compile Include="Instance.cs" />
     <Compile Include="InstanceFactory.cs" />
+    <Compile Include="Interfaces\ISourcePageController.cs" />
     <Compile Include="Interfaces\IBaseController.cs" />
     <Compile Include="Interfaces\IConverter.cs" />
     <Compile Include="Interfaces\IConverterFactory.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="Interfaces\IUserController.cs" />
     <Compile Include="Exceptions\NoResultException.cs" />
     <Compile Include="Interfaces\ISearchResultItem.cs" />
+    <Compile Include="Interfaces\ISourcePage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Querys\ScoreQuery.cs" />
     <Compile Include="Search\ScoreSearchResult.cs" />

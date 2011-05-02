@@ -74,9 +74,11 @@
     <Compile Include="Business\JPlay.cs" />
     <Compile Include="Business\JScore.cs" />
     <Compile Include="Business\JSource.cs" />
+    <Compile Include="Business\JSourcePage.cs" />
     <Compile Include="Business\JTextualSource.cs" />
     <Compile Include="Business\JUser.cs" />
     <Compile Include="Convert.cs" />
+    <Compile Include="LoveseatSourcePageDataMapper.cs" />
     <Compile Include="CouchViews.cs" />
     <Compile Include="LoveseatScoreDataMapper.cs" />
     <Compile Include="LoveseatPlayDataMapper.cs" />

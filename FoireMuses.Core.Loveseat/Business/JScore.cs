@@ -6,9 +6,7 @@ using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Loveseat.Business;
 using FoireMuses.Core.Interfaces;
 using LoveSeat;
-using FoireMuses.Core.Interfaces;
 using LoveSeat.Interfaces;
-using FoireMuses.Core.Loveseat.Business;
 
 namespace FoireMuses.Core.Business
 {

@@ -11,6 +11,7 @@ namespace FoireMuses.Core.Utils
 		public const string VIEW_PLAYS = "plays";
 		public const string VIEW_SCORES = "scores";
 		public const string VIEW_USERS = "users";
+		public const string VIEW_SOURCEPAGES = "sourcePages";
 
 		public const string VIEW_ALL = "all";
 
@@ -20,5 +21,7 @@ namespace FoireMuses.Core.Utils
 		public const string VIEW_USERS_BY_USERNAME = "byusername";
 
 		public const string VIEW_PLAYS_FROM_SOURCE = "fromsource";
+
+		public const string VIEW_SOURCEPAGES_FROM_SOURCE = "fromsource";
 	}
 }

@@ -17,7 +17,7 @@ namespace FoireMuses.Core.Business
 	{
 		public JSource()
 		{
-			this.Add("type", "source");
+			this.Add("otype", "source");
 		}
 
 		public JSource(JObject jobject)
@@ -125,6 +125,8 @@ namespace FoireMuses.Core.Business
         {
             get { return this["collaboratorsId"].Values<string>(); }
         }
+
+
 
         public void AddCollaborator(string collab)
         {

@@ -71,4 +71,11 @@ namespace FoireMuses.Core.Interfaces
 		Result<bool> AddAttachment(string aDocumentId, Stream file, string fileName, Result<bool> aResult); 
 		Result<SearchResult<IPlay>> GetPlaysFromSource(int offset, int max, string aSourceId, Result<SearchResult<IPlay>> aResult);
 	}
+
+	public interface ISourcePageDataMapper : IDataMapper<ISourcePage>
+	{
+
+		Result<bool> AddAttachment(string aDocumentId, Stream file, string fileName, Result<bool> aResult);
+		Result<SearchResult<ISourcePage>> GetPagesFromSource(int offset, int max, string aSourceId, Result<SearchResult<ISourcePage>> aResult);
+	}
 }

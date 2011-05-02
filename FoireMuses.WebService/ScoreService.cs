@@ -139,7 +139,7 @@ namespace FoireMuses.WebService
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("POST:scores/xml", "Create a score with music xml")]
+		[DreamFeature("POST:scores/musicxml", "Create a score with music xml")]
 		public Yield CreateScoreWithMusicXml(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			IScore score = Context.Current.Instance.ScoreController.CreateNew();
@@ -159,7 +159,7 @@ namespace FoireMuses.WebService
 			response.Return(DreamMessage.Ok(MimeType.BINARY, stream.Length, stream));
 		}
 
-		[DreamFeature("PUT:scores/xml", "Edit an existing score with music xml")]
+		[DreamFeature("PUT:scores/musicxml", "Edit an existing score with music xml")]
 		[DreamFeatureParam("{id}", "String", "Score id")]
 		[DreamFeatureParam("{rev}", "String", "Score rev id")]
 		[DreamFeatureParam("{overwrite}", "bool", "overwrite xml attributes or not")]
