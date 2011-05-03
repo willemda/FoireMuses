@@ -8,6 +8,7 @@ namespace FoireMuses.Core.Querys
 	public class ScoreQuery
 	{
 		public string Title{ get; set;}
+		public string TitleWild { get; set; }
 		public string Editor { get; set; }
 		public string Composer { get; set; }
 		public string Music { get; set; }

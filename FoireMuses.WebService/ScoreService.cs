@@ -87,6 +87,7 @@ namespace FoireMuses.WebService
 		[DreamFeature("GET:scores/search", "Search for a  score")]
 		[DreamFeatureParam("music","string","music partition to search for")]
 		[DreamFeatureParam("title", "string", "the title")]
+		[DreamFeatureParam("titleWild", "string", "the title wildcarded")]
 		[DreamFeatureParam("composer", "string", "the composer")]
 		[DreamFeatureParam("editor", "string", "the editor")]
 		[DreamFeatureParam("verses", "string", "verses in the score to search for")]
@@ -101,6 +102,7 @@ namespace FoireMuses.WebService
 				Composer = context.GetParam("composer",null),
 				Editor = context.GetParam("editor",null),
 				Title = context.GetParam("title",null),
+				TitleWild = context.GetParam("titleWild", null),
 				Verses = context.GetParam("verses",null),
 				Music = context.GetParam("music",null),
                 IsMaster = context.GetParam("isMaster",null),

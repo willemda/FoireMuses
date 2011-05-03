@@ -82,6 +82,16 @@ namespace FoireMuses.Core.Controllers
 			d.AddCheck("Type", score.ScoreType, Field.Store.YES, Field.Index.ANALYZED);
 			d.AddCheck("Verses", score.Verses, Field.Store.YES, Field.Index.ANALYZED);
 			d.AddCheck("Title", score.Title, Field.Store.YES, Field.Index.ANALYZED);
+			if (score.Title != null)
+			{
+				string[] titleParts = score.Title.Split(new char[] { ' ' });
+				string titleWithoutSpaces = "";
+				foreach (string part in titleParts)
+				{
+					titleWithoutSpaces += part;
+				}
+				d.AddCheck("TitleWithoutSpaces", titleWithoutSpaces, Field.Store.YES, Field.Index.ANALYZED);
+			}
 			d.AddCheck("Strophe", score.Stanza, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("Coirault", score.Coirault, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("Delarue", score.Delarue, Field.Store.NO, Field.Index.ANALYZED);
@@ -143,31 +153,35 @@ namespace FoireMuses.Core.Controllers
 			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "Title", perFieldAnalyzer);
 
 			StringBuilder queryString = new StringBuilder();
+			if (!String.IsNullOrEmpty(query.TitleWild))
+			{
+				queryString.AppendFormat("+TitleWithoutSpaces:{0} ", query.TitleWild+"*");
+			}
 			if (!String.IsNullOrEmpty(query.Title))
 			{
-				queryString.AppendFormat("(Title:\"{0}\" + ", query.Title);
+				queryString.AppendFormat("+Title:\"{0}\" ", query.Title);
 			}
 			if (!String.IsNullOrEmpty(query.Composer))
 			{
-				queryString.AppendFormat("Composer:\"{0}\" + ", query.Composer);
+				queryString.AppendFormat("+Composer:\"{0}\" ", query.Composer);
 			}
 			if (!String.IsNullOrEmpty(query.Editor))
 			{
-				queryString.AppendFormat("Editor:\"{0}\" + ", query.Editor);
+				queryString.AppendFormat("+Editor:\"{0}\" ", query.Editor);
 			}
 			if (!String.IsNullOrEmpty(query.Verses))
 			{
-				queryString.AppendFormat("Verses:\"{0}\" + ", query.Verses);
+				queryString.AppendFormat("+Verses:\"{0}\" ", query.Verses);
 			}
 			if (!String.IsNullOrEmpty(query.Music))
 			{
-				queryString.AppendFormat("CodageMelodiqueRISM:\"{0}\" + ", LilyToCodageMelodiqueRISM(query.Music));
+				queryString.AppendFormat("CodageMelodiqueRISM:\"{0}\" ", LilyToCodageMelodiqueRISM(query.Music));
 
-				queryString.AppendFormat("CodageParIntervalles:\"{0}\" + ", LilyToCodageParIntervalles(query.Music));
+				queryString.AppendFormat("CodageParIntervalles:\"{0}\" ", LilyToCodageParIntervalles(query.Music));
 			}
             if (!String.IsNullOrEmpty(query.IsMaster))
             {
-                queryString.AppendFormat("IsMaster:\"{0}\")", query.IsMaster);
+                queryString.AppendFormat("+IsMaster:\"{0}\"", query.IsMaster);
             }
 
 			Query q = qp.Parse(queryString.ToString());
@@ -196,6 +210,8 @@ namespace FoireMuses.Core.Controllers
 			aResult.Return(searchResult);
 			return aResult;
 		}
+
+
 
 		private string[] pitches = new string[] {"c", "ces", "cis", "d", "des", "dis", "e", "f", "fes", "fis", "g", "ges", "gis", "a", "aes", "ais", "b" };
 		private int[] pitchesValue = new int[] {0, 1, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 8, 9, 10, 10, 11};
