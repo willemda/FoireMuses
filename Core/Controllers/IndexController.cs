@@ -20,10 +20,10 @@ namespace FoireMuses.Core.Controllers
 {
 	public class IndexController : IIndexController
 	{
-		private Directory directory; 
+		private Directory directory;
 		private IndexWriter writer;
 		private PerFieldAnalyzerWrapper perFieldAnalyzer;
-		private Analyzer keywordAnalyzer;
+		private Analyzer whiteSpaceAnalyzer;
 		private Analyzer standardAnalyzer;
 		private INotificationManager theNotificationManager;
 		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(IndexController));
@@ -33,12 +33,12 @@ namespace FoireMuses.Core.Controllers
 			theLogger.Info("Creation of the IndexController");
 			theNotificationManager = notif;
 			directory = FSDirectory.Open(new System.IO.DirectoryInfo(Environment.CurrentDirectory + "\\LuceneIndex"));
-			keywordAnalyzer = new KeywordAnalyzer();
+			whiteSpaceAnalyzer = new WhitespaceAnalyzer();
 			standardAnalyzer = new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29);
 			perFieldAnalyzer = new PerFieldAnalyzerWrapper(standardAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("codageRythmique", keywordAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("codageMelodiqueRISM", keywordAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("codageParIntervalles", keywordAnalyzer);
+			perFieldAnalyzer.AddAnalyzer("CodageRythmique", whiteSpaceAnalyzer);
+			perFieldAnalyzer.AddAnalyzer("CodageMelodiqueRISM", whiteSpaceAnalyzer);
+			perFieldAnalyzer.AddAnalyzer("CodageParIntervalles", whiteSpaceAnalyzer);
 			writer = new IndexWriter(directory, perFieldAnalyzer, true, IndexWriter.MaxFieldLength.LIMITED);
 			theNotificationManager.ScoreChanged += new EventHandler<EventArgs<IScore>>(theNotificationManager_ScoreChanged);
 			theNotificationManager.PlayChanged += new EventHandler<EventArgs<IPlay>>(theNotificationManager_PlayChanged);
@@ -46,30 +46,31 @@ namespace FoireMuses.Core.Controllers
 			theNotificationManager.Start();
 		}
 
-		void  theNotificationManager_SourceChanged(object sender, EventArgs<ISource> e)
+		void theNotificationManager_SourceChanged(object sender, EventArgs<ISource> e)
 		{
 			theLogger.Info("Source Changed - updating index");
- 			//throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 
-		void  theNotificationManager_PlayChanged(object sender, EventArgs<IPlay> e)
+		void theNotificationManager_PlayChanged(object sender, EventArgs<IPlay> e)
 		{
 			theLogger.Info("Play Changed - updating index");
- 			//throw new NotImplementedException();
+			//throw new NotImplementedException();
 		}
 
-		void  theNotificationManager_ScoreChanged(object sender, EventArgs<IScore> e)
+		void theNotificationManager_ScoreChanged(object sender, EventArgs<IScore> e)
 		{
 			theLogger.Info("Score Changed - updating index");
- 			UpdateScore(e.Item, new Result()).Wait();
+			UpdateScore(e.Item, new Result()).Wait();
 		}
 
 
-		public Result AddScore(IScore score, Result aResult){
+		public Result AddScore(IScore score, Result aResult)
+		{
 			Document d = new Document();
-			d.AddCheck("Id",score.Id,Field.Store.YES, Field.Index.NOT_ANALYZED);
+			d.AddCheck("Id", score.Id, Field.Store.YES, Field.Index.NOT_ANALYZED);
 			d.AddCheck("Rev", score.Rev, Field.Store.YES, Field.Index.NOT_ANALYZED);
-            d.AddCheck("IsMaster", score.IsMaster, Field.Store.NO, Field.Index.ANALYZED);
+			d.AddCheck("IsMaster", score.IsMaster, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("CodageMelodiqueRISM", score.CodageMelodiqueRISM, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("CodageParIntervalles", score.CodageParIntervalles, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("CodageRythmique", score.CodageRythmique, Field.Store.NO, Field.Index.ANALYZED);
@@ -95,7 +96,7 @@ namespace FoireMuses.Core.Controllers
 			d.AddCheck("Strophe", score.Stanza, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("Coirault", score.Coirault, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("Delarue", score.Delarue, Field.Store.NO, Field.Index.ANALYZED);
-			string tags="";
+			string tags = "";
 			if (score.Tags != null)
 			{
 				foreach (string tag in score.Tags)
@@ -116,7 +117,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result DeleteScore(string id, Result aResult)
 		{
-			QueryParser queryParser = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "Id",perFieldAnalyzer);
+			QueryParser queryParser = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "Id", perFieldAnalyzer);
 			Query query = queryParser.Parse(id);
 			writer.DeleteDocuments(query);
 			aResult.Return();
@@ -155,7 +156,13 @@ namespace FoireMuses.Core.Controllers
 			StringBuilder queryString = new StringBuilder();
 			if (!String.IsNullOrEmpty(query.TitleWild))
 			{
-				queryString.AppendFormat("+TitleWithoutSpaces:{0} ", query.TitleWild+"*");
+				string[] titleParts = query.TitleWild.Split(new char[] { ' ' });
+				string titleWithoutSpaces = "";
+				foreach (string part in titleParts)
+				{
+					titleWithoutSpaces += part;
+				}
+				queryString.AppendFormat("+TitleWithoutSpaces:{0} ", titleWithoutSpaces + "*");
 			}
 			if (!String.IsNullOrEmpty(query.Title))
 			{
@@ -179,23 +186,24 @@ namespace FoireMuses.Core.Controllers
 
 				queryString.AppendFormat("CodageParIntervalles:\"{0}\" ", LilyToCodageParIntervalles(query.Music));
 			}
-            if (!String.IsNullOrEmpty(query.IsMaster))
-            {
-                queryString.AppendFormat("+IsMaster:\"{0}\"", query.IsMaster);
-            }
+			if (!String.IsNullOrEmpty(query.IsMaster))
+			{
+				queryString.AppendFormat("+IsMaster:\"{0}\"", query.IsMaster);
+			}
 
 			Query q = qp.Parse(queryString.ToString());
 			string toto = q.ToString();
 
-			IndexReader reader = IndexReader.Open(directory,true);
+			IndexReader reader = IndexReader.Open(directory, true);
 			Searcher indexSearch = new IndexSearcher(reader);
 
 			TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
 			IList<IScoreSearchResult> results = new List<IScoreSearchResult>();
-			if(query.Offset < 0 || query.Offset > topDocs.totalHits)
+			if (query.Offset < 0 || query.Offset > topDocs.totalHits)
 				throw new Exception();
-			int ToGo = (query.Offset + query.Max) > topDocs.totalHits? topDocs.totalHits:(query.Offset + query.Max);
-			for(int i = query.Offset; i<ToGo;i++){
+			int ToGo = (query.Offset + query.Max) > topDocs.totalHits ? topDocs.totalHits : (query.Offset + query.Max);
+			for (int i = query.Offset; i < ToGo; i++)
+			{
 				Document d = reader.Document(topDocs.scoreDocs[i].doc);
 				ScoreSearchResult score = new ScoreSearchResult();
 				score.Id = d.ExtractValue("Id");
@@ -213,8 +221,8 @@ namespace FoireMuses.Core.Controllers
 
 
 
-		private string[] pitches = new string[] {"c", "ces", "cis", "d", "des", "dis", "e", "f", "fes", "fis", "g", "ges", "gis", "a", "aes", "ais", "b" };
-		private int[] pitchesValue = new int[] {0, 1, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 8, 9, 10, 10, 11};
+		private string[] pitches = new string[] { "c", "ces", "cis", "d", "des", "dis", "e", "f", "fes", "fis", "g", "ges", "gis", "a", "aes", "ais", "b" };
+		private int[] pitchesValue = new int[] { 0, 1, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 8, 9, 10, 10, 11 };
 
 
 
@@ -263,13 +271,13 @@ namespace FoireMuses.Core.Controllers
 		public string LilyToCodageMelodiqueRISM(string lily)
 		{
 			string cpi = "0";
-			string [] notes = lily.Split(new char[]{' '});
+			string[] notes = lily.Split(new char[] { ' ' });
 			int lastNoteValue = -1;
 			foreach (string note in notes)
 			{
 				int valeur = 0;
 				string maNote = note;
-				Match m = Regex.Match(maNote,@"\w+'*");
+				Match m = Regex.Match(maNote, @"\w+'*");
 				if (!m.Success)
 					break;
 				maNote = m.Value;
@@ -295,7 +303,7 @@ namespace FoireMuses.Core.Controllers
 							cpi += valeur - lastNoteValue;
 						}
 						break;
-					}	
+					}
 				}
 			}
 			return cpi;
@@ -311,11 +319,11 @@ namespace FoireMuses.Core.Controllers
 				doc.Add(new Field(fieldName, fieldValue, fieldStore, fieldIndex));
 		}
 
-        public static void AddCheck(this Document doc, string fieldName, bool fieldValue, Field.Store fieldStore, Field.Index fieldIndex)
-        {
-            if (fieldValue != null)
-                doc.Add(new Field(fieldName, fieldValue.ToString(), fieldStore, fieldIndex));
-        }
+		public static void AddCheck(this Document doc, string fieldName, bool fieldValue, Field.Store fieldStore, Field.Index fieldIndex)
+		{
+			if (fieldValue != null)
+				doc.Add(new Field(fieldName, fieldValue.ToString(), fieldStore, fieldIndex));
+		}
 
 		public static string ExtractValue(this Document doc, string fieldName)
 		{
