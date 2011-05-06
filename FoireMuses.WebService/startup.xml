@@ -6,6 +6,21 @@
       <sid>http://foiremuses.org/service</sid>
       <instances>
         <instance webhost="test.foiremuses.org" databaseName="musicdatabasexml">
+          <convertersSettings
+            lilyPondCommand = "G:\Program Files\LilyPond\usr\bin\lilypond.exe"
+            toLyCommand = "G:\Program Files\LilyPond\usr\bin\musicxml2ly.py"
+            toLyArgs = "-o {0} {1}"
+            toLyExpectedFile = ".ly"
+            toPsArgs = "-fps -o {0} {1}"
+            toPsExpectedFile=".ps"
+            toPdfArgs = "--pdf -o {0} {1}"
+            toPdfExpectedFile = ".pdf"
+            toPngCommand="G:\Program Files\ImageMagick-6.6.9-Q16\convert.exe"
+            toPngArgs="&quot;{1}&quot; &quot;{0}.png&quot;"
+            toPngExpectedFile=".png"
+            toMidiArgs="-o {0} {1}"
+            toMidiExpectedFile=".mid"
+            />
           <components>
             <component
 							type="FoireMuses.Core.Interfaces.IScoreDataMapper, FoireMuses.Core"
@@ -27,10 +42,6 @@
 							type="FoireMuses.Core.Interfaces.ISourcePageDataMapper, FoireMuses.Core"
 							implementation="FoireMuses.Core.Loveseat.LoveseatSourcePageDataMapper, FoireMuses.Core.Loveseat"
 							name="SourcePageDataMapper"/>
-            <component
-							type="FoireMuses.Core.Interfaces.IConverterFactory, FoireMuses.Core"
-							implementation="FoireMuses.Core.ConverterFactory, FoireMuses.Core"
-							name="ConverterFactory"/>
             <component
 							type="FoireMuses.Core.Interfaces.INotificationManager, FoireMuses.Core"
 							implementation="FoireMuses.Core.Loveseat.NotificationManager, FoireMuses.Core.Loveseat"

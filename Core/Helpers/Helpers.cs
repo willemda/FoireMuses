@@ -7,12 +7,65 @@ using MindTouch.Dream;
 
 namespace FoireMuses.Core.Helpers
 {
-	public static class JObjectHelpers
+	public static class JObjectHelper
 	{
-		public static void AddCheck(this JObject jo, string fieldName, JToken fieldValue)
+
+		public static void AddCheck(this JObject jo, string fieldName, string fieldValue)
 		{
 			if (fieldValue != null)
-				jo.Add(fieldName, fieldValue);
+				jo[fieldName] = fieldValue;
+			else
+				jo.Remove(fieldName);
+		}
+
+		public static void AddCheck(this JObject jo, string fieldName, int? fieldValue)
+		{
+			if (fieldValue != null)
+				jo[fieldName] = fieldValue;
+			else
+				jo.Remove(fieldName);
+		}
+
+		public static void AddCheck(this JObject jo, string fieldName, bool? fieldValue)
+		{
+			if (fieldValue != null)
+				jo[fieldName] = fieldValue;
+			else
+				jo.Remove(fieldName);
+		}
+
+		public static void AddCheck(this JObject jo, string fieldName, bool fieldValue)
+		{
+			jo[fieldName] = fieldValue;
+		}
+
+
+		public static string RetrieveStringCheck(this JObject jo, string fieldName)
+		{
+			if (jo[fieldName] != null)
+				return jo[fieldName].Value<string>();
+			return null;
+		}
+
+		public static bool? RetrieveNullableBoolCheck(this JObject jo, string fieldName)
+		{
+			if (jo[fieldName] != null)
+				return jo[fieldName].Value<bool?>();
+			return null;
+		}
+
+		public static bool RetrieveBoolCheck(this JObject jo, string fieldName)
+		{
+			if (jo[fieldName] != null)
+				return jo[fieldName].Value<bool>();
+			return false;
+		}
+
+		public static int? RetrieveIntCheck(this JObject jo, string fieldName)
+		{
+			if (jo[fieldName] != null)
+				return jo[fieldName].Value<int?>();
+			return null;
 		}
 	}
 }

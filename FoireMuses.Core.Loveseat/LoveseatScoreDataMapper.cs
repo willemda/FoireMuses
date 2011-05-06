@@ -12,7 +12,8 @@ using MusicXml;
 using FoireMuses.MusicXMLImport;
 using System.IO;
 
-namespace FoireMuses.Core.Loveseat{
+namespace FoireMuses.Core.Loveseat
+{
 	/// <summary>
 	/// An Controller that stores in CouchDb
 	/// </summary>
@@ -25,9 +26,75 @@ namespace FoireMuses.Core.Loveseat{
 		{
 			theCouchClient = new CouchClient(aSettingsController.Host, aSettingsController.Port, aSettingsController.Username, aSettingsController.Password);
 			theCouchDatabase = theCouchClient.GetDatabase(aSettingsController.DatabaseName);
+			if (!theCouchDatabase.DocumentExists("_design/scores"))
+			{
+				CouchDesignDocument view = new CouchDesignDocument("scores");
+				view.Views.Add("all",
+							   new CouchView(
+								  @"function(doc){
+				                       if(doc.otype && doc.otype == 'score'){
+				                          emit(doc._id, doc._rev)
+				                       }
+				                    }"));
+				view.Views.Add("fromsource",
+							   new CouchView(
+								  @"function(doc){
+										if(doc.otype && doc.otype=='score'){
+											if(doc.textualSource && doc.textualSource.id){
+												emit([doc.textualSource.id,doc._id],null)
+											} 
+											if(doc.musicalSource && doc.musicalSource.id){ 
+												emit([doc.musicalSource.id, doc._id],null)
+											}
+									}}"));
+			}
+			if (!theCouchDatabase.DocumentExists("_design/plays"))
+			{
+				CouchDesignDocument view = new CouchDesignDocument("plays");
+				view.Views.Add("all",
+							   new CouchView(
+								  @"function(doc){
+				                       if(doc.otype && doc.otype == 'play'){
+				                          emit(doc._id, doc._rev)
+				                       }
+				                    }"));
+				view.Views.Add("fromsource",
+							   new CouchView(
+								  @"function(doc){
+if(doc.otype && doc.otype=='play' && doc.sourceID){
+emit([doc.sourceID,doc._id],null)} }"));
+			}
+
+			if (!theCouchDatabase.DocumentExists("_design/sources"))
+			{
+				CouchDesignDocument view = new CouchDesignDocument("sources");
+				view.Views.Add("all",
+							   new CouchView(
+								  @"function(doc){
+				                       if(doc.otype && doc.otype == 'source'){
+				                          emit(doc._id, doc._rev)
+				                       }
+				                    }"));
+				view.Views.Add("title",
+							   new CouchView(
+								  @"function(doc){
+if(doc.otype && doc.otype=='source' && doc.name){
+emit(doc._id, doc.name)}}"));
+			}
+
+			if (!theCouchDatabase.DocumentExists("_design/users"))
+			{
+				CouchDesignDocument view = new CouchDesignDocument("users");
+				view.Views.Add("all",
+							   new CouchView(
+								  @"function(doc){
+				                       if(doc.otype && doc.otype == 'user'){
+				                          emit(doc._id, doc._rev)
+				                       }
+				                    }"));
+			}
 		}
 
-		
 
 		public Result<IScore> Create(IScore aDocument, Result<IScore> aResult)
 		{
@@ -183,9 +250,9 @@ namespace FoireMuses.Core.Loveseat{
 			return new JScore(JObject.Parse(json));
 		}
 
-        public IScore CreateNew()
-        {
-            return new JScore();
-        }
+		public IScore CreateNew()
+		{
+			return new JScore();
+		}
 	}
 }

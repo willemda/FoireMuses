@@ -25,6 +25,7 @@ namespace FoireMuses.Core
 		public IPlayController PlayController { get; private set; }
 		public IConverterFactory ConverterFactory { get; private set; }
 		public IIndexController IndexController { get; private set; }
+		public ISourcePageController SourcePageController { get; private set; }
 
 		public Instance(IContainer container, XDoc anInstanceXmlConfig)
 		{
@@ -69,6 +70,10 @@ namespace FoireMuses.Core
 				builder.Register<IndexController>().As<IIndexController>();
 			}
 
+			if (!container.IsRegistered<ISourcePageController>())
+			{
+				builder.Register<SourcePageController>().As<ISourcePageController>();
+			}
 
 			builder.Build(container);
 
@@ -78,6 +83,7 @@ namespace FoireMuses.Core
 			PlayController = container.Resolve<IPlayController>();
 			ConverterFactory = container.Resolve<IConverterFactory>();
 			IndexController = container.Resolve<IIndexController>();
+			SourcePageController = container.Resolve<ISourcePageController>();
 		}
 	}
 }

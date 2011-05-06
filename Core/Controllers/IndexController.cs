@@ -43,7 +43,13 @@ namespace FoireMuses.Core.Controllers
 			theNotificationManager.ScoreChanged += new EventHandler<EventArgs<IScore>>(theNotificationManager_ScoreChanged);
 			theNotificationManager.PlayChanged += new EventHandler<EventArgs<IPlay>>(theNotificationManager_PlayChanged);
 			theNotificationManager.SourceChanged += new EventHandler<EventArgs<ISource>>(theNotificationManager_SourceChanged);
+			theNotificationManager.SourcePageChanged += new EventHandler<EventArgs<ISourcePage>>(theNotificationManager_SourcePageChanged);
 			theNotificationManager.Start();
+		}
+
+		void theNotificationManager_SourcePageChanged(object sender, EventArgs<ISourcePage> e)
+		{
+			theLogger.Info("Source Page Changed - updating index");
 		}
 
 		void theNotificationManager_SourceChanged(object sender, EventArgs<ISource> e)

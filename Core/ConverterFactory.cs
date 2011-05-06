@@ -22,16 +22,16 @@ namespace FoireMuses.Core
 	{
 		IDictionary<MimeType,IConverter> Converters = new Dictionary<MimeType,IConverter>();
 
-		public ConverterFactory()
+		public ConverterFactory(ISettingsController aSettingsController)
 		{
-			IConverter XmlToLilyPoundConverter = new Converter(ConvertHelper.ToLyCommand, ConvertHelper.ToLyArgs, ConvertHelper.ToLyExpectedFile);
-			IConverter LilyPoundToPdfConverter = new PDFConverter(ConvertHelper.LilyPondCommand, ConvertHelper.ToPdfArgs, ConvertHelper.ToPdfExpectedFile);
-			IConverter LilyPoundToPostScriptConverter = new Converter(ConvertHelper.LilyPondCommand, ConvertHelper.ToPsArgs, ConvertHelper.ToPsExpectedFile);
-			IConverter PostScriptToPngConverter = new Converter(ConvertHelper.ToPngCommand, ConvertHelper.ToPngArgs, ConvertHelper.ToPngExpectedFile);
+			IConverter XmlToLilyPoundConverter = new Converter(aSettingsController.ToLyCommand, aSettingsController.ToLyArgs, aSettingsController.ToLyExpectedFile);
+			IConverter LilyPoundToPdfConverter = new PDFConverter(aSettingsController.LilyPondCommand, aSettingsController.ToPdfArgs, aSettingsController.ToPdfExpectedFile);
+			IConverter LilyPoundToPostScriptConverter = new Converter(aSettingsController.LilyPondCommand, aSettingsController.ToPsArgs, aSettingsController.ToPsExpectedFile);
+			IConverter PostScriptToPngConverter = new Converter(aSettingsController.ToPngCommand, aSettingsController.ToPngArgs, aSettingsController.ToPngExpectedFile);
 			IConverter XmlToPostScriptConverter = new AndConverter(XmlToLilyPoundConverter, LilyPoundToPostScriptConverter);
 			IConverter XmlToPngConverter = new AndConverter(XmlToPostScriptConverter, PostScriptToPngConverter);
 			IConverter XmlToPdfConverter = new AndConverter(XmlToLilyPoundConverter, LilyPoundToPdfConverter);
-			IConverter LilyPoundToMidiConverter = new MIDIConverter(ConvertHelper.LilyPondCommand, ConvertHelper.ToMidiArgs, ConvertHelper.ToMidiExpectedFile);
+			IConverter LilyPoundToMidiConverter = new MIDIConverter(aSettingsController.LilyPondCommand, aSettingsController.ToMidiArgs, aSettingsController.ToMidiExpectedFile);
 			IConverter XmlToMidiConverter = new AndConverter(XmlToLilyPoundConverter, LilyPoundToMidiConverter);
 			Converters.Add(ConvertHelper.LilyPond, XmlToLilyPoundConverter);
 			Converters.Add(MimeType.PDF, XmlToPdfConverter);

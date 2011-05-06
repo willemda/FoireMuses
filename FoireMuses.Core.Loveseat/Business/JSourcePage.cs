@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Interfaces;
+using FoireMuses.Core.Helpers;
 
 namespace FoireMuses.Core.Loveseat.Business
 {
@@ -32,50 +33,103 @@ namespace FoireMuses.Core.Loveseat.Business
 
 		public int? PageNumber
 		{
-			get { return this["pageNumber"].Value<int?>(); }
-			set { this["pageNumber"] = value; }
+			get
+			{
+				return this.RetrieveIntCheck("pageNumber");
+			}
+			set { this.AddCheck("pageNumber", value); }
 		}
 
 		public int? DisplayPageNumber
 		{
-			get { return this["displayPageNumber"].Value<int?>(); }
-			set { this["displayPageNumber"] = value; }
+			get
+			{
+				return this.RetrieveIntCheck("displayPageNumber");
+			}
+			set { this.AddCheck("displayPageNumber", value); }
 		}
 
 		public int? PageNumberFormat
 		{
-			get { return this["pageNumberFormat"].Value<int?>(); }
-			set { this["pageNumberFormat"] = value; }
+			get
+			{
+				return this.RetrieveIntCheck("pageNumberFormat");
+			}
+			set { this.AddCheck("pageNumberFormat", value); }
 		}
 
 		public string TextContent
 		{
-			get { return this["textContent"].Value<string>(); }
-			set { this["textContent"] = value; }
+			get
+			{
+				return this.RetrieveStringCheck("textContent");
+			}
+			set { this.AddCheck("textContent", value); }
 		}
 
 
 		public string SourceId
 		{
-			get { return this["sourceId"].Value<string>(); }
-			set { this["sourceId"] = value; }
+			get
+			{
+				return this.RetrieveStringCheck("sourceId");
+			}
+			set { this.AddCheck("souceId", value); }
 		}
 
 		public string CreatorId
 		{
-			get { return this["creatorId"].Value<string>(); }
-			private set { this["creatorId"] = value; }
+			get
+			{
+				return this.RetrieveStringCheck("creatorId");
+			}
+			private set { this.AddCheck("creatorId", value); }
 		}
 
 		public string LastModifierId
 		{
-			get { return this["lastModifierId"].Value<string>(); }
-			private set { this["lastModifierId"] = value; }
+			get
+			{
+				return this.RetrieveStringCheck("lastModifierId");
+			}
+			private set { this.AddCheck("lastModifierId", value); }
 		}
-
+		
 		public IEnumerable<string> CollaboratorsId
 		{
 			get { return this["collaboratorsId"].Values<string>(); }
+		}
+
+		public override void Created()
+		{
+			base.Created();
+		}
+
+		public override void Creating()
+		{
+			base.Creating();
+			CreatorId = Context.Current.User.Id;
+		}
+
+		public override void Deleted()
+		{
+			base.Deleted();
+		}
+
+		public override void Deleting()
+		{
+			base.Deleting();
+		}
+
+		public override void Updated()
+		{
+			base.Updated();
+		}
+
+		public override void Updating()
+		{
+			base.Updating();
+			LastModifierId = Context.Current.User.Id;
 		}
 	}
 }

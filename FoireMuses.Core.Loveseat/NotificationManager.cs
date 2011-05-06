@@ -8,6 +8,7 @@ using System.IO;
 using LoveSeat.Interfaces;
 using FoireMuses.Core.Business;
 using Newtonsoft.Json.Linq;
+using FoireMuses.Core.Loveseat.Business;
 
 namespace FoireMuses.Core.Loveseat
 {
@@ -18,6 +19,9 @@ namespace FoireMuses.Core.Loveseat
 		public event EventHandler<EventArgs<IPlay>> PlayChanged;
 
 		public event EventHandler<EventArgs<ISource>> SourceChanged;
+
+		public event EventHandler<EventArgs<ISourcePage>> SourcePageChanged;
+
 		private CouchContinuousChanges<JDocument> Changes;
 		private ChangeOptions theOptions;
 		private readonly CouchDatabase theCouchDatabase;
@@ -58,7 +62,13 @@ namespace FoireMuses.Core.Loveseat
 				case "source":
 					if (SourceChanged != null)
 					{
-						SourceChanged(this, new EventArgs<ISource> { Item = new JSource(aChange.Doc) });
+						 SourceChanged(this, new EventArgs<ISource> { Item = new JSource(aChange.Doc) });
+					}
+					break;
+				case "sourcePage":
+					if (SourcePageChanged != null)
+					{
+						SourcePageChanged(this, new EventArgs<ISourcePage> { Item = new JSourcePage(aChange.Doc) });
 					}
 					break;
 			}

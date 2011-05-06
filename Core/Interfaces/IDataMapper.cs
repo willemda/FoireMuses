@@ -19,6 +19,7 @@ namespace FoireMuses.Core.Interfaces
 		event EventHandler<EventArgs<IScore>> ScoreChanged;
 		event EventHandler<EventArgs<IPlay>> PlayChanged;
 		event EventHandler<EventArgs<ISource>> SourceChanged;
+		event EventHandler<EventArgs<ISourcePage>> SourcePageChanged;
 		void Start();
 		void Stop();
 	}

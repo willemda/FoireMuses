@@ -39,6 +39,19 @@ namespace FoireMuses.Core.Controllers
 		public string Username { get { return theInstanceSettings["@username"].AsText ?? String.Empty; } }
 		public string Password { get { return theInstanceSettings["@password"].AsText ?? String.Empty; } }
 		public string DatabaseName { get { return theInstanceSettings["@databaseName"].AsText ?? "musicdatabasexml"; } }
+		public string LilyPondCommand { get { return theInstanceSettings["convertersSettings/@lilyPondCommand"].AsText; } }
+		public string ToLyCommand { get { return theInstanceSettings["convertersSettings/@toLyCommand"].AsText; } }
+		public string ToLyArgs { get { return theInstanceSettings["convertersSettings/@toLyArgs"].AsText; } }
+		public string ToLyExpectedFile { get { return theInstanceSettings["convertersSettings/@toLyExpectedFile"].AsText; } }
+		public string ToPsArgs { get { return theInstanceSettings["convertersSettings/@toPsArgs"].AsText; } }
+		public string ToPsExpectedFile { get { return theInstanceSettings["convertersSettings/@toPsExpectedFile"].AsText; } }
+		public string ToPdfArgs { get { return theInstanceSettings["convertersSettings/@toPdfArgs"].AsText; } }
+		public string ToPdfExpectedFile { get { return theInstanceSettings["convertersSettings/@toPdfExpectedFile"].AsText; } }
+		public string ToPngCommand { get { return theInstanceSettings["convertersSettings/@toPngCommand"].AsText; } }
+		public string ToPngArgs { get { return theInstanceSettings["convertersSettings/@toPngArgs"].AsText; } }
+		public string ToPngExpectedFile { get { return theInstanceSettings["convertersSettings/@toPngExpectedFile"].AsText; } }
+		public string ToMidiArgs { get { return theInstanceSettings["convertersSettings/@toMidiArgs"].AsText; } }
+		public string ToMidiExpectedFile { get { return theInstanceSettings["convertersSettings/@toMidiExpectedFile"].AsText; } }
 	}
 }
 

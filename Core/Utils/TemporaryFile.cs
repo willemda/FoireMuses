@@ -219,8 +219,8 @@ namespace FoireMuses.Core.Utils
 
 
 
-			//string tempPath = @"G:\Temp\";//ConfigurationManager.AppSettings["tempPath"];
-            string tempPath = @"C:\Projects\Temp\";
+			string tempPath = @"G:\Temp\";//ConfigurationManager.AppSettings["tempPath"];
+			//string tempPath = @"C:\Projects\Temp\";
 
 
 			if (String.IsNullOrEmpty(tempPath))
