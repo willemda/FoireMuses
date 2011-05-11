@@ -27,8 +27,6 @@ namespace FoireMuses.Core.Interfaces
 		string CreatorId { get; }
 		string LastModifierId { get; }
 
-		IEnumerable<string> CollaboratorsId { get; }
-		void AddCollaborator(string collab);
-		void RemoveCollaborator(string collab);
+		IList<string> CollaboratorsId { get; set; }
 	}
 }

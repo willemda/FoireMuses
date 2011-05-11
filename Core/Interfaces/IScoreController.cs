@@ -16,5 +16,6 @@ namespace FoireMuses.Core.Interfaces
 		Result<SearchResult<IScore>> GetScoresFromSource(int offset, int max,string aSourceId, Result<SearchResult<IScore>> aResult);
 		Result<Stream> GetAttachedFile(string scoreId, string fileName, Result<Stream> aResult);
 		Result<Stream> GetConvertedScore(MimeType mimetype, string id, Result<Stream> aResult);
+		Result<bool> TestAsync(string test, Result<bool> aResult);
 	}
 }

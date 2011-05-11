@@ -139,5 +139,11 @@ namespace FoireMuses.UnitTests.Mock
 		{
 			throw new NotImplementedException();
 		}
+
+
+		public Result<bool> TestAsync(string test, Result<bool> aResult)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

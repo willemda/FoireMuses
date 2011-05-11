@@ -13,6 +13,8 @@ namespace FoireMuses.Core.Interfaces
 
 		string Password { get; set; }
 		string Email { get; set; }
+		bool IsAdmin { get; set; }
+		bool IsAnon { get; set; }
 		IEnumerable<string> Groups { get; }
 		void AddGroup(string group);
 		void RemoveGroup(string group);

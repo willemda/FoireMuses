@@ -75,12 +75,6 @@ namespace FoireMuses.Core.Controllers
 
 		private Yield CreateHelper(IScore aDoc, Result<IScore> aResult)
 		{
-			//Check if user is set as we need to know the creator.
-			if (Context.Current.User == null)
-			{
-				aResult.Throw(new UnauthorizedAccessException());
-				yield break;
-			}
 
 			//Check that the sources aren't null and does exists
 			yield return Coroutine.Invoke(CheckSources, aDoc, new Result());
@@ -89,7 +83,6 @@ namespace FoireMuses.Core.Controllers
 			Result<IScore> resultCreate = new Result<IScore>();
 			yield return theScoreDataMapper.Create(aDoc, resultCreate);
 			aResult.Return(resultCreate.Value);
-			yield return Context.Current.Instance.IndexController.AddScore(resultCreate.Value, new Result());
 		}
 
 		private Yield CheckSources(IScore aScore, Result aResult)
@@ -141,9 +134,9 @@ namespace FoireMuses.Core.Controllers
 		public Result<IScore> Retrieve(string id, Result<IScore> aResult)
 		{
 			theScoreDataMapper.Retrieve(id, new Result<IScore>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
+					aResult.Return,
+					aResult.Throw
+					);
 			return aResult;
 		}
 
@@ -158,13 +151,6 @@ namespace FoireMuses.Core.Controllers
 				yield break;
 			}
 
-			//Check if the current user has the update rights.
-			if (!HasAuthorization(validScoreResult.Value))
-			{
-				aResult.Throw(new UnauthorizedAccessException());
-				yield break;
-			}
-
 			//Check if the sources in the score exists and are not null.
 			Coroutine.Invoke(CheckSources, aDoc, new Result());
 
@@ -172,7 +158,6 @@ namespace FoireMuses.Core.Controllers
 			Result<IScore> scoreResult = new Result<IScore>();
 			yield return theScoreDataMapper.Update(id, rev, aDoc, scoreResult);
 			aResult.Return(scoreResult.Value);
-			yield return Context.Current.Instance.IndexController.UpdateScore(scoreResult.Value, new Result());
 		}
 
 		public bool HasAuthorization(IScore aDoc)
@@ -212,12 +197,12 @@ namespace FoireMuses.Core.Controllers
 		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{
 			theScoreDataMapper.Delete(id, rev, new Result<bool>()).WhenDone(
-				a => {
-					aResult.Return(a);
-					Context.Current.Instance.IndexController.DeleteScore(id, new Result());
-				},
-				aResult.Throw
-				);
+					a =>
+					{
+						aResult.Return(a);
+					},
+					aResult.Throw
+					);
 			return aResult;
 		}
 
@@ -368,6 +353,25 @@ namespace FoireMuses.Core.Controllers
 				},
 				aResult.Throw
 				);
+			return aResult;
+		}
+
+		private static int teste = 0;
+
+		public Result<bool> TestAsync(string test, Result<bool> aResult)
+		{
+			if (teste == 0)
+			{
+				teste++;
+				Async.Sleep(TimeSpan.FromSeconds(5)).Wait();
+			}
+			else
+			{
+				teste--;
+			}
+			theLogger.Debug("ici starting " + test);
+			aResult.Return(true);
+			theLogger.Debug("valeur retournée");
 			return aResult;
 		}
 	}

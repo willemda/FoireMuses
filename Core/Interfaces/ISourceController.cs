@@ -9,5 +9,6 @@ namespace FoireMuses.Core.Interfaces
 {
 	public interface ISourceController : IBaseController<ISource>
 	{
+		/*Result<ISource> AddCollaborator(string sourceId, string userId, Result<ISource> aResult);*/
 	}
 }

@@ -47,6 +47,25 @@ namespace FoireMuses.Core.Business
 			set { this["email"] = value; }
 		}
 
+		public bool IsAdmin
+		{
+			get {
+				if (this["isAdmin"] == null)
+					return false;
+				return this["isAdmin"].Value<bool>(); }
+			set { this["isAdmin"] = value; }
+			
+		}
+
+		public bool IsAnon
+		{
+			get {
+				if (this["isAnon"] == null)
+					return false;
+				return this["isAnon"].Value<bool>(); }
+			set { this["isAnon"] = value; }
+		}
+
 		public IEnumerable<string> Groups
 		{
 			get { return this["groups"].Values<string>(); }
@@ -144,5 +163,6 @@ namespace FoireMuses.Core.Business
 			base.Updating();
 			validate();
 		}
+
 	}
 }

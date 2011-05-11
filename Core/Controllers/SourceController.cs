@@ -24,12 +24,6 @@ namespace FoireMuses.Core.Controllers
 
 		public Yield CreateHelper(ISource aDoc, Result<ISource> aResult)
 		{
-			//Check if user is set as we need to know the creator.
-			if (Context.Current.User == null)
-			{
-				aResult.Throw(new UnauthorizedAccessException());
-				yield break;
-			}
 
 			//Create a the source and return
 			Result<ISource> resultCreate = new Result<ISource>();
@@ -62,12 +56,7 @@ namespace FoireMuses.Core.Controllers
 				yield break;
 			}
 
-			//Check if the current user has the update rights.
-			if (!HasAuthorization(validSourceResult.Value))
-			{
-				aResult.Throw(new UnauthorizedAccessException());
-				yield break;
-			}
+			
 
 			//Update and return the updated source.
 			Result<ISource> sourceResult = new Result<ISource>();
@@ -177,5 +166,50 @@ namespace FoireMuses.Core.Controllers
 				);
 			return aResult;
 		}
+
+		/*
+		public Yield AddCollaboratorHelper(string sourceId, string userId, Result<ISource> aResult)
+		{
+			if (!Context.Current.User.IsAdmin)
+			{
+				aResult.Throw(new UnauthorizedAccessException("You must be admin to change the rights"));
+				yield break;
+			}
+
+			Result<IUser> resultUser = new Result<IUser>();
+			yield return Context.Current.Instance.UserController.Retrieve(userId, resultUser);
+			if (resultUser.Value == null)
+			{
+				aResult.Throw(new ArgumentException());
+				yield break;
+			}
+
+			Result<ISource> result = new Result<ISource>();
+			yield return this.Retrieve(sourceId, result);
+			if (result.Value == null)
+			{
+				aResult.Throw(new ArgumentException());
+				yield break;
+			}
+			ISource source = result.Value;
+			IList<string> listeCollab = source.CollaboratorsId;
+			listeCollab.Add(userId);
+			source.CollaboratorsId = listeCollab;
+
+			Result<ISource> resultUpdated = new Result<ISource>();
+			yield return this.Update(source.Id, source.Rev, source, resultUpdated);
+			aResult.Return(resultUpdated.Value);
+		}
+
+
+		public Result<ISource> AddCollaborator(string sourceId, string userId, Result<ISource> aResult)
+		{
+			Coroutine.Invoke(AddCollaboratorHelper, sourceId, userId, new Result<ISource>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
+		 */
 	}
 }

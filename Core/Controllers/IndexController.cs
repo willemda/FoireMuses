@@ -39,7 +39,7 @@ namespace FoireMuses.Core.Controllers
 			perFieldAnalyzer.AddAnalyzer("CodageRythmique", whiteSpaceAnalyzer);
 			perFieldAnalyzer.AddAnalyzer("CodageMelodiqueRISM", whiteSpaceAnalyzer);
 			perFieldAnalyzer.AddAnalyzer("CodageParIntervalles", whiteSpaceAnalyzer);
-			writer = new IndexWriter(directory, perFieldAnalyzer, true, IndexWriter.MaxFieldLength.LIMITED);
+			writer = new IndexWriter(directory, perFieldAnalyzer, !IndexReader.IndexExists(directory), IndexWriter.MaxFieldLength.LIMITED);
 			theNotificationManager.ScoreChanged += new EventHandler<EventArgs<IScore>>(theNotificationManager_ScoreChanged);
 			theNotificationManager.PlayChanged += new EventHandler<EventArgs<IPlay>>(theNotificationManager_PlayChanged);
 			theNotificationManager.SourceChanged += new EventHandler<EventArgs<ISource>>(theNotificationManager_SourceChanged);
@@ -77,6 +77,7 @@ namespace FoireMuses.Core.Controllers
 			d.AddCheck("Id", score.Id, Field.Store.YES, Field.Index.NOT_ANALYZED);
 			d.AddCheck("Rev", score.Rev, Field.Store.YES, Field.Index.NOT_ANALYZED);
 			d.AddCheck("IsMaster", score.IsMaster, Field.Store.NO, Field.Index.ANALYZED);
+			d.AddCheck("MasterId", score.MasterId, Field.Store.NO, Field.Index.NOT_ANALYZED);
 			d.AddCheck("CodageMelodiqueRISM", score.CodageMelodiqueRISM, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("CodageParIntervalles", score.CodageParIntervalles, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("CodageRythmique", score.CodageRythmique, Field.Store.NO, Field.Index.ANALYZED);
@@ -154,6 +155,38 @@ namespace FoireMuses.Core.Controllers
 			return jo.ToString();
 		}
 
+
+		public Result<SearchResult<IScoreSearchResult>> ScoreSearch(int max, int offset, string aLuceneQuery, Result<SearchResult<IScoreSearchResult>> aResult)
+		{
+			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "Title", perFieldAnalyzer);
+			Query q = qp.Parse(aLuceneQuery);
+			string toto = q.ToString();
+
+			IndexReader reader = IndexReader.Open(directory, true);
+			Searcher indexSearch = new IndexSearcher(reader);
+
+			TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
+			IList<IScoreSearchResult> results = new List<IScoreSearchResult>();
+			if (offset < 0 || offset > topDocs.totalHits)
+				throw new Exception();
+			int ToGo = (offset + max) > topDocs.totalHits ? topDocs.totalHits : (offset + max);
+			for (int i = offset; i < ToGo; i++)
+			{
+				Document d = reader.Document(topDocs.scoreDocs[i].doc);
+				ScoreSearchResult score = new ScoreSearchResult();
+				score.Id = d.ExtractValue("Id");
+				score.Title = d.ExtractValue("Title");
+				score.Composer = d.ExtractValue("Composer");
+				score.Editor = d.ExtractValue("Editor");
+				score.Verses = d.ExtractValue("Verses");
+				score.Music = d.ExtractValue("Music");
+				results.Add(score);
+			}
+			SearchResult<IScoreSearchResult> searchResult = new SearchResult<IScoreSearchResult>(results, offset, max, topDocs.totalHits);
+			aResult.Return(searchResult);
+			return aResult;
+		}
+
 		public Result<SearchResult<IScoreSearchResult>> SearchScore(ScoreQuery query, Result<SearchResult<IScoreSearchResult>> aResult)
 		{
 			theLogger.Info("Searching Score");
@@ -194,7 +227,12 @@ namespace FoireMuses.Core.Controllers
 			}
 			if (!String.IsNullOrEmpty(query.IsMaster))
 			{
-				queryString.AppendFormat("+IsMaster:\"{0}\"", query.IsMaster);
+				queryString.AppendFormat("+IsMaster:\"{0}\" ", query.IsMaster);
+			}
+
+			if (!String.IsNullOrEmpty(query.MasterId))
+			{
+				queryString.AppendFormat("+MasterId:\"{0}\"", query.MasterId);
 			}
 
 			Query q = qp.Parse(queryString.ToString());
@@ -222,6 +260,8 @@ namespace FoireMuses.Core.Controllers
 			}
 			SearchResult<IScoreSearchResult> searchResult = new SearchResult<IScoreSearchResult>(results, query.Offset, query.Max, topDocs.totalHits);
 			aResult.Return(searchResult);
+			reader.Close();
+			indexSearch.Close();
 			return aResult;
 		}
 

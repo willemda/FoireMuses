@@ -53,8 +53,6 @@ namespace FoireMuses.WebService
 			yield return res = Coroutine.Invoke(base.Start, config, new Result());
 			res.Confirm();
 
-
-
 			theFactory = new InstanceFactory(container, config);
 			result.Return();
 		}
@@ -68,16 +66,40 @@ namespace FoireMuses.WebService
 			string username, password;
 			if (!HttpUtil.GetAuthentication(context.Uri, request.Headers, out username, out password))
 			{
-				response.Return(DreamMessage.AccessDenied("Foire muses","No auth"));
+				response.Return(DreamMessage.AccessDenied("foire muses api", "no auth"));
 				yield break;
 			}
-			yield return ctx.Instance.UserController.Login(username, password, result);
-			ctx.User = result.Value;
+			else if (username == "secretusername" && password == "secretpassword")
+			{
+				//connected through webinterface
+				if (request.Headers["FoireMusesImpersonate"] != null)
+				{
+					//act like real user
+					ctx.User = ctx.Instance.UserController.Retrieve(request.Headers["FoireMusesImpersonate"], new Result<IUser>()).Wait();
+				}
+				else
+				{
+					// user is admin
+					IUser user = ctx.Instance.UserController.CreateNew();
+					user.IsAnon = false;
+					user.IsAdmin = true;
+					user.Id = "admin";
+					ctx.User = user;
+				}
+			}
+			else
+			{
+				//user is anon
+				IUser user = ctx.Instance.UserController.CreateNew();
+				user.IsAnon = true;
+				user.IsAdmin = false;
+				user.Id = "anonymous";
+				ctx.User = user;
+			}
 			ctx.AttachToCurrentTaskEnv();
 			//create context and attach
 			response.Return(request);
 			yield break;
-			//verification if the user if authenticated or not..
 		}
 	}
 }

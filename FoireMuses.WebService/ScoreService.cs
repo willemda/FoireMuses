@@ -11,6 +11,7 @@ namespace FoireMuses.WebService
 	using System.IO;
 	using FoireMuses.Core.Utils;
 	using FoireMuses.Core.Querys;
+	using System;
 
 	public partial class Services
 	{
@@ -45,19 +46,48 @@ namespace FoireMuses.WebService
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
+		Yield GetContentLength(XUri uriToDownload, Result<int> result)
+		{
+			Plug p = Plug.New(uriToDownload);
+			Result<DreamMessage> res;
+			yield return res = p.GetAsync();
+
+			// return the result
+			result.Return((int)res.Value.ContentLength);
+			yield return result;
+
+			// copy the stream to disk in the background
+			theLogger.Debug("BEFORE 5 SECONDDDSSS");
+			yield return Async.Sleep(TimeSpan.FromSeconds(5));
+			theLogger.Debug("AFTER 5 SECONDDDSSS");
+		}
+
+		[DreamFeature("GET:testasync", "")]
+		public Yield TestAsynch(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+		{
+			Result<int> result = new Result<int>(TimeSpan.FromSeconds(5));
+			yield return Coroutine.Invoke(GetContentLength, new XUri("http://www.mindtouch.com"), result);
+			if (result.HasException)
+			{
+				theLogger.Debug("got exception");
+			}
+			response.Return(DreamMessage.Ok(MimeType.TEXT, result.Value.ToString()));
+		}
+
 		[DreamFeature("GET:scores/{id}", "Get the score given by the id number")]
 		[DreamFeature("GET:scores/{id}/{fileName}", "Get the score given by the id number")]
 		public Yield GetScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			theLogger.Info("GetScore");
 			string id = context.GetParam("id");
-			string fileName = context.GetParam("fileName",".json").ToLower();
+			string fileName = context.GetParam("fileName", ".json").ToLower();
 			string fileType = Path.GetExtension(fileName);
 			switch (fileType)
 			{
 				case ".json":
 					Result<IScore> resultJson = new Result<IScore>();
 					yield return Context.Current.Instance.ScoreController.Retrieve(id, resultJson);
+
 					response.Return(resultJson.Value == null
 								? DreamMessage.NotFound("No Score found for id " + id)
 								: DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(resultJson.Value)));
@@ -81,17 +111,18 @@ namespace FoireMuses.WebService
 					response.Return(DreamMessage.Ok(ConvertHelper.Midi, streamMidi.Length, streamMidi));
 					break;
 			}
-			
+			yield break;
 		}
 
 		[DreamFeature("GET:scores/search", "Search for a  score")]
-		[DreamFeatureParam("music","string","music partition to search for")]
+		[DreamFeatureParam("music", "string", "music partition to search for")]
 		[DreamFeatureParam("title", "string", "the title")]
 		[DreamFeatureParam("titleWild", "string", "the title wildcarded")]
 		[DreamFeatureParam("composer", "string", "the composer")]
 		[DreamFeatureParam("editor", "string", "the editor")]
 		[DreamFeatureParam("verses", "string", "verses in the score to search for")]
-        [DreamFeatureParam("isMaster","bool?", "is master or not")]
+		[DreamFeatureParam("isMaster", "bool?", "is master or not")]
+		[DreamFeatureParam("masterId", "string", "the master's id")]
 		[DreamFeatureParam("offset", "int?", "result to start with")]
 		[DreamFeatureParam("max", "int?", "max results")]
 		public Yield SearchScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
@@ -99,13 +130,14 @@ namespace FoireMuses.WebService
 			theLogger.Info("SearchScore");
 			ScoreQuery query = new ScoreQuery()
 			{
-				Composer = context.GetParam("composer",null),
-				Editor = context.GetParam("editor",null),
-				Title = context.GetParam("title",null),
+				Composer = context.GetParam("composer", null),
+				Editor = context.GetParam("editor", null),
+				Title = context.GetParam("title", null),
 				TitleWild = context.GetParam("titleWild", null),
-				Verses = context.GetParam("verses",null),
-				Music = context.GetParam("music",null),
-                IsMaster = context.GetParam("isMaster",null),
+				Verses = context.GetParam("verses", null),
+				Music = context.GetParam("music", null),
+				IsMaster = context.GetParam("isMaster", null),
+				MasterId = context.GetParam("masterId", null),
 				Offset = context.GetParam<int>("offset", 0),
 				Max = context.GetParam<int>("max", 20)
 			};

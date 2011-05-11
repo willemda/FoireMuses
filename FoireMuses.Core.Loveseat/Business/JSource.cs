@@ -155,9 +155,18 @@ namespace FoireMuses.Core.Business
 			private set { this.AddCheck("lastModifierId", value); }
 		}
 
-		public IEnumerable<string> CollaboratorsId
+		public IList<string> CollaboratorsId
 		{
-			get { return this["collaboratorsId"].Values<string>(); }
+			get { return this["collaboratorsId"].Values<string>().ToList(); }
+			set 
+			{
+				JArray ja = new JArray();
+				foreach (string item in value)
+				{
+					ja.Add(item);
+				}
+				this["collaboratorsId"] = ja;
+			}
 		}
 
 
