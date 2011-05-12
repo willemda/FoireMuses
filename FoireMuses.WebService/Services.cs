@@ -69,32 +69,26 @@ namespace FoireMuses.WebService
 				response.Return(DreamMessage.AccessDenied("foire muses api", "no auth"));
 				yield break;
 			}
-			else if (username == "secretusername" && password == "secretpassword")
+			else
 			{
-				//connected through webinterface
-				if (request.Headers["FoireMusesImpersonate"] != null)
+				Result<IUser> user;
+				yield return user = ctx.Instance.UserController.Login(username, password, new Result<IUser>());
+				if (user.Value.IsAdmin)
 				{
-					//act like real user
-					ctx.User = ctx.Instance.UserController.Retrieve(request.Headers["FoireMusesImpersonate"], new Result<IUser>()).Wait();
+					if (request.Headers["FoireMusesImpersonate"] != null)
+					{
+						//act like real user
+						ctx.User = ctx.Instance.UserController.Retrieve(request.Headers["FoireMusesImpersonate"], new Result<IUser>()).Wait();
+					}
+					else
+					{
+						ctx.User = user.Value;
+					}
 				}
 				else
 				{
-					// user is admin
-					IUser user = ctx.Instance.UserController.CreateNew();
-					user.IsAnon = false;
-					user.IsAdmin = true;
-					user.Id = "admin";
-					ctx.User = user;
+					ctx.User = user.Value;
 				}
-			}
-			else
-			{
-				//user is anon
-				IUser user = ctx.Instance.UserController.CreateNew();
-				user.IsAnon = true;
-				user.IsAdmin = false;
-				user.Id = "anonymous";
-				ctx.User = user;
 			}
 			ctx.AttachToCurrentTaskEnv();
 			//create context and attach
