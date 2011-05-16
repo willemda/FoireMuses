@@ -47,6 +47,7 @@ namespace FoireMuses.Core.Loveseat
 												emit([doc.musicalSource.id, doc._id],null)
 											}
 									}}"));
+				theCouchDatabase.CreateDocument(view);
 			}
 			if (!theCouchDatabase.DocumentExists("_design/plays"))
 			{
@@ -63,6 +64,7 @@ namespace FoireMuses.Core.Loveseat
 								  @"function(doc){
 if(doc.otype && doc.otype=='play' && doc.sourceID){
 emit([doc.sourceID,doc._id],null)} }"));
+				theCouchDatabase.CreateDocument(view);
 			}
 
 			if (!theCouchDatabase.DocumentExists("_design/sources"))
@@ -80,6 +82,7 @@ emit([doc.sourceID,doc._id],null)} }"));
 								  @"function(doc){
 if(doc.otype && doc.otype=='source' && doc.name){
 emit(doc._id, doc.name)}}"));
+				theCouchDatabase.CreateDocument(view);
 			}
 
 			if (!theCouchDatabase.DocumentExists("_design/users"))
@@ -92,6 +95,7 @@ emit(doc._id, doc.name)}}"));
 				                          emit(doc._id, doc._rev)
 				                       }
 				                    }"));
+				theCouchDatabase.CreateDocument(view);
 			}
 		}
 

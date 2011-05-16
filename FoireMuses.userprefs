@@ -1,16 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Core/Controllers/ScoreController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Core/Controllers/IndexController.cs">
     <Files>
-      <File FileName="Core/IControllers/ICouchDBController.cs" Line="13" Column="39" />
-      <File FileName="Core/IControllers/IScoreController.cs" Line="8" Column="12" />
-      <File FileName="Core/Controllers/CouchDBController.cs" Line="21" Column="10" />
-      <File FileName="Core/Business/JScore.cs" Line="16" Column="4" />
-      <File FileName="Core/Utils/Utils.cs" Line="13" Column="18" />
-      <File FileName="Core/Exceptions/ArgumentInvalideException.cs" Line="1" Column="1" />
-      <File FileName="Core/Settings/TheSettings.cs" Line="30" Column="10" />
-      <File FileName="Core/Context/Context.cs" Line="26" Column="22" />
-      <File FileName="Core/Controllers/ScoreController.cs" Line="91" Column="16" />
+      <File FileName="Core/Controllers/ScoreController.cs" Line="160" Column="12" />
+      <File FileName="Core/Controllers/IndexController.cs" Line="28" Column="25" />
+      <File FileName="FoireMuses.Core.Loveseat/NotificationManager.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

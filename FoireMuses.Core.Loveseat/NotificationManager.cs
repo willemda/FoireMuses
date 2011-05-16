@@ -9,6 +9,7 @@ using LoveSeat.Interfaces;
 using FoireMuses.Core.Business;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Loveseat.Business;
+using MindTouch.Tasking;
 
 namespace FoireMuses.Core.Loveseat
 {
@@ -36,7 +37,7 @@ namespace FoireMuses.Core.Loveseat
 		}
 
 		public void Start(){
-				theCouchDatabase.GetCoutinuousChanges<JDocument>(theOptions, new CouchChangeDelegate<JDocument>(OnChanged));
+				theCouchDatabase.GetCoutinuousChanges<JDocument>(theOptions, new CouchChangeDelegate<JDocument>(OnChanged), new Result<CouchContinuousChanges<JDocument>>());
 		}
 
 		private void OnChanged(object sender, CouchChangeResult<JDocument> aChange){

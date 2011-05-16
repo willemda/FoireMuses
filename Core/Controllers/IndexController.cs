@@ -32,7 +32,7 @@ namespace FoireMuses.Core.Controllers
 		{
 			theLogger.Info("Creation of the IndexController");
 			theNotificationManager = notif;
-			directory = FSDirectory.Open(new System.IO.DirectoryInfo(Environment.CurrentDirectory + "\\LuceneIndex"));
+			directory = FSDirectory.Open(new System.IO.DirectoryInfo(System.IO.Path.Combine(Environment.CurrentDirectory,"LuceneIndex")));
 			whiteSpaceAnalyzer = new WhitespaceAnalyzer();
 			standardAnalyzer = new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29);
 			perFieldAnalyzer = new PerFieldAnalyzerWrapper(standardAnalyzer);
@@ -45,6 +45,7 @@ namespace FoireMuses.Core.Controllers
 			theNotificationManager.SourceChanged += new EventHandler<EventArgs<ISource>>(theNotificationManager_SourceChanged);
 			theNotificationManager.SourcePageChanged += new EventHandler<EventArgs<ISourcePage>>(theNotificationManager_SourcePageChanged);
 			theNotificationManager.Start();
+			theLogger.Info("IndexController created");
 		}
 
 		void theNotificationManager_SourcePageChanged(object sender, EventArgs<ISourcePage> e)
