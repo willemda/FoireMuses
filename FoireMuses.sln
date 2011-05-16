@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoireMuses.WebService", "Fo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoireMuses.Import", "FoireMuses.Import\FoireMuses.Import.csproj", "{3422F002-9AEC-4216-9111-575C9B72A188}"
 EndProject
-Project("{9344bdbb-3e7f-41fc-a0dd-8665d75ee146}") = "FoireMuses.UnitTests", "FoireMuses.UnitTests\FoireMuses.UnitTests.csproj", "{C37B1B64-9366-49A2-A8E3-ACD8B72ACB3A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoireMuses.UnitTests", "FoireMuses.UnitTests\FoireMuses.UnitTests.csproj", "{D928CBAC-72B3-45E4-BF05-184D06A32CFF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B276FA11-E329-428D-ACE3-0DD02082C5CD}"
 	ProjectSection(SolutionItems) = preProject
@@ -21,6 +21,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FoireMuses.Core.Loveseat", "FoireMuses.Core.Loveseat\FoireMuses.Core.Loveseat.csproj", "{A6361242-BFAF-4945-8598-11D69E9696CF}"
 EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = FoireMuses1.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -32,18 +35,18 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3422F002-9AEC-4216-9111-575C9B72A188}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{3422F002-9AEC-4216-9111-575C9B72A188}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{3422F002-9AEC-4216-9111-575C9B72A188}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{3422F002-9AEC-4216-9111-575C9B72A188}.Debug|Win32.ActiveCfg = Debug|x86
-		{3422F002-9AEC-4216-9111-575C9B72A188}.Debug|x86.ActiveCfg = Debug|x86
-		{3422F002-9AEC-4216-9111-575C9B72A188}.Debug|x86.Build.0 = Debug|x86
-		{3422F002-9AEC-4216-9111-575C9B72A188}.Release|Any CPU.ActiveCfg = Release|x86
-		{3422F002-9AEC-4216-9111-575C9B72A188}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{3422F002-9AEC-4216-9111-575C9B72A188}.Release|Mixed Platforms.Build.0 = Release|x86
-		{3422F002-9AEC-4216-9111-575C9B72A188}.Release|Win32.ActiveCfg = Release|x86
-		{3422F002-9AEC-4216-9111-575C9B72A188}.Release|x86.ActiveCfg = Release|x86
-		{3422F002-9AEC-4216-9111-575C9B72A188}.Release|x86.Build.0 = Release|x86
+		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Release|Win32.ActiveCfg = Release|Any CPU
+		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Release|x86.ActiveCfg = Release|Any CPU
 		{72AC88AC-91A1-4035-AE92-63E5EB9812AA}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{72AC88AC-91A1-4035-AE92-63E5EB9812AA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{72AC88AC-91A1-4035-AE92-63E5EB9812AA}.Debug|Mixed Platforms.Build.0 = Debug|x86
@@ -56,6 +59,38 @@ Global
 		{72AC88AC-91A1-4035-AE92-63E5EB9812AA}.Release|Win32.ActiveCfg = Release|x86
 		{72AC88AC-91A1-4035-AE92-63E5EB9812AA}.Release|x86.ActiveCfg = Release|x86
 		{72AC88AC-91A1-4035-AE92-63E5EB9812AA}.Release|x86.Build.0 = Release|x86
+		{AC57E329-8530-4452-BAD3-64A5159E208C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC57E329-8530-4452-BAD3-64A5159E208C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC57E329-8530-4452-BAD3-64A5159E208C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{AC57E329-8530-4452-BAD3-64A5159E208C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{AC57E329-8530-4452-BAD3-64A5159E208C}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{AC57E329-8530-4452-BAD3-64A5159E208C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AC57E329-8530-4452-BAD3-64A5159E208C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC57E329-8530-4452-BAD3-64A5159E208C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC57E329-8530-4452-BAD3-64A5159E208C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{AC57E329-8530-4452-BAD3-64A5159E208C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{AC57E329-8530-4452-BAD3-64A5159E208C}.Release|Win32.ActiveCfg = Release|Any CPU
+		{AC57E329-8530-4452-BAD3-64A5159E208C}.Release|x86.ActiveCfg = Release|Any CPU
+		{3422F002-9AEC-4216-9111-575C9B72A188}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{3422F002-9AEC-4216-9111-575C9B72A188}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{3422F002-9AEC-4216-9111-575C9B72A188}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{3422F002-9AEC-4216-9111-575C9B72A188}.Debug|Win32.ActiveCfg = Debug|x86
+		{3422F002-9AEC-4216-9111-575C9B72A188}.Debug|x86.ActiveCfg = Debug|x86
+		{3422F002-9AEC-4216-9111-575C9B72A188}.Debug|x86.Build.0 = Debug|x86
+		{3422F002-9AEC-4216-9111-575C9B72A188}.Release|Any CPU.ActiveCfg = Release|x86
+		{3422F002-9AEC-4216-9111-575C9B72A188}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{3422F002-9AEC-4216-9111-575C9B72A188}.Release|Mixed Platforms.Build.0 = Release|x86
+		{3422F002-9AEC-4216-9111-575C9B72A188}.Release|Win32.ActiveCfg = Release|x86
+		{3422F002-9AEC-4216-9111-575C9B72A188}.Release|x86.ActiveCfg = Release|x86
+		{3422F002-9AEC-4216-9111-575C9B72A188}.Release|x86.Build.0 = Release|x86
+		{D928CBAC-72B3-45E4-BF05-184D06A32CFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D928CBAC-72B3-45E4-BF05-184D06A32CFF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D928CBAC-72B3-45E4-BF05-184D06A32CFF}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{D928CBAC-72B3-45E4-BF05-184D06A32CFF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D928CBAC-72B3-45E4-BF05-184D06A32CFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D928CBAC-72B3-45E4-BF05-184D06A32CFF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D928CBAC-72B3-45E4-BF05-184D06A32CFF}.Release|Win32.ActiveCfg = Release|Any CPU
+		{D928CBAC-72B3-45E4-BF05-184D06A32CFF}.Release|x86.ActiveCfg = Release|Any CPU
 		{A6361242-BFAF-4945-8598-11D69E9696CF}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{A6361242-BFAF-4945-8598-11D69E9696CF}.Debug|Any CPU.Build.0 = Debug|x86
 		{A6361242-BFAF-4945-8598-11D69E9696CF}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
@@ -69,48 +104,11 @@ Global
 		{A6361242-BFAF-4945-8598-11D69E9696CF}.Release|Win32.ActiveCfg = Release|x86
 		{A6361242-BFAF-4945-8598-11D69E9696CF}.Release|x86.ActiveCfg = Release|x86
 		{A6361242-BFAF-4945-8598-11D69E9696CF}.Release|x86.Build.0 = Release|x86
-		{AC57E329-8530-4452-BAD3-64A5159E208C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC57E329-8530-4452-BAD3-64A5159E208C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC57E329-8530-4452-BAD3-64A5159E208C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{AC57E329-8530-4452-BAD3-64A5159E208C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{AC57E329-8530-4452-BAD3-64A5159E208C}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{AC57E329-8530-4452-BAD3-64A5159E208C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AC57E329-8530-4452-BAD3-64A5159E208C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC57E329-8530-4452-BAD3-64A5159E208C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC57E329-8530-4452-BAD3-64A5159E208C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{AC57E329-8530-4452-BAD3-64A5159E208C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{AC57E329-8530-4452-BAD3-64A5159E208C}.Release|Win32.ActiveCfg = Release|Any CPU
-		{AC57E329-8530-4452-BAD3-64A5159E208C}.Release|x86.ActiveCfg = Release|Any CPU
-		{C37B1B64-9366-49A2-A8E3-ACD8B72ACB3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C37B1B64-9366-49A2-A8E3-ACD8B72ACB3A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{C37B1B64-9366-49A2-A8E3-ACD8B72ACB3A}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{C37B1B64-9366-49A2-A8E3-ACD8B72ACB3A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C37B1B64-9366-49A2-A8E3-ACD8B72ACB3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C37B1B64-9366-49A2-A8E3-ACD8B72ACB3A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{C37B1B64-9366-49A2-A8E3-ACD8B72ACB3A}.Release|Win32.ActiveCfg = Release|Any CPU
-		{C37B1B64-9366-49A2-A8E3-ACD8B72ACB3A}.Release|x86.ActiveCfg = Release|Any CPU
-		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Release|Win32.ActiveCfg = Release|Any CPU
-		{D7BFAD87-C87A-4340-B982-E5D86CFF2DCA}.Release|x86.ActiveCfg = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = FoireMuses.WebService\FoireMuses.WebService.csproj
-	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = FoireMuses1.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = FoireMuses.WebService\FoireMuses.WebService.csproj
 	EndGlobalSection
 EndGlobal

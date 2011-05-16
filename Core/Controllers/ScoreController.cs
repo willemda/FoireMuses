@@ -281,8 +281,6 @@ namespace FoireMuses.Core.Controllers
 			{
 				yield return Create(aScore, result);
 			}
-			
-			aResult.Return(result.Value);
 			using(TemporaryFile inputFile = new TemporaryFile())
 			using(TemporaryFile outputFile = new TemporaryFile())
 			{
@@ -304,6 +302,7 @@ namespace FoireMuses.Core.Controllers
 			//attach music xml to the created /updated score
 			Stream stream = new MemoryStream(xdoc.ToBytes());
 			yield return AddAttachment(result.Value.Id, stream, "$musicxml.xml", new Result<bool>());
+			aResult.Return(result.Value);
 		}
 
 		public Result<IScore> AttachMusicXml(IScore aScore, XDoc xdoc, bool overwriteMusicXmlValues, Result<IScore> aResult)
