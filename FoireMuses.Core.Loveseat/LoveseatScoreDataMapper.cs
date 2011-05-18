@@ -97,6 +97,15 @@ emit(doc._id, doc.name)}}"));
 				                    }"));
 				theCouchDatabase.CreateDocument(view);
 			}
+            if (!theCouchDatabase.DocumentExists("admin"))
+            {
+                JDocument doc = new JDocument();
+                doc.Id = "admin";
+                doc["password"] = "admin@foiremuses";
+                doc["isAdmin"] = true;
+                doc["otype"] = "user";
+                theCouchDatabase.CreateDocument(doc);
+            }
 		}
 
 
