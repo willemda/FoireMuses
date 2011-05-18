@@ -1,0 +1,32 @@
+﻿<script>  <!-- Address Book sample -->  <action verb="POST" path="/host/services">    <config>      <path>foiremuses</path>      <sid>http://foiremuses.org/service</sid>      <instances>        <instance webhost="test.foiremuses.org" databaseName="musicdatabasexml">          <convertersSettings
+            lilyPondCommand = "/usr/bin/lilypond"
+            toLyCommand = "/usr/bin/musicxml2ly"
+            toLyArgs = "-o {0} {1}"
+            toLyExpectedFile = ".ly"
+            toPsArgs = "-fps -o {0} {1}"
+            toPsExpectedFile=".ps"
+            toPdfArgs = "--pdf -o {0} {1}"
+            toPdfExpectedFile = ".pdf"
+            toPngCommand="/usr/bin/convert"
+            toPngArgs="&quot;{1}&quot; &quot;{0}.png&quot;"
+            toPngExpectedFile=".png"
+            toMidiArgs="-o {0} {1}"
+            toMidiExpectedFile=".mid"            />          <components>            <component
+							type="FoireMuses.Core.Interfaces.IScoreDataMapper, FoireMuses.Core"
+							implementation="FoireMuses.Core.Loveseat.LoveseatScoreDataMapper, FoireMuses.Core.Loveseat"
+							name="ScoreDataMapper"/>            <component
+							type="FoireMuses.Core.Interfaces.IUserDataMapper, FoireMuses.Core"
+							implementation="FoireMuses.Core.Loveseat.LoveseatUserDataMapper, FoireMuses.Core.Loveseat"
+							name="UserDataMapper"/>            <component
+							type="FoireMuses.Core.Interfaces.ISourceDataMapper, FoireMuses.Core"
+							implementation="FoireMuses.Core.Loveseat.LoveseatSourceDataMapper, FoireMuses.Core.Loveseat"
+							name="SourceDataMapper"/>            <component
+							type="FoireMuses.Core.Interfaces.IPlayDataMapper, FoireMuses.Core"
+							implementation="FoireMuses.Core.Loveseat.LoveseatPlayDataMapper, FoireMuses.Core.Loveseat"
+							name="PlayDataMapper"/>            <component
+							type="FoireMuses.Core.Interfaces.ISourcePageDataMapper, FoireMuses.Core"
+							implementation="FoireMuses.Core.Loveseat.LoveseatSourcePageDataMapper, FoireMuses.Core.Loveseat"
+							name="SourcePageDataMapper"/>            <component
+							type="FoireMuses.Core.Interfaces.INotificationManager, FoireMuses.Core"
+							implementation="FoireMuses.Core.Loveseat.NotificationManager, FoireMuses.Core.Loveseat"
+							name="NotificationManager"/>          </components>        </instance>      </instances>    </config>  </action></script>
