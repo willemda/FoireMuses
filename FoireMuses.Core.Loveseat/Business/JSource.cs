@@ -119,7 +119,12 @@ namespace FoireMuses.Core.Business
 
 		public IEnumerable<string> Tags
 		{
-			get { return this["tags"].Values<string>(); }
+			get
+			{
+				if (this["tags"] == null)
+					return null;
+				return this["tags"].Values<string>();
+			}
 		}
 
 		public void AddTag(string tag)

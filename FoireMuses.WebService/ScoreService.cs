@@ -21,13 +21,13 @@ namespace FoireMuses.WebService
 		public Yield GetScores(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			theLogger.Info("GetScores");
-			Result<SearchResult<IScore>> result = new Result<SearchResult<IScore>>();
+			Result<SearchResult<IScoreSearchResult>> result = new Result<SearchResult<IScoreSearchResult>>();
 			int limit = context.GetParam("max", 20);
 			int offset = context.GetParam("offset", 0);
 
-			yield return Context.Current.Instance.ScoreController.GetAll(offset, limit, result);
+			yield return Context.Current.Instance.IndexController.GetAllScores(limit, offset, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.IndexController.ToJson(result.Value)));
 		}
 
 		[DreamFeature("GET:scores/source/{id}", "Get all scores from this source")]

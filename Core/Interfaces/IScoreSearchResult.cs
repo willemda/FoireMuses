@@ -7,6 +7,7 @@ namespace FoireMuses.Core.Interfaces
 {
 	public interface IScoreSearchResult : ISearchResultItem
 	{
+		string Id { get; set; }
 		string Title { get; set; }
 		string Editor { get; set; }
 		string Music { get; set; }

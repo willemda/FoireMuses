@@ -93,7 +93,7 @@ namespace FoireMuses.Core.Loveseat
 		{
 			aDocument.Id = aDocumentId;
 			aDocument.Rev = aRev;
-			theCouchDatabase.CreateDocument<JSourcePage>(aDocument as JSourcePage, new Result<JSourcePage>()).WhenDone(
+			theCouchDatabase.UpdateDocument<JSourcePage>(aDocument as JSourcePage, new Result<JSourcePage>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);

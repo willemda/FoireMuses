@@ -20,13 +20,13 @@ namespace FoireMuses.WebService
 		[DreamFeatureParam("offset", "int?", "skip the offset first results")]
 		public Yield GetSources(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			Result<SearchResult<ISource>> result = new Result<SearchResult<ISource>>();
+			Result<SearchResult<ISourceSearchResult>> result = new Result<SearchResult<ISourceSearchResult>>();
 			int limit = context.GetParam("max", 20);
 			int offset = context.GetParam("offset", 0);
 
-			yield return Context.Current.Instance.SourceController.GetAll(offset, limit, result);
+			yield return Context.Current.Instance.IndexController.GetAllSources(limit, offset, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourceController.ToJson(result.Value)));
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.IndexController.ToJson(result.Value)));
 		}
 
 		[DreamFeature("GET:sources/{id}", "Get the source given by the id number")]
@@ -68,12 +68,34 @@ namespace FoireMuses.WebService
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourceController.ToJson(result.Value)));
 		}
 
+		[DreamFeature("PUT:sources/{id}/pages", "Edit a source page")]
+		[DreamFeatureParam("{sourcePageId}", "String", "Source page id")]
+		[DreamFeatureParam("{sourcePageRev}", "String", "Source page revision id")]
+		public Yield UpdateSourcePage(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+		{
+			ISourcePage sourcePage = Context.Current.Instance.SourcePageController.FromJson(request.ToText());
+			Result<ISourcePage> result = new Result<ISourcePage>();
+			yield return Context.Current.Instance.SourcePageController.Update(context.GetParam("sourcePageId"), context.GetParam("sourcePageRev"), sourcePage, result);
+
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourcePageController.ToJson(result.Value)));
+		}
+
 		[DreamFeature("GET:sources/pages/{id}", "Get a source page")]
 		public Yield GetSourcePage(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			Result<ISourcePage> result = new Result<ISourcePage>();
 			yield return Context.Current.Instance.SourcePageController.Retrieve(context.GetParam("id"), result);
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourcePageController.ToJson(result.Value)));
+		}
+
+		[DreamFeature("GET:sources/{id}/pages", "Get the source pages")]
+		[DreamFeatureParam("max", "int", "the max result")]
+		[DreamFeatureParam("offset", "int", "the result to start with")]
+		public Yield GetPagesFromSource(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+		{
+			Result<SearchResult<ISourcePageSearchResult>> result;
+			yield return result = Context.Current.Instance.IndexController.GetAllPagesFromSource(context.GetParam("id"), context.GetParam<int>("max"), context.GetParam<int>("offset"), new Result<SearchResult<ISourcePageSearchResult>>());
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.IndexController.ToJson(result.Value)));
 		}
 
 		[DreamFeature("POST:sources/pages/", "Create a new page")]
@@ -103,17 +125,6 @@ namespace FoireMuses.WebService
 			yield return Context.Current.Instance.SourcePageController.Create(page, result);
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourcePageController.ToJson(result.Value)));
 		}*/
-
-		[DreamFeature("PUT:sources/pages/", "Edit a page")]
-		[DreamFeatureParam("{id}", "String", "source id")]
-		[DreamFeatureParam("{rev}", "String", "source revision id")]
-		public Yield EditSourcePage(DreamContext context, DreamMessage request, Result<DreamMessage> response)
-		{
-			ISourcePage page = Context.Current.Instance.SourcePageController.FromJson(request.ToText());
-			Result<ISourcePage> result = new Result<ISourcePage>();
-			yield return Context.Current.Instance.SourcePageController.Update(context.GetParam("id"), context.GetParam("rev"), page, result);
-			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourcePageController.ToJson(result.Value)));
-		}
 
 		[DreamFeature("DELETE:sources/pages/", "Delete a source")]
 		[DreamFeatureParam("{id}", "String", "source id")]
