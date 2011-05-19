@@ -72,7 +72,12 @@ namespace FoireMuses.WebService
 			else
 			{
 				Result<IUser> user;
-				yield return user = ctx.Instance.UserController.Login(username, password, new Result<IUser>());
+				yield return user = ctx.Instance.UserController.Retrieve(username, new Result<IUser>());
+				if (user.Value == null)
+				{
+					response.Return(DreamMessage.AccessDenied("foire muses api", "no auth"));
+					yield break;
+				}
 				if (user.Value.IsAdmin)
 				{
 					if (request.Headers["FoireMusesImpersonate"] != null)

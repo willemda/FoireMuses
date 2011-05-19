@@ -105,26 +105,6 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		public Result<IUser> Login(string username, string password, Result<IUser> aResult)
-		{
-			this.Retrieve(username, new Result<IUser>()).WhenDone(
-				a =>
-				{
-					if (a != null)
-					{
-						if (a.Password == password)
-							aResult.Return(a);
-						else
-							aResult.Throw(new SecurityException());
-					}
-					else
-						aResult.Throw(new SecurityException());
-				},
-				aResult.Throw
-				);
-			return aResult;
-		}
-
 		public IUser CreateNew()
 		{
 			return theUserDataMapper.CreateNew();
