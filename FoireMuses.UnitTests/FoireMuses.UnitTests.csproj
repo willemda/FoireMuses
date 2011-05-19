@@ -50,9 +50,9 @@
     <Reference Include="mindtouch.dream.test">
       <HintPath>..\externals\mindtouch.dream.test.dll</HintPath>
     </Reference>
-    <Reference Include="MusicXML, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MusicXml, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\externals\MusicXML.dll</HintPath>
+      <HintPath>..\externals\MusicXml.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\externals\Newtonsoft.Json.dll</HintPath>
