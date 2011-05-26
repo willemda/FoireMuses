@@ -180,7 +180,11 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<bool> DeleteAttachment(string aDocumentId, string aFileName, Result<bool> aResult)
 		{
-			throw new NotImplementedException();
+			theScoreDataMapper.DeleteAttachment(aDocumentId, aFileName, new Result<bool>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
 		}
 
 		public Result<Stream> GetConvertedScore(MimeType type, string scoreId, Result<Stream> aResult)
