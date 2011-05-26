@@ -114,7 +114,7 @@
     <Compile Include="Interfaces\IPlayController.cs" />
     <Compile Include="Interfaces\IScoreController.cs" />
     <Compile Include="Interfaces\ISourceController.cs" />
-    <Compile Include="Utils\ConvertHelper.cs" />
+    <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\TemporaryFile.cs" />
   </ItemGroup>
   <ItemGroup>

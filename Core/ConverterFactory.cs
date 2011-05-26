@@ -33,10 +33,10 @@ namespace FoireMuses.Core
 			IConverter XmlToPdfConverter = new AndConverter(XmlToLilyPoundConverter, LilyPoundToPdfConverter);
 			IConverter LilyPoundToMidiConverter = new MIDIConverter(aSettingsController.LilyPondCommand, aSettingsController.ToMidiArgs, aSettingsController.ToMidiExpectedFile);
 			IConverter XmlToMidiConverter = new AndConverter(XmlToLilyPoundConverter, LilyPoundToMidiConverter);
-			Converters.Add(ConvertHelper.LilyPond, XmlToLilyPoundConverter);
+			Converters.Add(Constants.LilyPond, XmlToLilyPoundConverter);
 			Converters.Add(MimeType.PDF, XmlToPdfConverter);
 			Converters.Add(MimeType.PNG, XmlToPngConverter);
-			Converters.Add(ConvertHelper.Midi, XmlToMidiConverter);
+			Converters.Add(Constants.Midi, XmlToMidiConverter);
 		}
 		
 		public IConverter GetConverter(MimeType type)

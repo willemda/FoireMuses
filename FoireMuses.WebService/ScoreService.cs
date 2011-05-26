@@ -106,9 +106,9 @@ namespace FoireMuses.WebService
 					break;
 				case ".mid":
 					Result<Stream> resultMidi = new Result<Stream>();
-					yield return Context.Current.Instance.ScoreController.GetConvertedScore(ConvertHelper.Midi, id, resultMidi);
+					yield return Context.Current.Instance.ScoreController.GetConvertedScore(Constants.Midi, id, resultMidi);
 					Stream streamMidi = resultMidi.Value;
-					response.Return(DreamMessage.Ok(ConvertHelper.Midi, streamMidi.Length, streamMidi));
+					response.Return(DreamMessage.Ok(Constants.Midi, streamMidi.Length, streamMidi));
 					break;
 			}
 			yield break;

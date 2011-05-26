@@ -71,7 +71,7 @@ namespace FoireMuses.UnitTests.CoreTests
 			{
 				xdoc.Save(inputFile.Path);
 				//yield return Context.Current.Instance.SourceController.Exists("bla", new Result<bool>());
-				IList<string> pngFilePath = Context.Current.Instance.ConverterFactory.GetConverter(ConvertHelper.Midi).Convert(inputFile.Path, outputFile.Path);
+				IList<string> pngFilePath = Context.Current.Instance.ConverterFactory.GetConverter(Constants.Midi).Convert(inputFile.Path, outputFile.Path);
 				foreach (string ooh in pngFilePath)
 				{
 					ooh.ToString();
