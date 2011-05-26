@@ -67,7 +67,7 @@
     <Compile Include="Controllers\IndexController.cs" />
     <Compile Include="ConverterFactory.cs" />
     <Compile Include="Converters\Converter.cs" />
-    <Compile Include="Converters\AndConverter.cs" />
+    <Compile Include="Converters\CombinedConverter.cs" />
     <Compile Include="Converters\PDFConverter.cs" />
     <Compile Include="Converters\MIDIConverter.cs" />
     <Compile Include="Exceptions\BadCharacterException.cs" />
