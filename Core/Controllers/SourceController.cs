@@ -6,10 +6,14 @@ using FoireMuses.Core.Interfaces;
 using FoireMuses.Core.Utils;
 using MindTouch.Tasking;
 using Newtonsoft.Json.Linq;
+using ICSharpCode.SharpZipLib.Zip;
+using MindTouch.IO;
 
 namespace FoireMuses.Core.Controllers
 {
 	using Yield = System.Collections.Generic.IEnumerator<MindTouch.Tasking.IYield>;
+	using System.IO;
+	using System.Text.RegularExpressions;
 
 	public class SourceController : ISourceController
 	{
@@ -38,7 +42,7 @@ namespace FoireMuses.Core.Controllers
 
 		public Result<ISource> Insert(ISource aDoc, Result<ISource> aResult)
 		{
-			Coroutine.Invoke(CreateHelper,aDoc, new Result<ISource>()).WhenDone(
+			Coroutine.Invoke(CreateHelper, aDoc, new Result<ISource>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -56,7 +60,7 @@ namespace FoireMuses.Core.Controllers
 				yield break;
 			}
 
-			
+
 
 			//Update and return the updated source.
 			Result<ISource> sourceResult = new Result<ISource>();
@@ -94,9 +98,9 @@ namespace FoireMuses.Core.Controllers
 			return false;
 		}
 
-		public Result<ISource> Update(string id,string rev,ISource aDoc, Result<ISource> aResult)
+		public Result<ISource> Update(string id, string rev, ISource aDoc, Result<ISource> aResult)
 		{
-			Coroutine.Invoke(UpdateHelper,id, rev, aDoc, new Result<ISource>()).WhenDone(
+			Coroutine.Invoke(UpdateHelper, id, rev, aDoc, new Result<ISource>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -111,6 +115,66 @@ namespace FoireMuses.Core.Controllers
 				);
 			return aResult;
 		}
+
+
+		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)
+		{
+			theSourceDataMapper.AddAttachment(id, file, fileName, new Result<bool>()).WhenDone(
+				aResult.Return,
+				aResult.Throw
+				);
+			return aResult;
+		}
+
+
+		public Result<bool> BulkFascimile(string sourceId, Stream file, Result<bool> aResult)
+		{
+			Stream valid = new MemoryStream();
+			file.CopyTo(valid, file.Length);
+			valid.Position = 0;
+			using (ZipInputStream zis = new ZipInputStream(valid))
+			{
+				ZipEntry entry;
+				while ((entry = zis.GetNextEntry()) != null)
+				{
+					if (!entry.IsFile)
+					{
+						aResult.Return(false);
+						return aResult;
+					}
+					string reg = @"\$facsimile_(\d+)\.jpg";
+					Match match = Regex.Match(entry.Name, reg);
+					if (!match.Success)
+					{
+						aResult.Return(false);
+						return aResult;
+					}
+				}
+			}
+			file.Position = 0;
+			using (ZipInputStream zis = new ZipInputStream(file))
+			{
+				ZipEntry entry;
+				while ((entry = zis.GetNextEntry()) != null)
+				{
+					Match match = Regex.Match(entry.Name, @"\$facsimile_(\d+)\.jpg");
+					string number;
+					number = match.Groups[1].Value;
+					ISourcePage page = Context.Current.Instance.SourcePageController.CreateNew();
+					page.PageNumber = int.Parse(number);
+					page.DisplayPageNumber = int.Parse(number);
+					page.SourceId = sourceId;
+					page = Context.Current.Instance.SourcePageController.Insert(page, new Result<ISourcePage>()).Wait();
+					Stream fasc = new MemoryStream();
+					zis.CopyTo(fasc, zis.Length);
+					fasc.Position = 0;
+					Context.Current.Instance.SourcePageController.AddFascimile(page.Id, fasc, new Result<bool>()).Wait();
+				}
+			}
+			aResult.Return(true);
+			return aResult;
+		}
+
 
 		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{

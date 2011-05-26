@@ -74,7 +74,7 @@ namespace FoireMuses.Core.Loveseat.Business
 			{
 				return this.RetrieveStringCheck("sourceId");
 			}
-			set { this.AddCheck("souceId", value); }
+			set { this.AddCheck("sourceId", value); }
 		}
 
 		public string CreatorId

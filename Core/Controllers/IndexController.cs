@@ -38,9 +38,9 @@ namespace FoireMuses.Core.Controllers
 			standardAnalyzer = new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29);
 			keywordAnalyzer = new KeywordAnalyzer();
 			perFieldAnalyzer = new PerFieldAnalyzerWrapper(standardAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("CodageRythmique", whiteSpaceAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("CodageMelodiqueRISM", whiteSpaceAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("CodageParIntervalles", whiteSpaceAnalyzer);
+			perFieldAnalyzer.AddAnalyzer("codageRythmique", whiteSpaceAnalyzer);
+			perFieldAnalyzer.AddAnalyzer("codageMelodiqueRISM", whiteSpaceAnalyzer);
+			perFieldAnalyzer.AddAnalyzer("codageParIntervalles", whiteSpaceAnalyzer);
 			perFieldAnalyzer.AddAnalyzer("otype", keywordAnalyzer);
 			perFieldAnalyzer.AddAnalyzer("sourceId", keywordAnalyzer);
 			perFieldAnalyzer.AddAnalyzer("id", keywordAnalyzer);
@@ -322,9 +322,9 @@ namespace FoireMuses.Core.Controllers
 			}
 			if (!String.IsNullOrEmpty(query.Music))
 			{
-				queryString.AppendFormat("codageMelodiqueRISM:\"{0}\" ", LilyToCodageMelodiqueRISM(query.Music));
+				queryString.AppendFormat("+(codageMelodiqueRISM:\"{0}\" or ", LilyToCodageMelodiqueRISM(query.Music));
 
-				queryString.AppendFormat("codageParIntervalles:\"{0}\" ", LilyToCodageParIntervalles(query.Music));
+				queryString.AppendFormat("codageParIntervalles:\"{0}\" ) ", LilyToCodageParIntervalles(query.Music));
 			}
 			if (!String.IsNullOrEmpty(query.IsMaster))
 			{
@@ -378,31 +378,37 @@ namespace FoireMuses.Core.Controllers
 			string toto = q.ToString();
 
 			IndexReader reader = IndexReader.Open(directory, true);
-			Searcher indexSearch = new IndexSearcher(reader);
-
-			TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
-			IList<IScoreSearchResult> results = new List<IScoreSearchResult>();
-			if (offset < 0 || offset > topDocs.totalHits)
-				throw new Exception();
-			int ToGo = (offset + max) > topDocs.totalHits ? topDocs.totalHits : (offset + max);
-			if (max == 0)
-				ToGo = topDocs.totalHits;
-			for (int i = offset; i < ToGo; i++)
+			if (reader.NumDocs() == 0)
 			{
-				Document d = reader.Document(topDocs.scoreDocs[i].doc);
-				ScoreSearchResult score = new ScoreSearchResult();
-				score.Id = d.ExtractValue("id");
-				score.Title = d.ExtractValue("title");
-				score.Composer = d.ExtractValue("composer");
-				score.Editor = d.ExtractValue("editor");
-				score.Verses = d.ExtractValue("verses");
-				score.Music = d.ExtractValue("music");
-				results.Add(score);
+				aResult.Return(new SearchResult<IScoreSearchResult>(new List<IScoreSearchResult>(), 0, 0, 0));
 			}
-			SearchResult<IScoreSearchResult> searchResult = new SearchResult<IScoreSearchResult>(results, offset, max, topDocs.totalHits);
-			aResult.Return(searchResult);
+			else
+			{
+				Searcher indexSearch = new IndexSearcher(reader);
+				TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
+				IList<IScoreSearchResult> results = new List<IScoreSearchResult>();
+				if (offset < 0 || offset > topDocs.totalHits)
+					throw new Exception();
+				int ToGo = (offset + max) > topDocs.totalHits ? topDocs.totalHits : (offset + max);
+				if (max == 0)
+					ToGo = topDocs.totalHits;
+				for (int i = offset; i < ToGo; i++)
+				{
+					Document d = reader.Document(topDocs.scoreDocs[i].doc);
+					ScoreSearchResult score = new ScoreSearchResult();
+					score.Id = d.ExtractValue("id");
+					score.Title = d.ExtractValue("title");
+					score.Composer = d.ExtractValue("composer");
+					score.Editor = d.ExtractValue("editor");
+					score.Verses = d.ExtractValue("verses");
+					score.Music = d.ExtractValue("music");
+					results.Add(score);
+				}
+				SearchResult<IScoreSearchResult> searchResult = new SearchResult<IScoreSearchResult>(results, offset, max, topDocs.totalHits);
+				aResult.Return(searchResult);
+				indexSearch.Close();
+			}
 			reader.Close();
-			indexSearch.Close();
 			return aResult;
 		}
 
@@ -416,30 +422,35 @@ namespace FoireMuses.Core.Controllers
 			string toto = q.ToString();
 
 			IndexReader reader = IndexReader.Open(directory, true);
-			Searcher indexSearch = new IndexSearcher(reader);
-
-			TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
-			IList<ISourceSearchResult> results = new List<ISourceSearchResult>();
-			if (offset < 0 || offset > topDocs.totalHits)
-				throw new Exception();
-			int ToGo = (offset + max) > topDocs.totalHits ? topDocs.totalHits : (offset + max);
-			if (max == 0)
-				ToGo = topDocs.totalHits;
-			for (int i = offset; i < ToGo; i++)
+			if (reader.NumDocs() == 0)
 			{
-				Document d = reader.Document(topDocs.scoreDocs[i].doc);
-				SourceSearchResult source = new SourceSearchResult();
-				source.Id = d.ExtractValue("id");
-				source.Name = d.ExtractValue("name");
-				source.Publisher = d.ExtractValue("publisher");
-				source.DateFrom = d.ExtractValue("dateFrom");
-				source.DateTo = d.ExtractValue("dateTo");
-				results.Add(source);
+				aResult.Return(new SearchResult<ISourceSearchResult>(new List<ISourceSearchResult>(), 0, 0, 0));
+			}else{
+				Searcher indexSearch = new IndexSearcher(reader);
+
+				TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
+				IList<ISourceSearchResult> results = new List<ISourceSearchResult>();
+				if (offset < 0 || offset > topDocs.totalHits)
+					throw new Exception();
+				int ToGo = (offset + max) > topDocs.totalHits ? topDocs.totalHits : (offset + max);
+				if (max == 0)
+					ToGo = topDocs.totalHits;
+				for (int i = offset; i < ToGo; i++)
+				{
+					Document d = reader.Document(topDocs.scoreDocs[i].doc);
+					SourceSearchResult source = new SourceSearchResult();
+					source.Id = d.ExtractValue("id");
+					source.Name = d.ExtractValue("name");
+					source.Publisher = d.ExtractValue("publisher");
+					source.DateFrom = d.ExtractValue("dateFrom");
+					source.DateTo = d.ExtractValue("dateTo");
+					results.Add(source);
+				}
+				SearchResult<ISourceSearchResult> searchResult = new SearchResult<ISourceSearchResult>(results, offset, max, topDocs.totalHits);
+				aResult.Return(searchResult);
+				indexSearch.Close();
 			}
-			SearchResult<ISourceSearchResult> searchResult = new SearchResult<ISourceSearchResult>(results, offset, max, topDocs.totalHits);
-			aResult.Return(searchResult);
 			reader.Close();
-			indexSearch.Close();
 			return aResult;
 		}
 
@@ -453,29 +464,36 @@ namespace FoireMuses.Core.Controllers
 			string toto = q.ToString();
 
 			IndexReader reader = IndexReader.Open(directory, true);
-			Searcher indexSearch = new IndexSearcher(reader);
-
-			TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
-			IList<ISourcePageSearchResult> results = new List<ISourcePageSearchResult>();
-			if (offset < 0 || offset > topDocs.totalHits)
-				throw new Exception();
-			int ToGo = (offset + max) > topDocs.totalHits ? topDocs.totalHits : (offset + max);
-			if (max == 0)
-				ToGo = topDocs.totalHits;
-			for (int i = offset; i < ToGo; i++)
+			if (reader.NumDocs() == 0)
 			{
-				Document d = reader.Document(topDocs.scoreDocs[i].doc);
-				SourcePageSearchResult sourcePage = new SourcePageSearchResult();
-				sourcePage.Id = d.ExtractValue("id");
-				sourcePage.PageNumber = d.ExtractValue("pageNumber");
-				sourcePage.DisplayPageNumber = d.ExtractValue("displayPageNumber");
-				sourcePage.SourceId = d.ExtractValue("sourceId");
-				results.Add(sourcePage);
+				aResult.Return(new SearchResult<ISourcePageSearchResult>(new List<ISourcePageSearchResult>(), 0, 0, 0));
 			}
-			SearchResult<ISourcePageSearchResult> searchResult = new SearchResult<ISourcePageSearchResult>(results, offset, max, topDocs.totalHits);
-			aResult.Return(searchResult);
+			else
+			{
+				Searcher indexSearch = new IndexSearcher(reader);
+
+				TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
+				IList<ISourcePageSearchResult> results = new List<ISourcePageSearchResult>();
+				if (offset < 0 || offset > topDocs.totalHits)
+					throw new Exception();
+				int ToGo = (offset + max) > topDocs.totalHits ? topDocs.totalHits : (offset + max);
+				if (max == 0)
+					ToGo = topDocs.totalHits;
+				for (int i = offset; i < ToGo; i++)
+				{
+					Document d = reader.Document(topDocs.scoreDocs[i].doc);
+					SourcePageSearchResult sourcePage = new SourcePageSearchResult();
+					sourcePage.Id = d.ExtractValue("id");
+					sourcePage.PageNumber = d.ExtractValue("pageNumber");
+					sourcePage.DisplayPageNumber = d.ExtractValue("displayPageNumber");
+					sourcePage.SourceId = d.ExtractValue("sourceId");
+					results.Add(sourcePage);
+				}
+				SearchResult<ISourcePageSearchResult> searchResult = new SearchResult<ISourcePageSearchResult>(results, offset, max, topDocs.totalHits);
+				aResult.Return(searchResult);
+				indexSearch.Close();
+			}
 			reader.Close();
-			indexSearch.Close();
 			return aResult;
 		}
 

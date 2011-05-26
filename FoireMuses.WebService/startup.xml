@@ -5,7 +5,7 @@
       <path>foiremuses</path>
       <sid>http://foiremuses.org/service</sid>
       <instances>
-        <instance webhost="test.foiremuses.org" databaseName="musicdatabasexml">
+        <instance webhost="test.foiremuses.org" databaseName="testdatabase">
           <convertersSettings
             lilyPondCommand = "G:\Program Files\LilyPond\usr\bin\lilypond.exe"
             toLyCommand = "G:\Program Files\LilyPond\usr\bin\musicxml2ly.py"

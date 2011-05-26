@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\externals\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="MusicXML">
       <HintPath>..\externals\MusicXML.dll</HintPath>
     </Reference>
@@ -69,8 +72,8 @@
     <Compile Include="Controllers\SourcePageController.cs" />
     <Compile Include="Controllers\IndexController.cs" />
     <Compile Include="ConverterFactory.cs" />
-    <Compile Include="Converters\Converter.cs" />
     <Compile Include="Converters\CombinedConverter.cs" />
+    <Compile Include="Converters\Converter.cs" />
     <Compile Include="Converters\PDFConverter.cs" />
     <Compile Include="Converters\MIDIConverter.cs" />
     <Compile Include="Exceptions\BadCharacterException.cs" />
@@ -127,7 +130,6 @@
   <ItemGroup>
     <Content Include="ConfigConverters.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
