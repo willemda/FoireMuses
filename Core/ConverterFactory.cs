@@ -23,11 +23,11 @@ namespace FoireMuses.Core
 			IConverter lilypoundToPdf = new PDFConverter(aSettingsController.LilyPondCommand, aSettingsController.ToPdfArgs, aSettingsController.ToPdfExpectedFile);
 			IConverter lilypoundToPostscript = new Converter(aSettingsController.LilyPondCommand, aSettingsController.ToPsArgs, aSettingsController.ToPsExpectedFile);
 			IConverter postcriptToPng = new Converter(aSettingsController.ToPngCommand, aSettingsController.ToPngArgs, aSettingsController.ToPngExpectedFile);
-			IConverter musicXmlToPostscript = new AndConverter(musicXmlToLilypound, lilypoundToPostscript);
-			IConverter musicXmlToPng = new AndConverter(musicXmlToPostscript, postcriptToPng);
-			IConverter musicXmlToPdf = new AndConverter(musicXmlToLilypound, lilypoundToPdf);
+			IConverter musicXmlToPostscript = new CombinedConverter(musicXmlToLilypound, lilypoundToPostscript);
+			IConverter musicXmlToPng = new CombinedConverter(musicXmlToPostscript, postcriptToPng);
+			IConverter musicXmlToPdf = new CombinedConverter(musicXmlToLilypound, lilypoundToPdf);
 			IConverter lilypoundToMidi = new MIDIConverter(aSettingsController.LilyPondCommand, aSettingsController.ToMidiArgs, aSettingsController.ToMidiExpectedFile);
-			IConverter musicXmlToMidi = new AndConverter(musicXmlToLilypound, lilypoundToMidi);
+			IConverter musicXmlToMidi = new CombinedConverter(musicXmlToLilypound, lilypoundToMidi);
 			theConverters.Add(Constants.LilyPond, musicXmlToLilypound);
 			theConverters.Add(MimeType.PDF, musicXmlToPdf);
 			theConverters.Add(MimeType.PNG, musicXmlToPng);

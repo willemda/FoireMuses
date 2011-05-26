@@ -8,14 +8,14 @@ using System.IO;
 
 namespace FoireMuses.Core.Converters
 {
-	public class AndConverter : IConverter
+	public class CombinedConverter : IConverter
 	{
-		private IConverter preConverter;
-		private IConverter postConverter;
+		private readonly IConverter thePreConverter;
+		private readonly IConverter thePostConverter;
 
-		public AndConverter(IConverter aPreConverter, IConverter aPostConverter){
-			preConverter = aPreConverter;
-			postConverter = aPostConverter;
+		public CombinedConverter(IConverter aPreConverter, IConverter aPostConverter){
+			thePreConverter = aPreConverter;
+			thePostConverter = aPostConverter;
 		}
 
 		public IList<string> Convert(string inputFilePath, string outputFilePath)
@@ -23,9 +23,9 @@ namespace FoireMuses.Core.Converters
 			using (TemporaryFile temp = new TemporaryFile())
 			{
 				// generate preConversion file and gives path to this file
-				string generated = preConverter.Convert(inputFilePath, temp.Path).First();
+				string generated = thePreConverter.Convert(inputFilePath, temp.Path).First();
 				// we pass the preGenerated file path and get the result paths
-				IList<string> paths = postConverter.Convert(generated, outputFilePath);
+				IList<string> paths = thePostConverter.Convert(generated, outputFilePath);
 				//deleted pre generated file which is useless
 				File.Delete(generated);
 				//return paths
