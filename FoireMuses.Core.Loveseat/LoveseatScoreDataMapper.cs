@@ -7,11 +7,12 @@ using FoireMuses.Core.Business;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Utils;
 using System.IO;
+using MindTouch.Xml;
 
 namespace FoireMuses.Core.Loveseat
 {
 	/// <summary>
-	/// An Controller that stores in CouchDb
+	/// An ScoreDataMapper that stores in CouchDb
 	/// </summary>
 	public class LoveseatScoreDataMapper : Convert<IScore>, IScoreDataMapper
 	{
@@ -104,7 +105,6 @@ emit(doc._id, doc.name)}}"));
             }
 		}
 
-
 		public Result<IScore> Create(IScore aDocument, Result<IScore> aResult)
 		{
 			theCouchDatabase.CreateDocument<JScore>(aDocument as JScore, new Result<JScore>()).WhenDone(
@@ -113,7 +113,6 @@ emit(doc._id, doc.name)}}"));
 				);
 			return aResult;
 		}
-
 
 		public Result<IScore> Retrieve(string id, Result<IScore> aResult)
 		{
@@ -163,7 +162,6 @@ emit(doc._id, doc.name)}}"));
 				);
 			return aResult;
 		}
-
 
 		public Result<Stream> GetAttachment(string id, string fileName, Result<Stream> aResult)
 		{
@@ -231,12 +229,12 @@ emit(doc._id, doc.name)}}"));
 			return aResult;
 		}
 
-		public IScore FromXml(MindTouch.Xml.XDoc aXML)
+		public IScore FromXml(XDoc aXml)
 		{
 			throw new NotImplementedException();
 		}
 
-		public MindTouch.Xml.XDoc ToXml(IScore anObject)
+		public XDoc ToXml(IScore anObject)
 		{
 			throw new NotImplementedException();
 		}
