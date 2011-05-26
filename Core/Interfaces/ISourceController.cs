@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using MindTouch.Tasking;
 using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace FoireMuses.Core.Interfaces
 {
 	public interface ISourceController : IBaseController<ISource>
 	{
+		Result<bool> BulkFascimile(string sourceId, Stream file, Result<bool> aResult);
 		/*Result<ISource> AddCollaborator(string sourceId, string userId, Result<ISource> aResult);*/
 	}
 }

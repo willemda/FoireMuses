@@ -12,6 +12,7 @@ namespace FoireMuses.WebService
 	using Yield = IEnumerator<IYield>;
 	using MindTouch.Xml;
 	using System.Collections;
+	using System.IO;
 	public partial class Services
 	{
 
@@ -54,6 +55,29 @@ namespace FoireMuses.WebService
 			yield return Context.Current.Instance.SourceController.Create(source, result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourceController.ToJson(result.Value)));
+		}
+
+
+		[DreamFeature("POST:sources/pages/{sourcePageId}/fascimile","Add an attachement to the source")]
+		public Yield AddFascimile(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+		{
+			Stream file = request.ToStream();
+			Result<bool> result;
+			yield return  result = Context.Current.Instance.SourcePageController.AddFascimile(context.GetParam("sourcePageId"),file, new Result<bool>());
+			response.Return(DreamMessage.Ok());
+		}
+
+		[DreamFeature("POST:sources/{sourceId}/fascimiles", "Bulk create pages and add fascimiles to them")]
+		public Yield BulkFascimile(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+		{
+			Stream file = request.ToStream();
+			Result<bool> result = new Result<bool>();
+			yield return Context.Current.Instance.SourceController.BulkFascimile(context.GetParam("sourceId"), file, result);
+
+			if (result.Value)
+				response.Return(DreamMessage.Ok());
+			else
+				response.Return(DreamMessage.BadRequest("Bad name format"));
 		}
 
 		[DreamFeature("PUT:sources", "Update the source")]
@@ -106,25 +130,6 @@ namespace FoireMuses.WebService
 			yield return Context.Current.Instance.SourcePageController.Create(page, result);
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourcePageController.ToJson(result.Value)));
 		}
-
-		/*[DreamFeature("POST:sources/{idSource}/collaborators/{idUser}", "Add a collaborator")]
-		public Yield AddCollaborator(DreamContext context, DreamMessage request, Result<DreamMessage> response)
-		{
-			string sourceId = context.GetParam("sourceId");
-			string userId = context.GetParam("userId");
-			Result<ISource> sourceResult = new Result<ISource>();
-			yield return Context.Current.Instance.SourceController.AddCollaborator(sourceId, userId, sourceResult);
-			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourceController.ToJson(sourceResult.Value)));
-		}
-
-		[DreamFeature("DELETE:sources/{idSource}/collaborators/{idUser}", "Remove a collaborator")]
-		public Yield AddCollaborator(DreamContext context, DreamMessage request, Result<DreamMessage> response)
-		{
-			ISourcePage page = Context.Current.Instance.SourcePageController.FromJson(request.ToText());
-			Result<ISourcePage> result = new Result<ISourcePage>();
-			yield return Context.Current.Instance.SourcePageController.Create(page, result);
-			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourcePageController.ToJson(result.Value)));
-		}*/
 
 		[DreamFeature("DELETE:sources/pages/", "Delete a source")]
 		[DreamFeatureParam("{id}", "String", "source id")]
