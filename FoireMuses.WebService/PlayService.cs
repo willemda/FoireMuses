@@ -53,16 +53,12 @@ namespace FoireMuses.WebService
 								: DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.PlayController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("POST:plays", "Create a play")]
+		[DreamFeature("POST:plays", "Insert a play")]
 		public Yield CreatePlay(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			IPlay play;
-			if (request.ContentType == MimeType.XML)
-				play = Context.Current.Instance.PlayController.FromXml(XDocFactory.From(request.ToStream(), MimeType.XML));
-			else
-				play = Context.Current.Instance.PlayController.FromJson(request.ToText());
+			IPlay play  = Context.Current.Instance.PlayController.FromJson(request.ToText());
 			Result<IPlay> result = new Result<IPlay>();
-			yield return Context.Current.Instance.PlayController.Create(play, result);
+			yield return Context.Current.Instance.PlayController.Insert(play, result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.PlayController.ToJson(result.Value)));
 		}

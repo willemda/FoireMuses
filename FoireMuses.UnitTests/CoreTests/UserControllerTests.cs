@@ -61,7 +61,7 @@ namespace FoireMuses.UnitTests.CoreTests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void CreationWithNullMustThrowException()
 		{
-			Context.Current.Instance.UserController.Create(null, new Result<IUser>()).Wait();
+			Context.Current.Instance.UserController.Insert(null, new Result<IUser>()).Wait();
 		}
 
 		[TestMethod]
@@ -71,7 +71,7 @@ namespace FoireMuses.UnitTests.CoreTests
 			string joString = jo.ToString();
 			IUser user = Context.Current.Instance.UserController.FromJson(joString);
 			Result<IUser> result = new Result<IUser>();
-			Context.Current.Instance.UserController.Create(user, result).Wait();
+			Context.Current.Instance.UserController.Insert(user, result).Wait();
 			Assert.IsTrue(result.HasValue);
 			IUser user2 = result.Value;
 			Assert.AreEqual("popol", user2.Id);

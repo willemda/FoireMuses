@@ -26,7 +26,7 @@ namespace FoireMuses.UnitTests.Mock
 			throw new NotImplementedException();
 		}
 
-		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
+		public Result<IScore> Insert(IScore aDoc, Result<IScore> aResult)
 		{
 			score = aDoc;
 			aResult.Return(score);

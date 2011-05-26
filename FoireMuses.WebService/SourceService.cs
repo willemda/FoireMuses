@@ -42,16 +42,12 @@ namespace FoireMuses.WebService
 								: DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourceController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("POST:sources", "Create new source")]
+		[DreamFeature("POST:sources", "Insert new source")]
 		public Yield CreateSource(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			ISource source;
-			if (request.ContentType == MimeType.XML)
-				source = Context.Current.Instance.SourceController.FromXml(XDocFactory.From(request.ToStream(), MimeType.XML));
-			else
-				source = Context.Current.Instance.SourceController.FromJson(request.ToText());
+			ISource source = Context.Current.Instance.SourceController.FromJson(request.ToText());
 			Result<ISource> result = new Result<ISource>();
-			yield return Context.Current.Instance.SourceController.Create(source, result);
+			yield return Context.Current.Instance.SourceController.Insert(source, result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourceController.ToJson(result.Value)));
 		}
@@ -98,12 +94,12 @@ namespace FoireMuses.WebService
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.IndexController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("POST:sources/pages/", "Create a new page")]
+		[DreamFeature("POST:sources/pages/", "Insert a new page")]
 		public Yield CreateSourcePage(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			ISourcePage page = Context.Current.Instance.SourcePageController.FromJson(request.ToText());
 			Result<ISourcePage> result = new Result<ISourcePage>();
-			yield return Context.Current.Instance.SourcePageController.Create(page, result);
+			yield return Context.Current.Instance.SourcePageController.Insert(page, result);
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourcePageController.ToJson(result.Value)));
 		}
 
@@ -122,7 +118,7 @@ namespace FoireMuses.WebService
 		{
 			ISourcePage page = Context.Current.Instance.SourcePageController.FromJson(request.ToText());
 			Result<ISourcePage> result = new Result<ISourcePage>();
-			yield return Context.Current.Instance.SourcePageController.Create(page, result);
+			yield return Context.Current.Instance.SourcePageController.Insert(page, result);
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourcePageController.ToJson(result.Value)));
 		}*/
 

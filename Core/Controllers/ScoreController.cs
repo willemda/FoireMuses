@@ -42,6 +42,7 @@ namespace FoireMuses.Core.Controllers
 
 		public ScoreController(IScoreDataMapper aController)
 		{
+			ArgCheck.NotNull("aController", aController);
 			theScoreDataMapper = aController;
 		}
 
@@ -55,35 +56,39 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		public Result<IScore> Create(IScore aDoc, Result<IScore> aResult)
+		public Result<IScore> Insert(IScore aScore, Result<IScore> aResult)
 		{
-			Coroutine.Invoke(CreateHelper, aDoc, new Result<IScore>()).WhenDone(
+			ArgCheck.NotNull("aScore", aScore);
+			ArgCheck.NotNull("aResult", aResult);
+
+			Coroutine.Invoke(CreateHelper, aScore, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
 			return aResult;
 		}
 
-		public Result<IScore> Retrieve(string id, Result<IScore> aResult)
+		public Result<IScore> Retrieve(string aScoreId, Result<IScore> aResult)
 		{
-			theScoreDataMapper.Retrieve(id, new Result<IScore>()).WhenDone(
+			ArgCheck.NotNull("aScoreId",aScoreId);
+			ArgCheck.NotNull("aResult", aResult);
+
+			theScoreDataMapper.Retrieve(aScoreId, new Result<IScore>()).WhenDone(
 					aResult.Return,
 					aResult.Throw
 					);
 			return aResult;
 		}
 
-		public bool HasAuthorization(IScore aDoc)
+		public bool HasAuthorization(IScore aScore)
 		{
-			//Check if user isn't set, or if he isn't creator or collaborator.
-			if (Context.Current.User == null || (!IsCreator(aDoc) && !IsCollaborator(aDoc)))
-				return false;
-			return true;
+			ArgCheck.NotNull("aScore", aScore);
+			return Context.Current.User != null && (IsCreator(aScore) || IsCollaborator(aScore));
 		}
 
-		public Result<IScore> Update(string id, string rev, IScore aDoc, Result<IScore> aResult)
+		public Result<IScore> Update(string aScoreId, string aScoreRev, IScore aDoc, Result<IScore> aResult)
 		{
-			Coroutine.Invoke(UpdateHelper, id, rev, aDoc, new Result<IScore>()).WhenDone(
+			Coroutine.Invoke(UpdateHelper, aScoreId, aScoreRev, aDoc, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -119,16 +124,6 @@ namespace FoireMuses.Core.Controllers
 		public string ToJson(IScore aScore)
 		{
 			return theScoreDataMapper.ToJson(aScore);
-		}
-
-		public IScore FromXml(XDoc aXml)
-		{
-			return theScoreDataMapper.FromXml(aXml);
-		}
-
-		public XDoc ToXml(IScore aScore)
-		{
-			return theScoreDataMapper.ToXml(aScore);
 		}
 
 		public IScore CreateNew()
@@ -228,7 +223,7 @@ namespace FoireMuses.Core.Controllers
 			//Check that the sources aren't null and does exists
 			yield return Coroutine.Invoke(CheckSources, aDoc, new Result());
 
-			//Create a the score and return
+			//Insert a the score and return
 			Result<IScore> resultCreate = new Result<IScore>();
 			yield return theScoreDataMapper.Create(aDoc, resultCreate);
 			aResult.Return(resultCreate.Value);
@@ -327,7 +322,7 @@ namespace FoireMuses.Core.Controllers
 			}
 			else
 			{
-				yield return Create(aScore, result);
+				yield return Insert(aScore, result);
 			}
 
 			using(TemporaryFile inputFile = new TemporaryFile())

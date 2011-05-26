@@ -39,7 +39,7 @@ namespace FoireMuses.UnitTests.Mock
 			throw new NotImplementedException();
 		}
 
-		public Result<IUser> Create(IUser aDoc, Result<IUser> aResult)
+		public Result<IUser> Insert(IUser aDoc, Result<IUser> aResult)
 		{
 			user = aDoc;
 			aResult.Return(user);

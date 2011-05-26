@@ -146,16 +146,12 @@ namespace FoireMuses.WebService
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.IndexController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("POST:scores", "Create new score")]
+		[DreamFeature("POST:scores", "Insert new score")]
 		public Yield CreateScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			IScore score;
-			if (request.ContentType == MimeType.XML)
-				score = Context.Current.Instance.ScoreController.FromXml(XDocFactory.From(request.ToStream(), MimeType.XML));
-			else
-				score = Context.Current.Instance.ScoreController.FromJson(request.ToText());
+			IScore score  = Context.Current.Instance.ScoreController.FromJson(request.ToText());
 			Result<IScore> result = new Result<IScore>();
-			yield return Context.Current.Instance.ScoreController.Create(score, result);
+			yield return Context.Current.Instance.ScoreController.Insert(score, result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
@@ -174,7 +170,7 @@ namespace FoireMuses.WebService
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("POST:scores/musicxml", "Create a score with music xml")]
+		[DreamFeature("POST:scores/musicxml", "Insert a score with music xml")]
 		public Yield CreateScoreWithMusicXml(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			IScore score = Context.Current.Instance.ScoreController.CreateNew();

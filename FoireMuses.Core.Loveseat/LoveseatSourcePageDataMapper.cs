@@ -129,21 +129,6 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		ISourcePage IDataMapper<ISourcePage>.FromXml(MindTouch.Xml.XDoc aJson)
-		{
-			throw new NotImplementedException();
-		}
-
-		public MindTouch.Xml.XDoc ToXml(ISourcePage anObject)
-		{
-			throw new NotImplementedException();
-		}
-
-		public string ToXml(SearchResult<ISourcePage> aSearchResult)
-		{
-			throw new NotImplementedException();
-		}
-
 		public ISourcePage FromJson(string json)
 		{
 			return new JSourcePage(JObject.Parse(json));

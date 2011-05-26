@@ -43,7 +43,7 @@ namespace FoireMuses.UnitTests.Mock
             throw new NotImplementedException();
         }
 
-        public MindTouch.Tasking.Result<IPlay> Create(IPlay aDoc, MindTouch.Tasking.Result<IPlay> aResult)
+        public MindTouch.Tasking.Result<IPlay> Insert(IPlay aDoc, MindTouch.Tasking.Result<IPlay> aResult)
         {
             throw new NotImplementedException();
         }

@@ -25,7 +25,7 @@ namespace FoireMuses.Core.Controllers
 		public Yield CreateHelper(ISource aDoc, Result<ISource> aResult)
 		{
 
-			//Create a the source and return
+			//Insert a the source and return
 			Result<ISource> resultCreate = new Result<ISource>();
 			yield return theSourceDataMapper.Create(aDoc, resultCreate);
 			aResult.Return(resultCreate.Value);
@@ -36,7 +36,7 @@ namespace FoireMuses.Core.Controllers
 			return theSourceDataMapper.CreateNew();
 		}
 
-		public Result<ISource> Create(ISource aDoc, Result<ISource> aResult)
+		public Result<ISource> Insert(ISource aDoc, Result<ISource> aResult)
 		{
 			Coroutine.Invoke(CreateHelper,aDoc, new Result<ISource>()).WhenDone(
 				aResult.Return,
@@ -139,18 +139,6 @@ namespace FoireMuses.Core.Controllers
 		{
 			return theSourceDataMapper.ToJson(aJson);
 		}
-
-
-		public ISource FromXml(MindTouch.Xml.XDoc aXml)
-		{
-			throw new NotImplementedException();
-		}
-
-		public MindTouch.Xml.XDoc ToXml(ISource anObject)
-		{
-			throw new NotImplementedException();
-		}
-
 
 		public Result<bool> Exists(string id, Result<bool> aResult)
 		{

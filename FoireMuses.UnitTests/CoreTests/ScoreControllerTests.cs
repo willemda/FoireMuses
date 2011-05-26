@@ -65,7 +65,7 @@ namespace FoireMuses.UnitTests.CoreTests
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void CreationWithNullMustThrowException()
 		{
-			Context.Current.Instance.ScoreController.Create(null, new Result<IScore>()).Wait();
+			Context.Current.Instance.ScoreController.Insert(null, new Result<IScore>()).Wait();
 		}
 
 		[TestMethod]
@@ -76,7 +76,7 @@ namespace FoireMuses.UnitTests.CoreTests
 			o["editor"] = "arnaud";
 			IScore score = Context.Current.Instance.ScoreController.FromJson(o.ToString());
 			Result<IScore> result = new Result<IScore>();
-			score = Context.Current.Instance.ScoreController.Create(score, result).Wait();
+			score = Context.Current.Instance.ScoreController.Insert(score, result).Wait();
 			Assert.AreEqual("la belle qui dors",score.Title);
 			Assert.AreEqual("arnaud",score.Editor);
 			Console.WriteLine(score.ToString());

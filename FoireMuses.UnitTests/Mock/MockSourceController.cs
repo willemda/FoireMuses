@@ -38,7 +38,7 @@ namespace FoireMuses.UnitTests.Mock
             throw new NotImplementedException();
         }
 
-        public MindTouch.Tasking.Result<ISource> Create(ISource aDoc, MindTouch.Tasking.Result<ISource> aResult)
+        public MindTouch.Tasking.Result<ISource> Insert(ISource aDoc, MindTouch.Tasking.Result<ISource> aResult)
         {
             throw new NotImplementedException();
         }

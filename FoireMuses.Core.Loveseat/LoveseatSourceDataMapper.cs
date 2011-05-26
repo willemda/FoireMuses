@@ -90,16 +90,6 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		public string ToXml(SearchResult<ISource> aSearchResult)
-		{
-			throw new NotImplementedException();
-		}
-
-		ISource IDataMapper<ISource>.FromXml(MindTouch.Xml.XDoc aJson)
-		{
-			throw new NotImplementedException();
-		}
-
 		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)
 		{
 
@@ -111,11 +101,6 @@ namespace FoireMuses.Core.Loveseat
 				aResult.Throw
 				);
 			return aResult;
-		}
-
-		public MindTouch.Xml.XDoc ToXml(ISource anObject)
-		{
-			throw new NotImplementedException();
 		}
 
 		public ISource FromJson(string json)

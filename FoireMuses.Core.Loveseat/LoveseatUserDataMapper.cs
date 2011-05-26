@@ -94,21 +94,6 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		IUser IDataMapper<IUser>.FromXml(MindTouch.Xml.XDoc aJson)
-		{
-			throw new NotImplementedException();
-		}
-
-		public MindTouch.Xml.XDoc ToXml(IUser anObject)
-		{
-			throw new NotImplementedException();
-		}
-
-		public string ToXml(SearchResult<IUser> aSearchResult)
-		{
-			throw new NotImplementedException();
-		}
-
 		public IUser FromJson(string json)
 		{
 			return new JUser(JObject.Parse(json));

@@ -37,7 +37,7 @@ namespace FoireMuses.WebService
 
 			IUser user = Context.Current.Instance.UserController.FromJson(request.ToText());
 
-			yield return Context.Current.Instance.UserController.Create(user, result);
+			yield return Context.Current.Instance.UserController.Insert(user, result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.UserController.ToJson(result.Value)));
 		}

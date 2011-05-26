@@ -128,21 +128,6 @@ namespace FoireMuses.Core.Loveseat
 			return aResult;
 		}
 
-		IPlay IDataMapper<IPlay>.FromXml(MindTouch.Xml.XDoc aJson)
-		{
-			throw new NotImplementedException();
-		}
-
-		public MindTouch.Xml.XDoc ToXml(IPlay anObject)
-		{
-			throw new NotImplementedException();
-		}
-
-		public string ToXml(SearchResult<IPlay> aSearchResult)
-		{
-			throw new NotImplementedException();
-		}
-
 		public IPlay FromJson(string json)
 		{
 			return new JPlay(JObject.Parse(json));

@@ -33,7 +33,7 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		public Result<IUser> Create(IUser aDoc, Result<IUser> aResult)
+		public Result<IUser> Insert(IUser aDoc, Result<IUser> aResult)
 		{
 			theUserDataMapper.Create(aDoc, new Result<IUser>()).WhenDone(
 				aResult.Return,
@@ -77,18 +77,6 @@ namespace FoireMuses.Core.Controllers
 		{
 			return theUserDataMapper.ToJson(aUser);
 		}
-
-
-		public IUser FromXml(MindTouch.Xml.XDoc aXml)
-		{
-			throw new NotImplementedException();
-		}
-
-		public MindTouch.Xml.XDoc ToXml(IUser anObject)
-		{
-			throw new NotImplementedException();
-		}
-
 
 		public Result<bool> Exists(string id, Result<bool> aResult)
 		{
