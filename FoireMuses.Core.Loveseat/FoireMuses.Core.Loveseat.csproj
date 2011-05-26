@@ -35,10 +35,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MusicXml, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\externals\MusicXml.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -83,7 +79,6 @@
     <Compile Include="LoveseatUserDataMapper.cs" />
     <Compile Include="NotificationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XScoreHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\FoireMuses.Core.csproj">

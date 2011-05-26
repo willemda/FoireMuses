@@ -6,10 +6,6 @@ using MindTouch.Tasking;
 using FoireMuses.Core.Business;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Utils;
-using FoireMuses.Core.Loveseat.Business;
-using System.Reflection;
-using MusicXml;
-using FoireMuses.MusicXMLImport;
 using System.IO;
 
 namespace FoireMuses.Core.Loveseat
@@ -237,15 +233,7 @@ emit(doc._id, doc.name)}}"));
 
 		public IScore FromXml(MindTouch.Xml.XDoc aXML)
 		{
-			XScore xscore = new XScore(aXML);
-			JScore js = new JScore();
-			js["codageParIntervalles"] = xscore.GetCodageParIntervalle();
-			js["codageMelodiqueRISM"] = xscore.GetCodageMelodiqueRISM();
-			js["verses"] = xscore.GetText();
-			js["title"] = xscore.MovementTitle;
-			js["composer"] = xscore.Identification.Composer;
-			return js;
-
+			throw new NotImplementedException();
 		}
 
 		public MindTouch.Xml.XDoc ToXml(IScore anObject)

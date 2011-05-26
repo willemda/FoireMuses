@@ -29,11 +29,13 @@ using System.Collections;
 using System.Linq;
 using MindTouch.Xml;
 using MindTouch.Dream;
+using System.IO;
+using MusicXml;
+using FoireMuses.Core.Utils;
 
 namespace FoireMuses.Core.Controllers
 {
 	using Yield = System.Collections.Generic.IEnumerator<MindTouch.Tasking.IYield>;
-	using System.IO;
 
 	public class ScoreController : IScoreController
 	{
@@ -261,16 +263,16 @@ namespace FoireMuses.Core.Controllers
 			return theScoreDataMapper.ToJson(aSearchResult);
 		}
 
-		private Yield AttachMusicXmlHelper(IScore aScore, XDoc xdoc, bool overwriteMusicXmlValues, Result<IScore> aResult)
+		private Yield AttachMusicXmlHelper(IScore aScore, XDoc aMusicXmlDoc, bool overwriteMusicXmlValues, Result<IScore> aResult)
 		{
 			if (!overwriteMusicXmlValues)
 			{
-				IScore themusicxmlScore = theScoreDataMapper.FromXml(xdoc);
-				aScore.CodageMelodiqueRISM = themusicxmlScore.CodageMelodiqueRISM;
-				aScore.CodageParIntervalles = themusicxmlScore.CodageParIntervalles;
-				aScore.Title = themusicxmlScore.Title;
-				aScore.Composer = themusicxmlScore.Composer;
-				aScore.Verses = themusicxmlScore.Verses;
+				XScore musicXml = new XScore(aMusicXmlDoc);
+				aScore.CodageMelodiqueRISM = musicXml.GetCodageMelodiqueRISM();
+				aScore.CodageParIntervalles = musicXml.GetCodageParIntervalle();
+				aScore.Title = musicXml.MovementTitle;
+				aScore.Composer = musicXml.Identification.Composer;
+				aScore.Verses = musicXml.GetText();
 			}
 			Result<IScore> result = new Result<IScore>();
 			if (aScore.Id != null)
@@ -286,7 +288,7 @@ namespace FoireMuses.Core.Controllers
 			{
 				theLogger.Info("Saving xdoc to " + inputFile.Path);
 				File.Delete(inputFile.Path);
-				xdoc.Save(inputFile.Path);
+				aMusicXmlDoc.Save(inputFile.Path);
 				theLogger.Info("XDoc saved");
 				theLogger.Info("Getting Converter and converting");
 				//yield return Context.Current.Instance.SourceController.Exists("bla", new Result<bool>());
@@ -300,7 +302,7 @@ namespace FoireMuses.Core.Controllers
 				}
 			}
 			//attach music xml to the created /updated score
-			Stream stream = new MemoryStream(xdoc.ToBytes());
+			Stream stream = new MemoryStream(aMusicXmlDoc.ToBytes());
 			yield return AddAttachment(result.Value.Id, stream, "$musicxml.xml", new Result<bool>());
 			aResult.Return(result.Value);
 		}

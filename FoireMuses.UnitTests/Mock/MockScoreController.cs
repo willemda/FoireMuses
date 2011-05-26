@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FoireMuses.Core.Utils;
 using MindTouch.Tasking;
 using Newtonsoft.Json.Linq;
 using LoveSeat;
@@ -105,19 +106,19 @@ namespace FoireMuses.UnitTests.Mock
             return aResult;
         }
 
-        public Result<IScore> AttachMusicXml(IScore aScore, MindTouch.Xml.XDoc xdoc, bool overwriteMusicXmlValues, Result<IScore> aResult)
+		public Result<IScore> AttachMusicXml(IScore aScore, MindTouch.Xml.XDoc aMusicXmlDoc, bool overwriteMusicXmlValues, Result<IScore> aResult)
         {
             if (!overwriteMusicXmlValues)
             {
-                IScore themusicxmlScore = FromXml(xdoc);
-                aScore.CodageMelodiqueRISM = themusicxmlScore.CodageMelodiqueRISM;
-                aScore.CodageParIntervalles = themusicxmlScore.CodageParIntervalles;
-                aScore.Title = themusicxmlScore.Title;
-                aScore.Composer = themusicxmlScore.Composer;
-                aScore.Verses = themusicxmlScore.Verses;
+				XScore musicXml = new XScore(aMusicXmlDoc);
+				aScore.CodageMelodiqueRISM = musicXml.GetCodageMelodiqueRISM();
+				aScore.CodageParIntervalles = musicXml.GetCodageParIntervalle();
+				aScore.Title = musicXml.MovementTitle;
+				aScore.Composer = musicXml.Identification.Composer;
+				aScore.Verses = musicXml.GetText();
             }
             score = aScore;
-            attachment = new MemoryStream(xdoc.ToBytes());
+			attachment = new MemoryStream(aMusicXmlDoc.ToBytes());
             aResult.Return(score);
             return aResult;
         }

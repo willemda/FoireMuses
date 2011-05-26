@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MusicXML">
+      <HintPath>..\externals\MusicXML.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -116,6 +119,7 @@
     <Compile Include="Interfaces\ISourceController.cs" />
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\TemporaryFile.cs" />
+    <Compile Include="Utils\XScoreHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

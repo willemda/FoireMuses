@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using MusicXml;
 
-namespace FoireMuses.MusicXMLImport
+namespace FoireMuses.Core.Utils
 {
 	public static class XScoreHelper
 	{
