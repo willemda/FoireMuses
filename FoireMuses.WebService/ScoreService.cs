@@ -100,7 +100,7 @@ namespace FoireMuses.WebService
 					break;
 				case ".xml":
 					Result<Stream> resultXml = new Result<Stream>();
-					yield return Context.Current.Instance.ScoreController.GetAttachedFile(id, "$musicxml.xml", resultXml);
+					yield return Context.Current.Instance.ScoreController.GetAttachment(id, "$musicxml.xml", resultXml);
 					Stream streamXml = resultXml.Value;
 					response.Return(DreamMessage.Ok(MimeType.XML, streamXml.Length, streamXml));
 					break;
@@ -185,7 +185,7 @@ namespace FoireMuses.WebService
 		{
 			IScore score = Context.Current.Instance.ScoreController.CreateNew();
 			Result<Stream> result = new Result<Stream>();
-			yield return Context.Current.Instance.ScoreController.GetAttachedFile(context.GetParam("id"), context.GetParam("fileName"), result);
+			yield return Context.Current.Instance.ScoreController.GetAttachment(context.GetParam("id"), context.GetParam("fileName"), result);
 			Stream stream = result.Value;
 			response.Return(DreamMessage.Ok(MimeType.BINARY, stream.Length, stream));
 		}

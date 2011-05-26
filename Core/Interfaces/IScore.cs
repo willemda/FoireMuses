@@ -8,17 +8,17 @@ namespace FoireMuses.Core.Interfaces
 	public interface IScore
 	{
 		string Id { get; set; }
-		string Rev { get; set;}
+		string Rev { get; set; }
 
-        string MasterId { get; set; }
-        bool IsMaster { get; set; }
+		string MasterId { get; set; }
+		bool IsMaster { get; set; }
 
-		string Title{get;set;}
+		string Title { get; set; }
 		string CodageMelodiqueRISM { get; set; }
 		string CodageParIntervalles { get; set; }
 		string Code1 { get; set; }
 		string Code2 { get; set; }
-        string CodageRythmique { get; set; }
+		string CodageRythmique { get; set; }
 		string Coirault { get; set; }
 		string Composer { get; set; }
 		string CoupeMetrique { get; set; }

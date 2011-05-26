@@ -13,15 +13,11 @@ using FoireMuses.Core.Loveseat.Business;
 
 namespace FoireMuses.Core.Loveseat
 {
-	public class LoveseatSourcePageDataMapper: Convert<ISourcePage>, ISourcePageDataMapper
+	public class LoveseatSourcePageDataMapper: BaseDataMapper<ISourcePage>, ISourcePageDataMapper
 	{
-		private readonly CouchDatabase theCouchDatabase;
-		private readonly CouchClient theCouchClient;
-
 		public LoveseatSourcePageDataMapper(ISettingsController aSettingsController)
+			:base(aSettingsController)
 		{
-			theCouchClient = new CouchClient(aSettingsController.Host, aSettingsController.Port, aSettingsController.Username, aSettingsController.Password);
-			theCouchDatabase = theCouchClient.GetDatabase(aSettingsController.DatabaseName);
 		}
 
 		public Result<SearchResult<ISourcePage>> GetPagesFromSource(int offset, int max, string aSourceId, Result<SearchResult<ISourcePage>> aResult)
@@ -34,7 +30,7 @@ namespace FoireMuses.Core.Loveseat
 			if (max > 0)
 				viewOptions.Limit = max;
 
-			theCouchDatabase.GetView<string[], string, JSourcePage>(CouchViews.VIEW_SOURCEPAGES, CouchViews.VIEW_SOURCEPAGES_FROM_SOURCE, viewOptions, new Result<ViewResult<string[], string, JSourcePage>>()).WhenDone(
+			CouchDatabase.GetView<string[], string, JSourcePage>(CouchViews.VIEW_SOURCEPAGES, CouchViews.VIEW_SOURCEPAGES_FROM_SOURCE, viewOptions, new Result<ViewResult<string[], string, JSourcePage>>()).WhenDone(
 				a =>
 				{
 					IList<ISourcePage> results = new List<ISourcePage>();
@@ -56,7 +52,7 @@ namespace FoireMuses.Core.Loveseat
 			if (max > 0)
 				viewOptions.Limit = max;
 
-			theCouchDatabase.GetView<string, string, JSourcePage>(CouchViews.VIEW_SOURCEPAGES, CouchViews.VIEW_ALL, viewOptions, new Result<ViewResult<string, string, JSourcePage>>()).WhenDone(
+			CouchDatabase.GetView<string, string, JSourcePage>(CouchViews.VIEW_SOURCEPAGES, CouchViews.VIEW_ALL, viewOptions, new Result<ViewResult<string, string, JSourcePage>>()).WhenDone(
 				a =>
 				{
 					IList<ISourcePage> list = new List<ISourcePage>();
@@ -73,7 +69,7 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<ISourcePage> Create(ISourcePage aDocument, Result<ISourcePage> aResult)
 		{
-			theCouchDatabase.CreateDocument<JSourcePage>(aDocument as JSourcePage, new Result<JSourcePage>()).WhenDone(
+			CouchDatabase.CreateDocument<JSourcePage>(aDocument as JSourcePage, new Result<JSourcePage>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -82,7 +78,7 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<ISourcePage> Retrieve(string aDocumentId, Result<ISourcePage> aResult)
 		{
-			theCouchDatabase.GetDocument<JSourcePage>(aDocumentId, new Result<JSourcePage>()).WhenDone(
+			CouchDatabase.GetDocument<JSourcePage>(aDocumentId, new Result<JSourcePage>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -93,7 +89,7 @@ namespace FoireMuses.Core.Loveseat
 		{
 			aDocument.Id = aDocumentId;
 			aDocument.Rev = aRev;
-			theCouchDatabase.UpdateDocument<JSourcePage>(aDocument as JSourcePage, new Result<JSourcePage>()).WhenDone(
+			CouchDatabase.UpdateDocument<JSourcePage>(aDocument as JSourcePage, new Result<JSourcePage>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -106,7 +102,7 @@ namespace FoireMuses.Core.Loveseat
 			d.Id = id;
 			d.Rev = rev;
 
-			theCouchDatabase.DeleteDocument(d, new Result<JObject>()).WhenDone(
+			CouchDatabase.DeleteDocument(d, new Result<JObject>()).WhenDone(
 				a =>
 				{
 					aResult.Return(true);
@@ -119,7 +115,7 @@ namespace FoireMuses.Core.Loveseat
 		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)
 		{
 
-			theCouchDatabase.AddAttachment(id, file, fileName, new Result<JObject>()).WhenDone(
+			CouchDatabase.AddAttachment(id, file, fileName, new Result<JObject>()).WhenDone(
 				a =>
 				{
 					aResult.Return(true);

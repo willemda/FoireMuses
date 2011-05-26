@@ -32,6 +32,10 @@ namespace FoireMuses.Core.Interfaces
 		Result<bool> Delete(string aDocumentId, string aRev, Result<bool> aResult);
 		Result<SearchResult<T>> GetAll(int offset, int max, Result<SearchResult<T>> aResult);
 
+		Result<bool> AddAttachment(string aDocumentId, Stream file, string fileName, Result<bool> aResult);
+		Result<Stream> GetAttachment(string aDocumentId, string FileName, Result<Stream> aResult);
+		Result<bool> DeleteAttachment(string aDocumentId, string aFileName, Result<bool> aResult);
+
 		T CreateNew();
 
 		T FromJson(string aJson);
@@ -47,8 +51,6 @@ namespace FoireMuses.Core.Interfaces
 		Result<SearchResult<IScore>> SearchScoreForText(int offset, int max, string textSearch, IScore aScore, Result<SearchResult<IScore>> aResult);
 		Result<SearchResult<IScore>> SearchScoreForCode(int offset, int max, string code, IScore aScore, Result<SearchResult<IScore>> aResult);
 		Result<SearchResult<IScore>> ScoresFromSource(int offset, int max, string aSourceId, Result<SearchResult<IScore>> aResult);
-		Result<bool> AddAttachment(string aDocumentId, Stream file, string fileName, Result<bool> aResult);
-		Result<Stream> GetAttachment(string scoreId, string FileName, Result<Stream> aResult);
 	}
 	public interface IUserDataMapper : IDataMapper<IUser>
 	{
@@ -57,21 +59,15 @@ namespace FoireMuses.Core.Interfaces
 
 	public interface ISourceDataMapper : IDataMapper<ISource>
 	{
-
-		Result<bool> AddAttachment(string aDocumentId, Stream file, string fileName, Result<bool> aResult); 
 	}
 
 	public interface IPlayDataMapper : IDataMapper<IPlay>
 	{
-
-		Result<bool> AddAttachment(string aDocumentId, Stream file, string fileName, Result<bool> aResult); 
 		Result<SearchResult<IPlay>> GetPlaysFromSource(int offset, int max, string aSourceId, Result<SearchResult<IPlay>> aResult);
 	}
 
 	public interface ISourcePageDataMapper : IDataMapper<ISourcePage>
 	{
-
-		Result<bool> AddAttachment(string aDocumentId, Stream file, string fileName, Result<bool> aResult);
 		Result<SearchResult<ISourcePage>> GetPagesFromSource(int offset, int max, string aSourceId, Result<SearchResult<ISourcePage>> aResult);
 	}
 }

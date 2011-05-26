@@ -126,6 +126,16 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
+		public Result<Stream> GetAttachment(string aDocumentId, string aFileName, Result<Stream> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<bool> DeleteAttachment(string aDocumentId, string aFileName, Result<bool> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
 
 		public Result<bool> BulkFascimile(string sourceId, Stream file, Result<bool> aResult)
 		{

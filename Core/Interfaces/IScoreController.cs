@@ -11,10 +11,8 @@ namespace FoireMuses.Core.Interfaces
 {
 	public interface IScoreController : IBaseController<IScore>
 	{
-		Result<bool> AddAttachment(string aScoreId, Stream file, string fileName, Result<bool> aResult);
 		Result<IScore> AttachMusicXml(IScore score, XDoc xdoc, bool overwriteMusicXmlValues, Result<IScore> aResult);
 		Result<SearchResult<IScore>> GetScoresFromSource(string aSourceId, int offset, int max, Result<SearchResult<IScore>> aResult);
-		Result<Stream> GetAttachedFile(string scoreId, string fileName, Result<Stream> aResult);
 		Result<Stream> GetConvertedScore(MimeType mimetype, string id, Result<Stream> aResult);
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using FoireMuses.Core.Interfaces;
@@ -31,6 +32,21 @@ namespace FoireMuses.Core.Controllers
 				aResult.Throw
 				);
 			return aResult;
+		}
+
+		public Result<bool> AddAttachment(string aDocumentId, Stream aStream, string aFileName, Result<bool> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<Stream> GetAttachment(string aDocumentId, string aFileName, Result<Stream> aResult)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<bool> DeleteAttachment(string aDocumentId, string aFileName, Result<bool> aResult)
+		{
+			throw new NotImplementedException();
 		}
 
 		public Result<IUser> Insert(IUser aDoc, Result<IUser> aResult)
@@ -97,5 +113,7 @@ namespace FoireMuses.Core.Controllers
 		{
 			return theUserDataMapper.CreateNew();
 		}
+
+
 	}
 }

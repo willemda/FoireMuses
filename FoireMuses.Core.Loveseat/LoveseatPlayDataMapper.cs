@@ -12,15 +12,11 @@ using System.IO;
 
 namespace FoireMuses.Core.Loveseat
 {
-	public class LoveseatPlayDataMapper: Convert<IPlay>, IPlayDataMapper
+	public class LoveseatPlayDataMapper: BaseDataMapper<IPlay>, IPlayDataMapper
 	{
-		private readonly CouchDatabase theCouchDatabase;
-		private readonly CouchClient theCouchClient;
-
 		public LoveseatPlayDataMapper(ISettingsController aSettingsController)
+			:base(aSettingsController)
 		{
-			theCouchClient = new CouchClient(aSettingsController.Host, aSettingsController.Port, aSettingsController.Username, aSettingsController.Password);
-			theCouchDatabase = theCouchClient.GetDatabase(aSettingsController.DatabaseName);
 		}
 
 		public Result<SearchResult<IPlay>> GetPlaysFromSource(int offset, int max, string aSourceId, Result<SearchResult<IPlay>> aResult)
@@ -33,7 +29,7 @@ namespace FoireMuses.Core.Loveseat
 			if (max > 0)
 				viewOptions.Limit = max;
 
-			theCouchDatabase.GetView<string[], string, JPlay>(CouchViews.VIEW_PLAYS, CouchViews.VIEW_PLAYS_FROM_SOURCE, viewOptions, new Result<ViewResult<string[], string, JPlay>>()).WhenDone(
+			CouchDatabase.GetView<string[], string, JPlay>(CouchViews.VIEW_PLAYS, CouchViews.VIEW_PLAYS_FROM_SOURCE, viewOptions, new Result<ViewResult<string[], string, JPlay>>()).WhenDone(
 				a =>
 				{
 					IList<IPlay> results = new List<IPlay>();
@@ -55,7 +51,7 @@ namespace FoireMuses.Core.Loveseat
 			if (max > 0)
 				viewOptions.Limit = max;
 
-			theCouchDatabase.GetView<string, string, JPlay>(CouchViews.VIEW_PLAYS, CouchViews.VIEW_ALL, viewOptions, new Result<ViewResult<string, string, JPlay>>()).WhenDone(
+			CouchDatabase.GetView<string, string, JPlay>(CouchViews.VIEW_PLAYS, CouchViews.VIEW_ALL, viewOptions, new Result<ViewResult<string, string, JPlay>>()).WhenDone(
 				a =>
 				{
 					IList<IPlay> list = new List<IPlay>();
@@ -72,7 +68,7 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<IPlay> Create(IPlay aDocument, Result<IPlay> aResult)
 		{
-			theCouchDatabase.CreateDocument<JPlay>(aDocument as JPlay, new Result<JPlay>()).WhenDone(
+			CouchDatabase.CreateDocument<JPlay>(aDocument as JPlay, new Result<JPlay>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -81,7 +77,7 @@ namespace FoireMuses.Core.Loveseat
 
 		public Result<IPlay> Retrieve(string aDocumentId, Result<IPlay> aResult)
 		{
-			theCouchDatabase.GetDocument<JPlay>(aDocumentId, new Result<JPlay>()).WhenDone(
+			CouchDatabase.GetDocument<JPlay>(aDocumentId, new Result<JPlay>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -92,7 +88,7 @@ namespace FoireMuses.Core.Loveseat
 		{
 			aDocument.Id = aDocumentId;
 			aDocument.Rev = aRev;
-			theCouchDatabase.CreateDocument<JPlay>(aDocument as JPlay, new Result<JPlay>()).WhenDone(
+			CouchDatabase.CreateDocument<JPlay>(aDocument as JPlay, new Result<JPlay>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -105,7 +101,7 @@ namespace FoireMuses.Core.Loveseat
 			d.Id = id;
 			d.Rev = rev;
 
-			theCouchDatabase.DeleteDocument(d, new Result<JObject>()).WhenDone(
+			CouchDatabase.DeleteDocument(d, new Result<JObject>()).WhenDone(
 				a =>
 				{
 					aResult.Return(true);
@@ -118,7 +114,7 @@ namespace FoireMuses.Core.Loveseat
 		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)
 		{
 
-			theCouchDatabase.AddAttachment(id, file, fileName, new Result<JObject>()).WhenDone(
+			CouchDatabase.AddAttachment(id, file, fileName, new Result<JObject>()).WhenDone(
 				a =>
 				{
 					aResult.Return(true);

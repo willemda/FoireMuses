@@ -169,18 +169,23 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		public Result<Stream> GetAttachedFile(string scoreId, string fileName, Result<Stream> aResult)
+		public Result<Stream> GetAttachment(string aDocumentId, string aFileName, Result<Stream> aResult)
 		{
-			theScoreDataMapper.GetAttachment(scoreId, fileName, new Result<Stream>()).WhenDone(
+			theScoreDataMapper.GetAttachment(aDocumentId, aFileName, new Result<Stream>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
-				);
+			);
 			return aResult;
+		}
+
+		public Result<bool> DeleteAttachment(string aDocumentId, string aFileName, Result<bool> aResult)
+		{
+			throw new NotImplementedException();
 		}
 
 		public Result<Stream> GetConvertedScore(MimeType type, string scoreId, Result<Stream> aResult)
 		{
-			this.GetAttachedFile(scoreId, "$musicxml.xml", new Result<Stream>()).WhenDone(
+			this.GetAttachment(scoreId, "$musicxml.xml", new Result<Stream>()).WhenDone(
 				a =>
 				{
 					using (TemporaryFile input = new TemporaryFile())
@@ -199,7 +204,6 @@ namespace FoireMuses.Core.Controllers
 				);
 			return aResult;
 		}
-
 
 		private Yield GetScoresFromSourceHelper(int offset, int max, string aSourceId, Result<SearchResult<IScore>> aResult)
 		{

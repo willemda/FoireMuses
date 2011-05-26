@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using MindTouch.Tasking;
 using MindTouch.Xml;
+using System.IO;
 
 namespace FoireMuses.Core.Interfaces
 {
@@ -91,5 +92,33 @@ namespace FoireMuses.Core.Interfaces
 		/// <param name="aResult">a Result</param>
 		/// <returns></returns>
 		Result<SearchResult<T>> GetAll(int anOffset, int aMax, Result<SearchResult<T>> aResult);
+
+		/// <summary>
+		/// Add an Attachment to the document
+		/// </summary>
+		/// <param name="aDocumentId">id of the document</param>
+		/// <param name="aStream">Stream to the file to attach</param>
+		/// <param name="aFileName">File Name</param>
+		/// <param name="aResult">a Result</param>
+		/// <returns></returns>
+		Result<bool> AddAttachment(string aDocumentId, Stream aStream, string aFileName, Result<bool> aResult);
+
+		/// <summary>
+		/// Retrieve an attachment
+		/// </summary>
+		/// <param name="aDocumentId">Id of the document</param>
+		/// <param name="aFileName">File Name</param>
+		/// <param name="aResult">a Result</param>
+		/// <returns></returns>
+		Result<Stream> GetAttachment(string aDocumentId, string aFileName, Result<Stream> aResult);
+
+		/// <summary>
+		/// Delete attachment
+		/// </summary>
+		/// <param name="aDocumentId">Id of the document</param>
+		/// <param name="aFileName">File Name</param>
+		/// <param name="aResult">a Result</param>
+		/// <returns></returns>
+		Result<bool> DeleteAttachment(string aDocumentId, string aFileName, Result<bool> aResult);
 	}
 }
