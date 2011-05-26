@@ -21,7 +21,7 @@ namespace FoireMuses.UnitTests.Mock
         private Stream attachment = null;
 
 
-		public Result<Core.SearchResult<IScore>> GetScoresFromSource(int offset, int max, string aJSource, Result<Core.SearchResult<IScore>> aResult)
+		public Result<SearchResult<IScore>> GetScoresFromSource(string aJSource, int offset, int max, Result<SearchResult<IScore>> aResult)
 		{
 			throw new NotImplementedException();
 		}

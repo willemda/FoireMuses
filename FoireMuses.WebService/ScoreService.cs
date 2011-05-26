@@ -41,7 +41,7 @@ namespace FoireMuses.WebService
 			int offset = context.GetParam("offset", 0);
 			string id = context.GetParam("id");
 
-			yield return Context.Current.Instance.ScoreController.GetScoresFromSource(offset, limit, id, result);
+			yield return Context.Current.Instance.ScoreController.GetScoresFromSource(id, offset, limit, result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
@@ -145,7 +145,6 @@ namespace FoireMuses.WebService
 			yield return Context.Current.Instance.IndexController.SearchScore(query, result);
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.IndexController.ToJson(result.Value)));
 		}
-
 
 		[DreamFeature("POST:scores", "Create new score")]
 		public Yield CreateScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)

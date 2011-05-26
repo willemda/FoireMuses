@@ -45,7 +45,7 @@ namespace FoireMuses.Core.Controllers
 			theScoreDataMapper = aController;
 		}
 
-		public Result<SearchResult<IScore>> GetScoresFromSource(int offset, int max, string aSourceId, Result<SearchResult<IScore>> aResult)
+		public Result<SearchResult<IScore>> GetScoresFromSource(string aSourceId, int offset, int max, Result<SearchResult<IScore>> aResult)
 		{
 			ArgCheck.NotNull("aSourceId", aSourceId);
 			Coroutine.Invoke(GetScoresFromSourceHelper, offset, max, aSourceId, new Result<SearchResult<IScore>>()).WhenDone(
