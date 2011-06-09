@@ -113,9 +113,14 @@ namespace FoireMuses.WebService
 		[DreamFeatureParam("offset", "int", "the result to start with")]
 		public Yield GetPagesFromSource(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			Result<SearchResult<ISourcePageSearchResult>> result;
-			yield return result = Context.Current.Instance.IndexController.GetAllPagesFromSource(context.GetParam("id"), context.GetParam<int>("max"), context.GetParam<int>("offset"), new Result<SearchResult<ISourcePageSearchResult>>());
-			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.IndexController.ToJson(result.Value)));
+			Result<SearchResult<ISourcePage>> result;
+			yield return result = Context.Current.Instance.SourcePageController.GetPagesFromSource(
+				context.GetParam("id"),
+				context.GetParam("offset", 0),
+				context.GetParam("max",10),
+				new Result<SearchResult<ISourcePage>>());
+
+			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourcePageController.ToJson(result.Value)));
 		}
 
 		[DreamFeature("POST:sources/pages/", "Create a new page")]

@@ -17,88 +17,29 @@ namespace FoireMuses.Core.Loveseat
 	public class LoveseatScoreDataMapper : BaseDataMapper<IScore>, IScoreDataMapper
 	{
 		public LoveseatScoreDataMapper(ISettingsController aSettingsController)
-			:base(aSettingsController)
+			: base(aSettingsController)
 		{
 			if (!CouchDatabase.DocumentExists("_design/scores"))
 			{
 				CouchDesignDocument view = new CouchDesignDocument("scores");
-				view.Views.Add("all",
+				view.Views.Add(CouchViews.VIEW_ALL,
 							   new CouchView(
 								  @"function(doc){
-				                       if(doc.otype && doc.otype == 'score'){
-				                          emit(doc._id, doc._rev)
-				                       }
-				                    }"));
-				view.Views.Add("fromsource",
+										if(doc.otype && doc.otype == 'score')
+											emit(doc._id, doc._rev)
+									}"));
+				view.Views.Add(CouchViews.VIEW_SCORES_FROM_SOURCE,
 							   new CouchView(
 								  @"function(doc){
 										if(doc.otype && doc.otype=='score'){
-											if(doc.textualSource && doc.textualSource.id){
+											if(doc.textualSource && doc.textualSource.id)
 												emit([doc.textualSource.id,doc._id],null)
-											} 
-											if(doc.musicalSource && doc.musicalSource.id){ 
+											if(doc.musicalSource && doc.musicalSource.id) 
 												emit([doc.musicalSource.id, doc._id],null)
-											}
-									}}"));
+										}
+									}"));
 				CouchDatabase.CreateDocument(view);
 			}
-			if (!CouchDatabase.DocumentExists("_design/plays"))
-			{
-				CouchDesignDocument view = new CouchDesignDocument("plays");
-				view.Views.Add("all",
-							   new CouchView(
-								  @"function(doc){
-				                       if(doc.otype && doc.otype == 'play'){
-				                          emit(doc._id, doc._rev)
-				                       }
-				                    }"));
-				view.Views.Add("fromsource",
-							   new CouchView(
-								  @"function(doc){
-if(doc.otype && doc.otype=='play' && doc.sourceID){
-emit([doc.sourceID,doc._id],null)} }"));
-				CouchDatabase.CreateDocument(view);
-			}
-
-			if (!CouchDatabase.DocumentExists("_design/sources"))
-			{
-				CouchDesignDocument view = new CouchDesignDocument("sources");
-				view.Views.Add("all",
-							   new CouchView(
-								  @"function(doc){
-				                       if(doc.otype && doc.otype == 'source'){
-				                          emit(doc._id, doc._rev)
-				                       }
-				                    }"));
-				view.Views.Add("title",
-							   new CouchView(
-								  @"function(doc){
-if(doc.otype && doc.otype=='source' && doc.name){
-emit(doc._id, doc.name)}}"));
-				CouchDatabase.CreateDocument(view);
-			}
-
-			if (!CouchDatabase.DocumentExists("_design/users"))
-			{
-				CouchDesignDocument view = new CouchDesignDocument("users");
-				view.Views.Add("all",
-							   new CouchView(
-								  @"function(doc){
-				                       if(doc.otype && doc.otype == 'user'){
-				                          emit(doc._id, doc._rev)
-				                       }
-				                    }"));
-				CouchDatabase.CreateDocument(view);
-			}
-            if (!CouchDatabase.DocumentExists("admin"))
-            {
-                JDocument doc = new JDocument();
-                doc.Id = "admin";
-                doc["password"] = "admin@foiremuses";
-                doc["isAdmin"] = true;
-                doc["otype"] = "user";
-                CouchDatabase.CreateDocument(doc);
-            }
 		}
 
 		public Result<IScore> Create(IScore aDocument, Result<IScore> aResult)

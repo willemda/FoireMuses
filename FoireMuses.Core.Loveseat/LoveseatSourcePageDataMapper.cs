@@ -18,19 +18,31 @@ namespace FoireMuses.Core.Loveseat
 		public LoveseatSourcePageDataMapper(ISettingsController aSettingsController)
 			:base(aSettingsController)
 		{
+			if (!CouchDatabase.DocumentExists("_design/"+CouchViews.VIEW_SOURCEPAGES))
+			{
+				CouchDesignDocument view = new CouchDesignDocument(CouchViews.VIEW_SOURCEPAGES);
+				view.Views.Add(CouchViews.VIEW_SOURCEPAGES_FROM_SOURCE, new CouchView(@"function(doc) {
+if(doc.otype == 'sourcePage')
+	emit([doc.sourceId,doc.pageNumber], doc._id);
+}"));
+				CouchDatabase.CreateDocument(view);
+			}
 		}
 
 		public Result<SearchResult<ISourcePage>> GetPagesFromSource(int offset, int max, string aSourceId, Result<SearchResult<ISourcePage>> aResult)
 		{
 			ViewOptions viewOptions = new ViewOptions();
 			viewOptions.Skip = offset;
-			viewOptions.StartKey.Add(new JRaw("[\"" + aSourceId + "\"]"));
-			viewOptions.EndKey.Add(new JRaw("[\"" + aSourceId + "\",{}]"));
+			viewOptions.StartKey.Add(new JArray(aSourceId));
+			viewOptions.EndKey.Add(new JArray(aSourceId,"{}"));
 			viewOptions.InclusiveEnd = false;
 			if (max > 0)
 				viewOptions.Limit = max;
 
-			CouchDatabase.GetView<string[], string, JSourcePage>(CouchViews.VIEW_SOURCEPAGES, CouchViews.VIEW_SOURCEPAGES_FROM_SOURCE, viewOptions, new Result<ViewResult<string[], string, JSourcePage>>()).WhenDone(
+			CouchDatabase.GetView<string[], string, JSourcePage>(
+				CouchViews.VIEW_SOURCEPAGES,
+				CouchViews.VIEW_SOURCEPAGES_FROM_SOURCE,
+				viewOptions, new Result<ViewResult<string[], string, JSourcePage>>()).WhenDone(
 				a =>
 				{
 					IList<ISourcePage> results = new List<ISourcePage>();

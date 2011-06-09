@@ -12,6 +12,6 @@ using System.IO;
 	public interface ISourcePageController : IBaseController<ISourcePage>
 	{
 		Result<bool> AddFascimile(string id, Stream file, Result<bool> aResult);
-		Result<SearchResult<ISourcePage>> GetPagesFromSource(int offset, int max, string sourceId, Result<SearchResult<ISourcePage>> aResult);
+		Result<SearchResult<ISourcePage>> GetPagesFromSource(string sourceId, int offset, int max, Result<SearchResult<ISourcePage>> aResult);
 	}
 }

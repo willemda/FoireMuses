@@ -17,6 +17,21 @@ namespace FoireMuses.Core.Loveseat
 		public LoveseatPlayDataMapper(ISettingsController aSettingsController)
 			:base(aSettingsController)
 		{
+			if (!CouchDatabase.DocumentExists("_design/plays"))
+			{
+				CouchDesignDocument view = new CouchDesignDocument(CouchViews.VIEW_PLAYS);
+				view.Views.Add(CouchViews.VIEW_ALL,new CouchView(@"
+function(doc){
+	if(doc.otype && doc.otype == 'play')
+		emit(doc._id, doc._rev)
+}"));
+				view.Views.Add(CouchViews.VIEW_PLAYS_FROM_SOURCE,new CouchView(@"
+function(doc){
+	if(doc.otype && doc.otype=='play' && doc.sourceID)
+		emit([doc.sourceID,doc._id],null)
+}"));
+				CouchDatabase.CreateDocument(view);
+			}
 		}
 
 		public Result<SearchResult<IPlay>> GetPlaysFromSource(int offset, int max, string aSourceId, Result<SearchResult<IPlay>> aResult)

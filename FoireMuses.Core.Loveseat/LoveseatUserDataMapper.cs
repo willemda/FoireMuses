@@ -16,6 +16,26 @@ namespace FoireMuses.Core.Loveseat
 		public LoveseatUserDataMapper(ISettingsController aSettingsController)
 			:base(aSettingsController)
 		{
+			if (!CouchDatabase.DocumentExists("_design/users"))
+			{
+				CouchDesignDocument view = new CouchDesignDocument(CouchViews.VIEW_USERS);
+				view.Views.Add(CouchViews.VIEW_ALL,new CouchView(@"function(doc){
+														if(doc.otype && doc.otype == 'user')
+															emit(doc._id, doc._rev)
+													}"));
+				CouchDatabase.CreateDocument(view);
+			}
+
+			if (!CouchDatabase.DocumentExists("admin"))
+			{
+				JDocument doc = new JDocument();
+				doc.Id = "admin";
+				doc["password"] = "admin@foiremuses";
+				doc["isAdmin"] = true;
+				doc["otype"] = "user";
+				CouchDatabase.CreateDocument(doc);
+			}
+
 		}
 
 		public Result<IUser> Create(IUser aDocument, Result<IUser> aResult)

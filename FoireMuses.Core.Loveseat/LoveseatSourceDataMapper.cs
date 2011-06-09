@@ -17,6 +17,19 @@ namespace FoireMuses.Core.Loveseat
 		public LoveseatSourceDataMapper(ISettingsController aSettingsController)
 			:base(aSettingsController)
 		{
+			if (!CouchDatabase.DocumentExists("_design/sources"))
+			{
+				CouchDesignDocument view = new CouchDesignDocument("sources");
+				view.Views.Add("all", new CouchView(@"function(doc){
+if(doc.otype && doc.otype == 'source')
+	emit(doc._id, doc._rev)
+}"));
+				view.Views.Add("title", new CouchView(@"function(doc){
+if(doc.otype && doc.otype=='source' && doc.name)
+	emit(doc._id, doc.name)
+}"));
+				CouchDatabase.CreateDocument(view);
+			}
 		}
 
 		public Result<SearchResult<ISource>> GetAll(int offset, int max, Result<SearchResult<ISource>> aResult)
