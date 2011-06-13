@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using FoireMuses.Core;
 using FoireMuses.Core.Interfaces;
+using FoireMuses.Core.Querys;
+using FoireMuses.Core.Utils;
 using MindTouch.Dream;
 using MindTouch.Tasking;
-using MindTouch.Xml;
-using System.IO;
-using FoireMuses.Core.Utils;
-using FoireMuses.Core.Querys;
-using System;
 
 namespace FoireMuses.WebService
 {
+	#region
+
 	using Yield = IEnumerator<IYield>;
+
+	#endregion
 
 	public partial class Services
 	{
@@ -100,8 +102,8 @@ namespace FoireMuses.WebService
 		public Yield SearchScore(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			theLogger.Info("SearchScore");
-			ScoreQuery query = new ScoreQuery()
-			{
+			ScoreQuery query = new ScoreQuery
+			                   	{
 				Composer = context.GetParam("composer", null),
 				Editor = context.GetParam("editor", null),
 				Title = context.GetParam("title", null),
@@ -110,8 +112,8 @@ namespace FoireMuses.WebService
 				Music = context.GetParam("music", null),
 				IsMaster = context.GetParam("isMaster", null),
 				MasterId = context.GetParam("masterId", null),
-				Offset = context.GetParam<int>("offset", 0),
-				Max = context.GetParam<int>("max", 20)
+				Offset = context.GetParam("offset", 0),
+				Max = context.GetParam("max", 20)
 			};
 			Result<SearchResult<IScoreSearchResult>> result = new Result<SearchResult<IScoreSearchResult>>();
 			yield return Context.Current.Instance.IndexController.SearchScore(query, result);
