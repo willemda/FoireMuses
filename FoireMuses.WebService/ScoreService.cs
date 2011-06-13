@@ -4,30 +4,30 @@ using FoireMuses.Core.Interfaces;
 using MindTouch.Dream;
 using MindTouch.Tasking;
 using MindTouch.Xml;
+using System.IO;
+using FoireMuses.Core.Utils;
+using FoireMuses.Core.Querys;
+using System;
 
 namespace FoireMuses.WebService
 {
 	using Yield = IEnumerator<IYield>;
-	using System.IO;
-	using FoireMuses.Core.Utils;
-	using FoireMuses.Core.Querys;
-	using System;
 
 	public partial class Services
 	{
 		[DreamFeature("GET:scores", "Get all scores")]
 		[DreamFeatureParam("max", "int?", "the number of document given by the output")]
 		[DreamFeatureParam("offset", "int?", "skip the offset first results")]
-		public Yield GetScores(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+		public Yield GetScores(DreamContext aContext, DreamMessage aRequest, Result<DreamMessage> aResponse)
 		{
 			theLogger.Info("GetScores");
 			Result<SearchResult<IScoreSearchResult>> result = new Result<SearchResult<IScoreSearchResult>>();
-			int limit = context.GetParam("max", 20);
-			int offset = context.GetParam("offset", 0);
+			int limit = aContext.GetParam("max", 20);
+			int offset = aContext.GetParam("offset", 0);
 
 			yield return Context.Current.Instance.IndexController.GetAllScores(limit, offset, result);
 
-			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.IndexController.ToJson(result.Value)));
+			aResponse.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.IndexController.ToJson(result.Value)));
 		}
 
 		[DreamFeature("GET:scores/source/{id}", "Get all scores from this source")]
@@ -44,34 +44,6 @@ namespace FoireMuses.WebService
 			yield return Context.Current.Instance.ScoreController.GetScoresFromSource(id, offset, limit, result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
-		}
-
-		Yield GetContentLength(XUri uriToDownload, Result<int> result)
-		{
-			Plug p = Plug.New(uriToDownload);
-			Result<DreamMessage> res;
-			yield return res = p.GetAsync();
-
-			// return the result
-			result.Return((int)res.Value.ContentLength);
-			yield return result;
-
-			// copy the stream to disk in the background
-			theLogger.Debug("BEFORE 5 SECONDDDSSS");
-			yield return Async.Sleep(TimeSpan.FromSeconds(5));
-			theLogger.Debug("AFTER 5 SECONDDDSSS");
-		}
-
-		[DreamFeature("GET:testasync", "")]
-		public Yield TestAsynch(DreamContext context, DreamMessage request, Result<DreamMessage> response)
-		{
-			Result<int> result = new Result<int>(TimeSpan.FromSeconds(5));
-			yield return Coroutine.Invoke(GetContentLength, new XUri("http://www.mindtouch.com"), result);
-			if (result.HasException)
-			{
-				theLogger.Debug("got exception");
-			}
-			response.Return(DreamMessage.Ok(MimeType.TEXT, result.Value.ToString()));
 		}
 
 		[DreamFeature("GET:scores/{id}", "Get the score given by the id number")]
