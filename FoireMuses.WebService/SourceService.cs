@@ -68,7 +68,7 @@ namespace FoireMuses.WebService
 		{
 			Stream file = request.ToStream();
 			Result<bool> result = new Result<bool>();
-			yield return Context.Current.Instance.SourceController.BulkImportSourcePages(context.GetParam("sourceId"), file, result);
+			yield return Context.Current.Instance.SourcePageController.BulkImportSourcePages(context.GetParam("sourceId"), file, result);
 
 			if (result.Value)
 				response.Return(DreamMessage.Ok());
