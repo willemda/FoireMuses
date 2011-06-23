@@ -26,15 +26,6 @@ namespace FoireMuses.Core.Controllers
 			theSourceDataMapper = aController;
 		}
 
-		public Yield CreateHelper(ISource aDoc, Result<ISource> aResult)
-		{
-
-			//Insert a the source and return
-			Result<ISource> resultCreate = new Result<ISource>();
-			yield return theSourceDataMapper.Create(aDoc, resultCreate);
-			aResult.Return(resultCreate.Value);
-		}
-
 		public ISource CreateNew()
 		{
 			return theSourceDataMapper.CreateNew();
@@ -49,25 +40,6 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		private Yield UpdateHelper(string id, string rev, ISource aDoc, Result<ISource> aResult)
-		{
-			//Check if a source with this id exists.
-			Result<ISource> validSourceResult = new Result<ISource>();
-			yield return theSourceDataMapper.Retrieve(aDoc.Id, validSourceResult);
-			if (validSourceResult.Value == null)
-			{
-				aResult.Throw(new ArgumentException());
-				yield break;
-			}
-
-
-
-			//Update and return the updated source.
-			Result<ISource> sourceResult = new Result<ISource>();
-			yield return theSourceDataMapper.Update(id, rev, aDoc, sourceResult);
-			aResult.Return(sourceResult.Value);
-		}
-
 		public string ToJson(SearchResult<ISource> aSearchResult)
 		{
 			return theSourceDataMapper.ToJson(aSearchResult);
@@ -79,23 +51,6 @@ namespace FoireMuses.Core.Controllers
 			if (Context.Current.User == null || (!IsCreator(aDoc) && !IsCollaborator(aDoc)))
 				return false;
 			return true;
-		}
-
-		private bool IsCreator(ISource aDoc)
-		{
-			return aDoc.CreatorId == Context.Current.User.Id;
-		}
-
-		private bool IsCollaborator(ISource aDoc)
-		{
-			IUser current = Context.Current.User;
-
-			foreach (string collab in aDoc.CollaboratorsId)
-			{
-				if (current.Groups.Contains(collab) || collab == current.Id)
-					return true;
-			}
-			return false;
 		}
 
 		public Result<ISource> Update(string id, string rev, ISource aDoc, Result<ISource> aResult)
@@ -116,7 +71,6 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-
 		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)
 		{
 			theSourceDataMapper.AddAttachment(id, file, fileName, new Result<bool>()).WhenDone(
@@ -136,37 +90,26 @@ namespace FoireMuses.Core.Controllers
 			throw new NotImplementedException();
 		}
 
-
-		public Result<bool> BulkFascimile(string sourceId, Stream file, Result<bool> aResult)
+		public Result<bool> BulkImportSourcePages(string sourceId, Stream file, Result<bool> aResult)
 		{
-			Stream valid = new MemoryStream();
-			file.CopyTo(valid, file.Length);
-			valid.Position = 0;
-			using (ZipInputStream zis = new ZipInputStream(valid))
+			bool valid = TestFacsimileZipStream(file);
+
+			if (!valid)
 			{
-				ZipEntry entry;
-				while ((entry = zis.GetNextEntry()) != null)
-				{
-					if (!entry.IsFile)
-					{
-						aResult.Return(false);
-						return aResult;
-					}
-					string reg = @"\$facsimile_(\d+)\.jpg";
-					Match match = Regex.Match(entry.Name, reg);
-					if (!match.Success)
-					{
-						aResult.Return(false);
-						return aResult;
-					}
-				}
+				aResult.Return(false);
+				return aResult;
 			}
+
+
 			file.Position = 0;
 			using (ZipInputStream zis = new ZipInputStream(file))
 			{
 				ZipEntry entry;
 				while ((entry = zis.GetNextEntry()) != null)
 				{
+					if (!entry.IsFile)
+						continue;
+
 					Match match = Regex.Match(entry.Name, @"\$facsimile_(\d+)\.jpg");
 					string number;
 					number = match.Groups[1].Value;
@@ -184,7 +127,6 @@ namespace FoireMuses.Core.Controllers
 			aResult.Return(true);
 			return aResult;
 		}
-
 
 		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
 		{
@@ -229,49 +171,75 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		/*
-		public Yield AddCollaboratorHelper(string sourceId, string userId, Result<ISource> aResult)
+		private Yield UpdateHelper(string id, string rev, ISource aDoc, Result<ISource> aResult)
 		{
-			if (!Context.Current.User.IsAdmin)
-			{
-				aResult.Throw(new UnauthorizedAccessException("You must be admin to change the rights"));
-				yield break;
-			}
-
-			Result<IUser> resultUser = new Result<IUser>();
-			yield return Context.Current.Instance.UserController.Retrieve(userId, resultUser);
-			if (resultUser.Value == null)
+			//Check if a source with this id exists.
+			Result<ISource> validSourceResult = new Result<ISource>();
+			yield return theSourceDataMapper.Retrieve(aDoc.Id, validSourceResult);
+			if (validSourceResult.Value == null)
 			{
 				aResult.Throw(new ArgumentException());
 				yield break;
 			}
 
-			Result<ISource> result = new Result<ISource>();
-			yield return this.Retrieve(sourceId, result);
-			if (result.Value == null)
-			{
-				aResult.Throw(new ArgumentException());
-				yield break;
-			}
-			ISource source = result.Value;
-			IList<string> listeCollab = source.CollaboratorsId;
-			listeCollab.Add(userId);
-			source.CollaboratorsId = listeCollab;
 
-			Result<ISource> resultUpdated = new Result<ISource>();
-			yield return this.Update(source.Id, source.Rev, source, resultUpdated);
-			aResult.Return(resultUpdated.Value);
+
+			//Update and return the updated source.
+			Result<ISource> sourceResult = new Result<ISource>();
+			yield return theSourceDataMapper.Update(id, rev, aDoc, sourceResult);
+			aResult.Return(sourceResult.Value);
 		}
 
-
-		public Result<ISource> AddCollaborator(string sourceId, string userId, Result<ISource> aResult)
+		private Yield CreateHelper(ISource aDoc, Result<ISource> aResult)
 		{
-			Coroutine.Invoke(AddCollaboratorHelper, sourceId, userId, new Result<ISource>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
-			return aResult;
+			//Insert a the source and return
+			Result<ISource> resultCreate = new Result<ISource>();
+			yield return theSourceDataMapper.Create(aDoc, resultCreate);
+			aResult.Return(resultCreate.Value);
 		}
-		 */
+
+		private bool IsCreator(ISource aDoc)
+		{
+			return aDoc.CreatorId == Context.Current.User.Id;
+		}
+
+		private bool IsCollaborator(ISource aDoc)
+		{
+			IUser current = Context.Current.User;
+
+			foreach (string collab in aDoc.CollaboratorsId)
+			{
+				if (current.Groups.Contains(collab) || collab == current.Id)
+					return true;
+			}
+			return false;
+		}
+
+		private static bool TestFacsimileZipStream(Stream file)
+		{
+			bool valid = false;
+			using (Stream testStream = new MemoryStream())
+			{
+				file.CopyTo(testStream, file.Length);
+				testStream.Position = 0;
+				using (ZipInputStream zis = new ZipInputStream(testStream))
+				{
+					ZipEntry entry;
+					while ((entry = zis.GetNextEntry()) != null)
+					{
+						if (entry.IsFile)
+						{
+							string reg = @"\$facsimile_(\d+)\.jpg";
+							Match match = Regex.Match(entry.Name, reg);
+
+							valid = match.Success;
+							if (!valid)
+								break;
+						}
+					}
+				}
+			}
+			return valid;
+		}
 	}
 }

@@ -10,6 +10,6 @@ namespace FoireMuses.Core.Interfaces
 {
 	public interface ISourceController : IBaseController<ISource>
 	{
-		Result<bool> BulkFascimile(string sourceId, Stream file, Result<bool> aResult);
+		Result<bool> BulkImportSourcePages(string sourceId, Stream file, Result<bool> aResult);
 	}
 }
