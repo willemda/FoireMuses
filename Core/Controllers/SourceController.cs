@@ -50,9 +50,17 @@ namespace FoireMuses.Core.Controllers
 				return false;
 			return true;
 		}
-		public Result<ISource> Update(string id, string rev, ISource aDoc, Result<ISource> aResult)
+		public Result<ISource> Update(string aSourceId, string rev, ISource aDoc, Result<ISource> aResult)
 		{
-			Coroutine.Invoke(UpdateHelper, id, rev, aDoc, new Result<ISource>()).WhenDone(
+			ArgCheck.NotNullNorEmpty("aSourceId", aSourceId);
+			ArgCheck.NotNull("aSource", aDoc);
+
+			//if (aDoc.Id != aSourceId)
+			//{
+			//    aDoc.Id = aSourceId;
+			//}
+
+			Coroutine.Invoke(UpdateHelper, aSourceId, rev, aDoc, new Result<ISource>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -130,15 +138,13 @@ namespace FoireMuses.Core.Controllers
 			yield return theSourceDataMapper.Retrieve(aDoc.Id, validSourceResult);
 			if (validSourceResult.Value == null)
 			{
-				aResult.Throw(new ArgumentException());
+				aResult.Throw(new ArgumentException(String.Format("Source not found for id '{0}'",id)));
 				yield break;
 			}
 
-
-
 			//Update and return the updated source.
 			Result<ISource> sourceResult = new Result<ISource>();
-			yield return theSourceDataMapper.Update(id, rev, aDoc, sourceResult);
+			yield return theSourceDataMapper.Update(id, rev ?? validSourceResult.Value.Rev , aDoc, sourceResult);
 			aResult.Return(sourceResult.Value);
 		}
 		private Yield CreateHelper(ISource aDoc, Result<ISource> aResult)
