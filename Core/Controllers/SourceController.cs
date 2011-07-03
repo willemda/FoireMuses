@@ -55,15 +55,7 @@ namespace FoireMuses.Core.Controllers
 			ArgCheck.NotNullNorEmpty("aSourceId", aSourceId);
 			ArgCheck.NotNull("aSource", aDoc);
 
-			//if (aDoc.Id != aSourceId)
-			//{
-			//    aDoc.Id = aSourceId;
-			//}
-
-			Coroutine.Invoke(UpdateHelper, aSourceId, rev, aDoc, new Result<ISource>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
+			Coroutine.Invoke(UpdateHelper, aSourceId, rev, aDoc, aResult);
 			return aResult;
 		}
 		public Result<ISource> Retrieve(string id, Result<ISource> aResult)
@@ -90,12 +82,11 @@ namespace FoireMuses.Core.Controllers
 		{
 			throw new NotImplementedException();
 		}
-		public Result<bool> Delete(string id, string rev, Result<bool> aResult)
+		public Result<bool> Delete(string aSourceId, string rev, Result<bool> aResult)
 		{
-			theSourceDataMapper.Delete(id, rev, new Result<bool>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
+			ArgCheck.NotNullNorEmpty("aSourceId", aSourceId);
+
+			Coroutine.Invoke(DeleteHelper, aSourceId, rev, aResult);
 			return aResult;
 		}
 		public Result<SearchResult<ISource>> GetAll(int offset, int max, Result<SearchResult<ISource>> aResult)
@@ -146,6 +137,19 @@ namespace FoireMuses.Core.Controllers
 			Result<ISource> sourceResult = new Result<ISource>();
 			yield return theSourceDataMapper.Update(id, rev ?? validSourceResult.Value.Rev , aDoc, sourceResult);
 			aResult.Return(sourceResult.Value);
+		}
+		private Yield DeleteHelper(string id, string rev, Result<bool> aResult)
+		{
+			//Check if a source with this id exists.
+			Result<ISource> validSourceResult = new Result<ISource>();
+			yield return theSourceDataMapper.Retrieve(id, validSourceResult);
+			if (validSourceResult.Value == null)
+			{
+				aResult.Throw(new ArgumentException(String.Format("Source not found for id '{0}'", id)));
+				yield break;
+			}
+
+			yield return theSourceDataMapper.Delete(id, rev ?? validSourceResult.Value.Rev, aResult);
 		}
 		private Yield CreateHelper(ISource aDoc, Result<ISource> aResult)
 		{

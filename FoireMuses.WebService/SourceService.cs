@@ -71,7 +71,7 @@ namespace FoireMuses.WebService
 		public Yield DeleteSource(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			Result<bool> result = new Result<bool>();
-			yield return Context.Current.Instance.SourceController.Delete(context.GetParam("id"), context.GetParam("rev"), result);
+			yield return Context.Current.Instance.SourceController.Delete(context.GetParam("id"), context.GetParam("rev",null), result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
 		} 
