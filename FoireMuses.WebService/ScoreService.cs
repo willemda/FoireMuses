@@ -36,7 +36,7 @@ namespace FoireMuses.WebService
 			aResponse.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.IndexController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("GET:scores/source/{id}", "Get all scores from this source")]
+		[DreamFeature("GET:source/{id}/scores", "Get all scores from this source")]
 		[DreamFeatureParam("max", "int?", "the number of document given by the output")]
 		[DreamFeatureParam("offset", "int?", "skip the offset first results")]
 		public Yield GetScoresFromSource(DreamContext aContext, DreamMessage aRequest, Result<DreamMessage> aResponse)
@@ -125,37 +125,53 @@ namespace FoireMuses.WebService
 			aResponse.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.IndexController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("POST:scores", "Insert new score")]
+		[DreamFeature("POST:scores", "Insert new score from JSON or MusicXML")]
 		public Yield CreateScore(DreamContext aContext, DreamMessage aRequest, Result<DreamMessage> aResponse)
 		{
-			IScore score = Context.Current.Instance.ScoreController.FromJson(aRequest.ToText());
 			Result<IScore> result = new Result<IScore>();
-			yield return Context.Current.Instance.ScoreController.Insert(score, result);
 
+			if (aRequest.ContentType.IsXml)
+			{
+				IScore score = Context.Current.Instance.ScoreController.CreateNew();
+				yield return Context.Current.Instance.ScoreController.AttachMusicXml(score, aRequest.ToDocument(), false, result);
+			}
+			else
+			{
+				IScore score = Context.Current.Instance.ScoreController.FromJson(aRequest.ToText());
+				yield return Context.Current.Instance.ScoreController.Insert(score, result);
+			}
 			aResponse.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
-		[DreamFeature("PUT:scores", "Update the score")]
+		[DreamFeature("PUT:scores/{id}", "Update the score")]
 		[DreamFeatureParam("{id}", "String", "Score id")]
 		[DreamFeatureParam("{rev}", "String", "Score revision id")]
+		[DreamFeatureParam("{overwrite}", "bool", "Overwrite xml attributes from MusicXML or not")]
 		public Yield UpdateScore(DreamContext aContext, DreamMessage aRequest, Result<DreamMessage> aResponse)
 		{
-			IScore score = Context.Current.Instance.ScoreController.FromJson(aRequest.ToText());
-			Result<IScore> result = new Result<IScore>();
-			if (aContext.GetParam("id") == null || aContext.GetParam("rev") == null)
-				aResponse.Return(DreamMessage.BadRequest("not id or rev specified"));
-			yield return
-				Context.Current.Instance.ScoreController.Update(aContext.GetParam("id"), aContext.GetParam("rev"), score, result);
+			if (aContext.GetParam("rev") == null)
+			{
+				aResponse.Return(DreamMessage.BadRequest("no rev specified"));
+				yield break;
+			}
 
-			aResponse.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
-		}
-
-		[DreamFeature("POST:scores/musicxml", "Insert a score with music xml")]
-		public Yield CreateScoreWithMusicXml(DreamContext aContext, DreamMessage aRequest, Result<DreamMessage> aResponse)
-		{
-			IScore score = Context.Current.Instance.ScoreController.CreateNew();
 			Result<IScore> result = new Result<IScore>();
-			yield return Context.Current.Instance.ScoreController.AttachMusicXml(score, aRequest.ToDocument(), false, result);
+
+			if (aRequest.ContentType.IsXml)
+			{
+				Result<IScore> resultRetrieve = new Result<IScore>();
+				yield return Context.Current.Instance.ScoreController.Retrieve(aContext.GetParam("id"), resultRetrieve);
+				IScore score = resultRetrieve.Value;
+				yield return
+					Context.Current.Instance.ScoreController.AttachMusicXml(score, aRequest.ToDocument(),
+																			aContext.GetParam("overwrite", true), result);
+			}
+			else
+			{
+				IScore score = Context.Current.Instance.ScoreController.FromJson(aRequest.ToText());
+				yield return
+					Context.Current.Instance.ScoreController.Update(aContext.GetParam("id"), aContext.GetParam("rev"), score, result);
+			}
 
 			aResponse.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
@@ -167,27 +183,9 @@ namespace FoireMuses.WebService
 			Result<Stream> result = new Result<Stream>();
 			yield return
 				Context.Current.Instance.ScoreController.GetAttachment(aContext.GetParam("id"), aContext.GetParam("fileName"),
-				                                                       result)
-				;
+				                                                       result);
 			Stream stream = result.Value;
 			aResponse.Return(DreamMessage.Ok(MimeType.BINARY, stream.Length, stream));
-		}
-
-		[DreamFeature("PUT:scores/musicxml", "Edit an existing score with music xml")]
-		[DreamFeatureParam("{id}", "String", "Score id")]
-		[DreamFeatureParam("{rev}", "String", "Score rev id")]
-		[DreamFeatureParam("{overwrite}", "bool", "overwrite xml attributes or not")]
-		public Yield UpdateScoreWithMusicXml(DreamContext aContext, DreamMessage aRequest, Result<DreamMessage> aResponse)
-		{
-			Result<IScore> resultRetrieve = new Result<IScore>();
-			yield return Context.Current.Instance.ScoreController.Retrieve(aContext.GetParam("id"), resultRetrieve);
-			IScore score = resultRetrieve.Value;
-			Result<IScore> result = new Result<IScore>();
-			yield return
-				Context.Current.Instance.ScoreController.AttachMusicXml(score, aRequest.ToDocument(),
-				                                                        aContext.GetParam("overwrite", true), result);
-
-			aResponse.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.ScoreController.ToJson(result.Value)));
 		}
 
 		[DreamFeature("DELETE:scores/{id}", "Delete a score")]
@@ -197,8 +195,7 @@ namespace FoireMuses.WebService
 		{
 			Result<bool> result = new Result<bool>();
 			yield return
-				Context.Current.Instance.ScoreController.Delete(aContext.GetParam("id"), aContext.GetParam("rev"), result)
-				;
+				Context.Current.Instance.ScoreController.Delete(aContext.GetParam("id"), aContext.GetParam("rev"), result);
 
 			aResponse.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
 		}

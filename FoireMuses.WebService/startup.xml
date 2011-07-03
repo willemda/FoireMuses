@@ -1,54 +1,54 @@
 <script>
-  <!-- Address Book sample -->
-  <action verb="POST" path="/host/services">
-    <config>
-      <path>foiremuses</path>
-      <sid>http://foiremuses.org/service</sid>
-      <instances>
-        <instance webhost="test.foiremuses.org" databaseName="testdatabase">
-          <convertersSettings
-            lilyPondCommand = "G:\Program Files\LilyPond\usr\bin\lilypond.exe"
-            toLyCommand = "G:\Program Files\LilyPond\usr\bin\musicxml2ly.py"
+	<!-- Address Book sample -->
+	<action verb="POST" path="/host/services">
+		<config>
+			<path>foiremuses</path>
+			<sid>http://foiremuses.org/service</sid>
+			<instances>
+				<instance webhost="test.foiremuses.org" databaseName="testdatabase">
+					<convertersSettings
+            lilyPondCommand = "C:\Program Files (x86)\LilyPond\usr\bin\lilypond.exe"
+            toLyCommand = "C:\Program Files (x86)\LilyPond\usr\bin\musicxml2ly.py"
             toLyArgs = "-o {0} {1}"
             toLyExpectedFile = ".ly"
             toPsArgs = "-fps -o {0} {1}"
             toPsExpectedFile=".ps"
             toPdfArgs = "--pdf -o {0} {1}"
             toPdfExpectedFile = ".pdf"
-            toPngCommand="G:\Program Files\ImageMagick-6.6.9-Q16\convert.exe"
-            toPngArgs="&quot;{1}&quot; &quot;{0}.png&quot;"
+            toPngCommand="C:\Program Files\ImageMagick-6.7.0-Q16\convert.exe"
+            toPngArgs="-verbose &quot;{1}&quot; &quot;{0}.png&quot;"
             toPngExpectedFile=".png"
             toMidiArgs="-o {0} {1}"
             toMidiExpectedFile=".mid"
             />
-          <components>
-            <component
+					<components>
+						<component
 							type="FoireMuses.Core.Interfaces.IScoreDataMapper, FoireMuses.Core"
 							implementation="FoireMuses.Core.Loveseat.LoveseatScoreDataMapper, FoireMuses.Core.Loveseat"
 							name="ScoreDataMapper"/>
-            <component
+						<component
 							type="FoireMuses.Core.Interfaces.IUserDataMapper, FoireMuses.Core"
 							implementation="FoireMuses.Core.Loveseat.LoveseatUserDataMapper, FoireMuses.Core.Loveseat"
 							name="UserDataMapper"/>
-            <component
+						<component
 							type="FoireMuses.Core.Interfaces.ISourceDataMapper, FoireMuses.Core"
 							implementation="FoireMuses.Core.Loveseat.LoveseatSourceDataMapper, FoireMuses.Core.Loveseat"
 							name="SourceDataMapper"/>
-            <component
+						<component
 							type="FoireMuses.Core.Interfaces.IPlayDataMapper, FoireMuses.Core"
 							implementation="FoireMuses.Core.Loveseat.LoveseatPlayDataMapper, FoireMuses.Core.Loveseat"
 							name="PlayDataMapper"/>
-            <component
+						<component
 							type="FoireMuses.Core.Interfaces.ISourcePageDataMapper, FoireMuses.Core"
 							implementation="FoireMuses.Core.Loveseat.LoveseatSourcePageDataMapper, FoireMuses.Core.Loveseat"
 							name="SourcePageDataMapper"/>
-            <component
+						<component
 							type="FoireMuses.Core.Interfaces.INotificationManager, FoireMuses.Core"
 							implementation="FoireMuses.Core.Loveseat.NotificationManager, FoireMuses.Core.Loveseat"
 							name="NotificationManager"/>
-          </components>
-        </instance>
-      </instances>
-    </config>
-  </action>
+					</components>
+				</instance>
+			</instances>
+		</config>
+	</action>
 </script>

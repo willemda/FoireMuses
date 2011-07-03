@@ -42,7 +42,6 @@ namespace FoireMuses.WebService
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.UserController.ToJson(result.Value)));
 		}
 
-
 		[DreamFeature("GET:users/{id}", "get the user that has the given id")]
 		public Yield GetUser(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
@@ -55,7 +54,7 @@ namespace FoireMuses.WebService
 								: DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.UserController.ToJson((result.Value))));
 		}
 
-		[DreamFeature("PUT:users", "update a user")]
+		[DreamFeature("PUT:users/{id}", "update a user")]
 		[DreamFeatureParam("{id}", "String", "User id")]
 		[DreamFeatureParam("{rev}", "String", "User revision id")]
 		public Yield UpdateUser(DreamContext context, DreamMessage request, Result<DreamMessage> response)
