@@ -55,7 +55,7 @@ namespace FoireMuses.WebService
 		}
 
 		[DreamFeature("PUT:sources/{id}", "Update the source")]
-		[DreamFeatureParam("{rev}", "String", "Source revision id")]
+		[DreamFeatureParam("{rev}", "String", "Source revision id, if not specified, use the last source rev")]
 		public Yield UpdateSource(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			ISource source = Context.Current.Instance.SourceController.FromJson(request.ToText());
