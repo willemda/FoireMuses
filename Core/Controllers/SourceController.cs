@@ -33,10 +33,7 @@ namespace FoireMuses.Core.Controllers
 		}
 		public Result<ISource> Insert(ISource aDoc, Result<ISource> aResult)
 		{
-			Coroutine.Invoke(CreateHelper, aDoc, new Result<ISource>()).WhenDone(
-				aResult.Return,
-				aResult.Throw
-				);
+			theSourceDataMapper.Create(aDoc, aResult);
 			return aResult;
 		}
 		public string ToJson(SearchResult<ISource> aSearchResult)
@@ -150,13 +147,6 @@ namespace FoireMuses.Core.Controllers
 			}
 
 			yield return theSourceDataMapper.Delete(id, rev ?? validSourceResult.Value.Rev, aResult);
-		}
-		private Yield CreateHelper(ISource aDoc, Result<ISource> aResult)
-		{
-			//Insert a the source and return
-			Result<ISource> resultCreate = new Result<ISource>();
-			yield return theSourceDataMapper.Create(aDoc, resultCreate);
-			aResult.Return(resultCreate.Value);
 		}
 		private bool IsCreator(ISource aDoc)
 		{
