@@ -98,7 +98,7 @@ namespace FoireMuses.WebService
 		public Yield GetSourcePage(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
 			Result<ISourcePage> result = new Result<ISourcePage>();
-			yield return Context.Current.Instance.SourcePageController.Retrieve(context.GetParam("id"), result);
+			yield return Context.Current.Instance.SourcePageController.Retrieve(context.GetParam("sourcePageId"), result);
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.SourcePageController.ToJson(result.Value)));
 		}
 
@@ -126,7 +126,7 @@ namespace FoireMuses.WebService
 		[DreamFeature("POST:sources/{id}/pages", "Create a new page")]
 		public Yield CreateSourcePage(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
-			if (request.ContentType == MimeType.JSON)
+			if (request.ContentType.Match(MimeType.JSON))
 			{
 				ISourcePage page = Context.Current.Instance.SourcePageController.FromJson(request.ToText());
 				Result<ISourcePage> result = new Result<ISourcePage>();

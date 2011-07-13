@@ -123,7 +123,7 @@ namespace FoireMuses.Core.Controllers
 		{
 			//Check if a source with this id exists.
 			Result<ISource> validSourceResult = new Result<ISource>();
-			yield return theSourceDataMapper.Retrieve(aDoc.Id, validSourceResult);
+			yield return theSourceDataMapper.Retrieve(id, validSourceResult);
 			if (validSourceResult.Value == null)
 			{
 				aResult.Throw(new ArgumentException(String.Format("Source not found for id '{0}'",id)));

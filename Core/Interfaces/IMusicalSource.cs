@@ -12,5 +12,7 @@ namespace FoireMuses.Core.Interfaces
 		string Page { get; set; }
 		int? Tome { get; set; }
 		int? Volume { get; set; }
+
+		bool IsSuggested { get; set; }
 	}
 }

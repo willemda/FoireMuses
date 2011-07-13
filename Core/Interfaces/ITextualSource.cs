@@ -13,9 +13,6 @@ namespace FoireMuses.Core.Interfaces
 		int? Tome { get; set; }
 		int? Volume { get; set; }
 
-		string Comment { get; set; }
-		bool IsSuggested { get; set; }
-
 		string PieceId { get; set; }
 		int? SceneNumber { get; set; }
 		int? ActNumber { get; set; }

@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoreTests\ConvertersTests.cs" />
+    <Compile Include="CoreTests\SourceControllerTests.cs" />
     <Compile Include="CoreTests\IndexControllerTests.cs" />
     <Compile Include="CoreTests\ScoreControllerTests.cs" />
     <Compile Include="CoreTests\UserControllerTests.cs" />

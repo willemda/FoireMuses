@@ -73,5 +73,17 @@ namespace FoireMuses.Core.Loveseat.Business
 				this["volume"] = value;
 			}
 		}
+
+		public bool IsSuggested
+		{
+			get
+			{
+				return this["isSuggested"].Value<bool>();
+			}
+			set
+			{
+				this["isSuggested"] = value;
+			}
+		}
 	}
 }

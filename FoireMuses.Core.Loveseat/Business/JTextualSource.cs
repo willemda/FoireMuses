@@ -56,18 +56,6 @@ namespace FoireMuses.Core.Loveseat.Business
 			}
 		}
 
-		public bool IsSuggested
-		{
-			get
-			{
-				return this["isSuggested"].Value<bool>();
-			}
-			set
-			{
-				this["isSuggested"] = value;
-			}
-		}
-
 		public int? ActNumber
 		{
 			get

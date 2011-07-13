@@ -22,8 +22,6 @@ namespace FoireMuses.Import
 			CouchClient client = new CouchClient();
 			CouchDatabase db = client.GetDatabase("musicdatabasexml");
 
-
-
 			foreach (ISource source in ControllerFactory.Instance.SourceController.GetAllSources(false))
 			{
 				JDocument doc = new JDocument();
@@ -42,9 +40,6 @@ namespace FoireMuses.Import
 				AddProperty(doc, source.Publisher, "publisher");
 				db.CreateDocument(doc);
 			}
-
-
-
 
 			foreach (IPlay play in ControllerFactory.Instance.PlayController.GetAllPlays())
 			{
