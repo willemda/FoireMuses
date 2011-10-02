@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using FoireMuses.Core.Interfaces;
-using LoveSeat;
+using DreamSeat;
 using MindTouch.Tasking;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Utils;

@@ -11,7 +11,7 @@ namespace FoireMuses.Core.Interfaces
 
 	public interface ISourcePageController : IBaseController<ISourcePage>
 	{
-		Result<bool> AddFascimile(string id, Stream file, Result<bool> aResult);
+		Result<bool> AddFascimile(string id, Stream file, long anAttachmentLength, Result<bool> aResult);
 		Result<SearchResult<ISourcePage>> GetPagesFromSource(string sourceId, int offset, int max, Result<SearchResult<ISourcePage>> aResult);
 		Result<bool> BulkImportSourcePages(string sourceId, Stream file, Result<bool> aResult);
 	}

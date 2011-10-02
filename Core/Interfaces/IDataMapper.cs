@@ -32,7 +32,7 @@ namespace FoireMuses.Core.Interfaces
 		Result<bool> Delete(string aDocumentId, string aRev, Result<bool> aResult);
 		Result<SearchResult<T>> GetAll(int offset, int max, Result<SearchResult<T>> aResult);
 
-		Result<bool> AddAttachment(string aDocumentId, Stream file, string fileName, Result<bool> aResult);
+		Result<bool> AddAttachment(string aDocumentId, Stream file, long anAttachmentLength, string fileName, Result<bool> aResult);
 		Result<Stream> GetAttachment(string aDocumentId, string FileName, Result<Stream> aResult);
 		Result<bool> DeleteAttachment(string aDocumentId, string aFileName, Result<bool> aResult);
 

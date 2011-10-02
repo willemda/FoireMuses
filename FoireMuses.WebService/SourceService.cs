@@ -107,7 +107,7 @@ namespace FoireMuses.WebService
 		{
 			Stream file = request.ToStream();
 			Result<bool> result;
-			yield return result = Context.Current.Instance.SourcePageController.AddFascimile(context.GetParam("sourcePageId"), file, new Result<bool>());
+			yield return result = Context.Current.Instance.SourcePageController.AddFascimile(context.GetParam("sourcePageId"), file, request.ContentLength, new Result<bool>());
 			response.Return(DreamMessage.Ok());
 		}
 

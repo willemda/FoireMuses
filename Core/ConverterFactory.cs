@@ -21,7 +21,7 @@ namespace FoireMuses.Core
 		{
 			IConverter musicXmlToLilypound = new Converter(aSettingsController.ToLyCommand, aSettingsController.ToLyArgs, aSettingsController.ToLyExpectedFile);
 			IConverter lilypoundToPdf = new PDFConverter(aSettingsController.LilyPondCommand, aSettingsController.ToPdfArgs, aSettingsController.ToPdfExpectedFile);
-			IConverter lilypoundToPostscript = new Converter(aSettingsController.LilyPondCommand, aSettingsController.ToPsArgs, aSettingsController.ToPsExpectedFile);
+			IConverter lilypoundToPostscript = new MusicXmlToPsConverter(aSettingsController.LilyPondCommand);
 			IConverter postcriptToPng = new Converter(aSettingsController.ToPngCommand, aSettingsController.ToPngArgs, aSettingsController.ToPngExpectedFile);
 			IConverter musicXmlToPostscript = new CombinedConverter(musicXmlToLilypound, lilypoundToPostscript);
 			IConverter musicXmlToPng = new CombinedConverter(musicXmlToPostscript, postcriptToPng);

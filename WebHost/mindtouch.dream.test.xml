@@ -1,0 +1,1105 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>mindtouch.dream.test</name>
+    </assembly>
+    <members>
+        <member name="T:MindTouch.Dream.Test.Data.MockDataCatalog">
+            <summary>
+            Provides a mocking framework for <see cref="T:MindTouch.Data.IDataCatalog"/>.
+            </summary>
+            <remarks>
+            This framework is not complete and represents a work in progress.
+            </remarks>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.ExpectNewQuery(System.String,System.Int32)">
+            <summary>
+            Create a new mock command to intercept a specific <see cref="M:MindTouch.Data.IDataCatalog.NewQuery(System.String)"/> call.
+            </summary>
+            <param name="query">Sql query string.</param>
+            <param name="expectedCalls">Number of times this call is expected to occur.</param>
+            <returns>New mock command.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.ExpectNewReadOnlyQuery(System.String,System.Int32)">
+            <summary>
+            Create a new mock command to intercept a specific <see cref="M:MindTouch.Data.IDataCatalog.NewReadOnlyQuery(System.String)"/> call.
+            </summary>
+            <param name="query">Sql query string.</param>
+            <param name="expectedCalls">Number of times this call is expected to occur.</param>
+            <returns>New mock command.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.ExpectNewQuery(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Create a new mock command to intercept a specific <see cref="M:MindTouch.Data.IDataCatalog.NewQuery(System.String,System.Boolean)"/> call.
+            </summary>
+            <param name="query">Sql query string.</param>
+            <param name="readonly"><see langword="True"/> if the query is readonly.</param>
+            <param name="expectedCalls">Number of times this call is expected to occur.</param>
+            <returns>New mock command.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.Verify">
+            <summary>
+            Verify that the setup expectations occured.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:MindTouch.Dream.Test.Data.MockDataCatalog.VerificationFailure">
+            <summary>
+            A text explanation of why <see cref="M:MindTouch.Dream.Test.Data.MockDataCatalog.Verify"/> failed.
+            </summary>
+        </member>
+        <member name="T:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand">
+            <summary>
+            Provides an <see cref="T:MindTouch.Data.IDataCommand"/> mock that matches actual calls based on its command signature and is configured via a fluent
+            api mirroring the <see cref="T:MindTouch.Data.IDataCommand"/> fluent api. Configuration of calls are order sensitive.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.With(System.String,System.Object)">
+            <summary>
+            Define a parameter to expect.
+            </summary>
+            <param name="key">Expected key.</param>
+            <param name="value">Expected value.</param>
+            <returns>Same instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.WithInOut(System.String,System.Object)">
+            <summary>
+            Define a parameter to expect.
+            </summary>
+            <param name="key">Expected key.</param>
+            <param name="value">Expected value.</param>
+            <returns>Same instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.WithOutput(System.String)">
+            <summary>
+            Define an output parameter to expect.
+            </summary>
+            <param name="key">Expected key.</param>
+            <returns>Same instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.WithReturn(System.String)">
+            <summary>
+            Define an return parameter to expect.
+            </summary>
+            <param name="key">Expected key.</param>
+            <returns>Same instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.Execute">
+            <summary>
+            Defines the execution command to expect.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.Execute(System.Data.IDataReader)">
+            <summary>
+            Defines the execution command to expect.
+            </summary>
+            <param name="dataReader">The data reader to return to the caller.</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.Read">
+            <summary>
+            Defines the execution command to expect.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.ReadAsBool">
+            <summary>
+            Defines the execution command to expect.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.ReadAsByte">
+            <summary>
+            Defines the execution command to expect.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.ReadAsUShort">
+            <summary>
+            Defines the execution command to expect.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.ReadAsShort">
+            <summary>
+            Defines the execution command to expect.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.ReadAsUInt">
+            <summary>
+            Defines the execution command to expect.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.ReadAsInt">
+            <summary>
+            Defines the execution command to expect.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.ReadAsULong">
+            <summary>
+            Defines the execution command to expect.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.ReadAsLong">
+            <summary>
+            Defines the execution command to expect.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.ReadAsDateTime">
+            <summary>
+            Defines the execution command to expect.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataCommand.WithExpectedReturnValue(System.Object)">
+            <summary>
+            Define data object to return on read operation.
+            </summary>
+            <param name="data">Data object.</param>
+            <returns>Same instance.</returns>
+        </member>
+        <member name="T:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataReader">
+            <summary>
+            Provides a <see cref="T:System.Data.IDataReader"/> mock backed by a two-dimensional object array.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Data.MockDataCatalog.MockDataReader.#ctor(System.String[],System.Object[][])">
+            <summary>
+            Create a new mock instance.
+            </summary>
+            <param name="keys">Array of field names.</param>
+            <param name="table">Array of data rows, each containing an array of values to match the field names.</param>
+        </member>
+        <member name="T:MindTouch.Dream.Test.DreamServiceTestUtil">
+            <summary>
+            Provides NUnit Assertion extension methods for <see cref="T:MindTouch.Dream.Plug"/> response <see cref="T:MindTouch.Dream.DreamMessage"/> instances.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamServiceTestUtil.AssertStatus(MindTouch.Dream.DreamMessage,MindTouch.Dream.DreamStatus)">
+            <summary>
+            Assert that the status of the message is equal to an expected value.
+            </summary>
+            <param name="response">Response message.</param>
+            <param name="status">Status to assert.</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamServiceTestUtil.AssertSuccess(MindTouch.Dream.DreamMessage)">
+            <summary>
+            Assert that the response indicates a successful request.
+            </summary>
+            <param name="response">Response message.</param>
+        </member>
+        <member name="T:MindTouch.Dream.Test.MockPlug">
+            <summary>
+            Provides a mocking framework for intercepting <see cref="T:MindTouch.Dream.Plug"/> calls.
+            </summary>
+            <remarks>
+            Meant to be used to test services without having to set up dependent remote endpoints the service relies on for proper execution.
+            <see cref="T:MindTouch.Dream.Test.MockPlug"/> provides 3 different mechanisms for mocking an endpoint:
+            <list type="bullet">
+            <item>
+            <see cref="T:MindTouch.Dream.Test.MockPlug"/> endpoints, which can match requests based on content and supply a reply. These endpoints are order independent and
+            can be set up to verifiable.
+            </item>
+            <item>
+            <see cref="T:MindTouch.Dream.Test.AutoMockPlug"/> endpoints, which are order dependent and provide an Arrange/Act/Assert workflow for validating calls.
+            </item>
+            <item>
+            <see cref="T:MindTouch.Dream.Test.MockPlug.MockInvokeDelegate"/> endpoints which redirect an intercepted Uri (and child paths) to a delegate to be handled as the
+            desired by the delegate implementor.
+            </item>
+            </list>
+            </remarks>
+        </member>
+        <member name="T:MindTouch.Dream.Test.Mock.IMockPlug">
+            <summary>
+            Interface describing a <see cref="T:MindTouch.Dream.Test.MockPlug"/> definition.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.Verb(System.String)">
+            <summary>
+            Except a given verb.
+            </summary>
+            <param name="verb">Verb to expect.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.At(System.String[])">
+            <summary>
+            Modify the expected uri, to expec the call at the given relative path.
+            </summary>
+            <param name="path">Relative path to add to existing or base uri expectation.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.With(System.String,System.String)">
+            <summary>
+            Expect query key/value pair.
+            </summary>
+            <param name="key">Query key.</param>
+            <param name="value">Query value.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.With(System.String,System.Predicate{System.String})">
+            <summary>
+            Expect query key with a value checked by a callback.
+            </summary>
+            <param name="key">Query key.</param>
+            <param name="valueCallback">Callback to evaluate query value.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.WithTrailingSlash">
+            <summary>
+            Expect the query uri to have a trailing slash
+            </summary>
+            <remarks>By default presence or lack of presence of trailing slashes is not considered when matching, but this call makes it significant</remarks>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.WithoutTrailingSlash">
+            <summary>
+            Expect the query uri to not have a trailing slash
+            </summary>
+            <remarks>By default presence or lack of presence of trailing slashes is not considered when matching, but this call makes it significant</remarks>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.WithBody(MindTouch.Xml.XDoc)">
+            <summary>
+            Expect a given request document.
+            </summary>
+            <param name="request"></param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.WithMessage(System.Func{MindTouch.Dream.DreamMessage,System.Boolean})">
+            <summary>
+            Register a callback function to perform custom expectation matching.
+            </summary>
+            <param name="requestCallback">Callback to determine whether the document matches expecations.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.WithHeader(System.String,System.String)">
+            <summary>
+            Expect the presence of a given header.
+            </summary>
+            <param name="key">Header key.</param>
+            <param name="value">Header value.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.WithHeader(System.String,System.Predicate{System.String})">
+            <summary>
+            Expect the presence of a given head with a value checked by a callback.
+            </summary>
+            <param name="key">Header key.</param>
+            <param name="valueCallback">Callback to evaluate header value.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.Returns(MindTouch.Dream.DreamMessage)">
+            <summary>
+            Provide a response message on expectation match.
+            </summary>
+            <param name="response">Response message.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.Returns(MindTouch.Xml.XDoc)">
+            <summary>
+            Provide a response message on expectation match.
+            </summary>
+            <param name="response">Response message.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.Returns(System.Func{MindTouch.Dream.Test.Mock.MockPlugInvocation,MindTouch.Dream.DreamMessage})">
+            <summary>
+            Provide a response message on expectation match.
+            </summary>
+            <param name="response">Response message.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.WithResponseHeader(System.String,System.String)">
+            <summary>
+            Provide a response header on expectation match.
+            </summary>
+            <param name="key">Header key.</param>
+            <param name="value">Header value.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.Mock.IMockPlug"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.Verify">
+            <summary>
+            Verify that the <see cref="T:MindTouch.Dream.Test.MockPlug"/> was called as expected.
+            </summary>
+            <remarks>
+            Uses a 5 second timeout and will return immediately if <see cref="M:MindTouch.Dream.Test.Mock.IMockPlug.ExpectAtLeastOneCall"/> 
+            or <see cref="M:MindTouch.Dream.Test.Mock.IMockPlug.ExpectCalls(MindTouch.Dream.Test.Mock.Times)"/> was called previously.
+            </remarks>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.Verify(MindTouch.Dream.Test.Mock.Times)">
+            <summary>
+            Verify that the <see cref="T:MindTouch.Dream.Test.MockPlug"/> was called the expected number of <see cref="T:MindTouch.Dream.Test.Mock.Times"/>
+            </summary>
+            <remarks>Uses a 5 second timeout.</remarks>
+            <param name="times">Times instance to use for expectations.</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.Verify(System.TimeSpan)">
+            <summary>
+            Verify that the <see cref="T:MindTouch.Dream.Test.MockPlug"/> was called as expected.
+            </summary>
+            <remarks>
+            Will return immediately if <see cref="M:MindTouch.Dream.Test.Mock.IMockPlug.ExpectAtLeastOneCall"/> or <see cref="M:MindTouch.Dream.Test.Mock.IMockPlug.ExpectCalls(MindTouch.Dream.Test.Mock.Times)"/> was called previously.
+            </remarks>
+            <param name="timeout">The time to wait for expectations to be met.</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.Verify(System.TimeSpan,MindTouch.Dream.Test.Mock.Times)">
+            <summary>
+            Verify that the <see cref="T:MindTouch.Dream.Test.MockPlug"/> was called the expected number of <see cref="T:MindTouch.Dream.Test.Mock.Times"/>
+            </summary>
+            <param name="timeout">The time to wait for expectations to be met.</param>
+            <param name="times">Times instance to use for expectations.</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.ExpectAtLeastOneCall">
+            <summary>
+            Set expectations to be at least one call.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.IMockPlug.ExpectCalls(MindTouch.Dream.Test.Mock.Times)">
+            <summary>
+            Set expectations to be the specified <see cref="T:MindTouch.Dream.Test.Mock.Times"/>.
+            </summary>
+            <param name="called"></param>
+            <returns></returns>
+        </member>
+        <member name="F:MindTouch.Dream.Test.MockPlug.DefaultUri">
+            <summary>
+            The default base Uri that will return a <see cref="M:MindTouch.Dream.DreamMessage.Ok(MindTouch.Xml.XDoc)"/> for any request. Should be used as no-op endpoint.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockPlug.Register(MindTouch.Dream.XUri,MindTouch.Dream.Test.MockPlug.MockInvokeDelegate)">
+            <summary>
+            Register a callback to intercept any calls to a uri and its child paths.
+            </summary>
+            <param name="uri">Base Uri to intercept.</param>
+            <param name="mock">Interception callback.</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockPlug.Register(MindTouch.Dream.XUri)">
+            <summary>
+            Create an <see cref="T:MindTouch.Dream.Test.AutoMockPlug"/> instance to intercept calls to a uri and its child paths for for Arrange/Act/Assert style mocking.
+            </summary>
+            <param name="uri">Base Uri to intercept.</param>
+            <returns>A new interceptor instance responsible for the uri.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockPlug.Setup(MindTouch.Dream.XUri)">
+            <summary>
+            Setup a new <see cref="T:MindTouch.Dream.Test.MockPlug"/> interceptor candidate for a uri and its child paths.
+            </summary>
+            <remarks>
+            This mechanism has not been completed and is only a WIP.
+            Must further configure ordered <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/> parameters to make validation possible.
+            </remarks>
+            <param name="baseUri">Base Uri to intercept.</param>
+            <returns>A new interceptor instance that may intercept the uri, depending on its additional matching parameters.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockPlug.Setup(MindTouch.Dream.XUri,System.String)">
+            <summary>
+            Setup a new <see cref="T:MindTouch.Dream.Test.MockPlug"/> interceptor candidate for a uri and its child paths.
+            </summary>
+            <remarks>
+            This mechanism has not been completed and is only a WIP.
+            Must further configure ordered <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/> parameters to make validation possible.
+            </remarks>
+            <param name="baseUri">Base Uri to intercept.</param>
+            <param name="name">Debug name for setup</param>
+            <returns>A new interceptor instance that may intercept the uri, depending on its additional matching parameters.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockPlug.VerifyAll">
+            <summary>
+            Verify all <see cref="T:MindTouch.Dream.Test.MockPlug"/> instances created with <see cref="M:MindTouch.Dream.Test.MockPlug.Setup(MindTouch.Dream.XUri)"/> since the last <see cref="M:MindTouch.Dream.Test.MockPlug.DeregisterAll"/> call.
+            </summary>
+            <remarks>
+            Uses a 10 second timeout.
+            </remarks>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockPlug.VerifyAll(System.TimeSpan)">
+            <summary>
+            Verify all <see cref="T:MindTouch.Dream.Test.MockPlug"/> instances created with <see cref="M:MindTouch.Dream.Test.MockPlug.Setup(MindTouch.Dream.XUri)"/> since the last <see cref="M:MindTouch.Dream.Test.MockPlug.DeregisterAll"/> call.
+            </summary>
+            <param name="timeout">Time to wait for all expectations to be met.</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockPlug.Deregister(MindTouch.Dream.XUri)">
+            <summary>
+            Deregister all interceptors for a specific base uri
+            </summary>
+            <remarks>
+            This will not deregister an interceptor that was registered specifically for a uri that is a child path of the provided uri.
+            </remarks>
+            <param name="uri">Base Uri to intercept.</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockPlug.DeregisterAll">
+            <summary>
+            Deregister all interceptors.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.MockPlug.Name">
+            <summary>
+            Name for the Mock Plug for debug logging purposes.
+            </summary>
+        </member>
+        <member name="P:MindTouch.Dream.Test.MockPlug.IsVerifiable">
+            <summary>
+            Used by <see cref="M:MindTouch.Dream.Test.MockPlug.VerifyAll"/> to determine whether instance should be included in verification.
+            </summary>
+        </member>
+        <member name="T:MindTouch.Dream.Test.MockPlug.MockInvokeDelegate">
+            <summary>
+            Delegate for registering a callback on Uri/Child Uri interception via <see cref="M:MindTouch.Dream.Test.MockPlug.Register(MindTouch.Dream.XUri,MindTouch.Dream.Test.MockPlug.MockInvokeDelegate)"/>.
+            </summary>
+            <param name="plug">Invoking plug instance.</param>
+            <param name="verb">Request verb.</param>
+            <param name="uri">Request uri.</param>
+            <param name="request">Request message.</param>
+            <param name="response">Synchronization handle for response message.</param>
+        </member>
+        <member name="T:MindTouch.Dream.Test.AutoMockPlug">
+            <summary>
+            Provides and Arrange/Act/Assert mocking framework for intercepting and handling <see cref="T:MindTouch.Dream.Plug"/> invocations.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.AutoMockPlug.Expect">
+            <summary>
+            Set up an expectation from a chain of parameters.
+            </summary>
+            <remarks>
+            <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/> is meant to be used as a fluent interface to set up parameter qualifications for the expecation.
+            </remarks>
+            <returns>A new expectation configuration instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.AutoMockPlug.Expect(System.String)">
+            <summary>
+            Expect a call at the base uri with the given verb, ignoring all other parameters.
+            </summary>
+            <param name="verb">Http verb to expect.</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.AutoMockPlug.Expect(System.String,MindTouch.Dream.XUri)">
+            <summary>
+            Expect a call on the given uri with the given verb, ignoring all other parameters.
+            </summary>
+            <param name="verb">Http verb to expect.</param>
+            <param name="uri">Uri to expect (must be a child path of <see cref="P:MindTouch.Dream.Test.AutoMockPlug.BaseUri"/>).</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.AutoMockPlug.Expect(System.String,MindTouch.Dream.XUri,MindTouch.Xml.XDoc)">
+            <summary>
+            Expect a call on the given uri with the given verb and document, ignoring all other parameters.
+            </summary>
+            <param name="verb">Http verb to expect.</param>
+            <param name="uri">Uri to expect (must be a child path of <see cref="P:MindTouch.Dream.Test.AutoMockPlug.BaseUri"/>).</param>
+            <param name="requestDoc">Expected request document.</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.AutoMockPlug.Expect(System.String,MindTouch.Dream.XUri,MindTouch.Xml.XDoc,MindTouch.Dream.DreamMessage)">
+            <summary>
+            Expect a call on the given uri with the given verb and document.
+            </summary>
+            <param name="verb">Http verb to expect.</param>
+            <param name="uri">Uri to expect (must be a child path of <see cref="P:MindTouch.Dream.Test.AutoMockPlug.BaseUri"/>).</param>
+            <param name="requestDoc">Expected request document.</param>
+            <param name="response">Response message to return.</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.AutoMockPlug.Expect(MindTouch.Dream.Test.AutoMockPlug.MockAutoInvokeDelegate)">
+            <summary>
+            Create an expecation delegated to a callback.
+            </summary>
+            <param name="autoInvokeDelegate">Callback.</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.AutoMockPlug.Reset">
+            <summary>
+            Clear all expectations and status.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.AutoMockPlug.WaitAndVerify(System.TimeSpan)">
+            <summary>
+            Block for expectations to be met, a bad expectation to come in or the timeout to expire.
+            </summary>
+            <param name="timeout">Wait timeout.</param>
+            <returns><see langword="True"/> if all expectations were met.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.AutoMockPlug.Dispose">
+            <summary>
+            Deregister this instance from uri interception.
+            </summary>
+        </member>
+        <member name="P:MindTouch.Dream.Test.AutoMockPlug.BaseUri">
+            <summary>
+            Base uri this instance is registered for.
+            </summary>
+        </member>
+        <member name="P:MindTouch.Dream.Test.AutoMockPlug.HasInterceptsInExcessOfExpectations">
+            <summary>
+            <see langword="True"/> if after the Act phase has excess requests beyond set up expectations
+            </summary>
+        </member>
+        <member name="P:MindTouch.Dream.Test.AutoMockPlug.TotalExpectationCount">
+            <summary>
+            Total number of expectations set up.
+            </summary>
+        </member>
+        <member name="P:MindTouch.Dream.Test.AutoMockPlug.MetExpectationCount">
+            <summary>
+            Number of expecattions met.
+            </summary>
+        </member>
+        <member name="P:MindTouch.Dream.Test.AutoMockPlug.VerificationFailure">
+            <summary>
+            Contains a text message detailing why <see cref="M:MindTouch.Dream.Test.AutoMockPlug.WaitAndVerify(System.TimeSpan)"/> failed.
+            </summary>
+        </member>
+        <member name="P:MindTouch.Dream.Test.AutoMockPlug.ExcessInterceptions">
+            <summary>
+            Array of excess interceptions caught.
+            </summary>
+        </member>
+        <member name="T:MindTouch.Dream.Test.AutoMockPlug.MockAutoInvokeDelegate">
+            <summary>
+            Delegate for custom expectations.
+            </summary>
+            <param name="verb">Request verb.</param>
+            <param name="uri">Request uri.</param>
+            <param name="request">Request message.</param>
+            <param name="response">Response message output.</param>
+            <param name="failureReason">Output for failure message, should the call not meet expectations.</param>
+            <returns><see langword="False"/> if the call did not meet expectations of the callback.</returns>
+        </member>
+        <member name="T:MindTouch.Dream.Test.ExcessInterception">
+            <summary>
+            Provides information about an excess request that occured after expecations had already been met.
+            </summary>
+        </member>
+        <member name="P:MindTouch.Dream.Test.ExcessInterception.Verb">
+            <summary>
+            Request verb.
+            </summary>
+        </member>
+        <member name="P:MindTouch.Dream.Test.ExcessInterception.Uri">
+            <summary>
+            Request Uri.
+            </summary>
+        </member>
+        <member name="P:MindTouch.Dream.Test.ExcessInterception.Request">
+            <summary>
+            Request document.
+            </summary>
+        </member>
+        <member name="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter">
+            <summary>
+            Provides a fluent interface for defining parameters of an <see cref="T:MindTouch.Dream.Test.AutoMockPlug"/> expecation.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.Verb(System.String)">
+            <summary>
+            Except a given verb.
+            </summary>
+            <param name="verb">Verb to expect.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.Uri(MindTouch.Dream.XUri)">
+            <summary>
+            Expect a given uri (must be a child of <see cref="P:MindTouch.Dream.Test.AutoMockPlug.BaseUri"/>.
+            </summary>
+            <param name="uri"></param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.At(System.String[])">
+            <summary>
+            Modify the expected uri, to expec the call at the given relative path.
+            </summary>
+            <param name="path">Relative path to add to existing or base uri expectation.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.With(System.String,System.String)">
+            <summary>
+            Expect query key/value pair.
+            </summary>
+            <param name="key">Query key.</param>
+            <param name="value">Query value.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.Request(MindTouch.Dream.DreamMessage)">
+            <summary>
+            Expect a given request message (mutually exclusive to <see cref="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.RequestDocument(MindTouch.Xml.XDoc)"/> and <see cref="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.RequestDocument(System.Func{MindTouch.Xml.XDoc,System.Boolean})"/>).
+            </summary>
+            <param name="request">Expected message.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.RequestDocument(MindTouch.Xml.XDoc)">
+            <summary>
+            Expect a given request document (mutually exclusive to <see cref="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.Request(MindTouch.Dream.DreamMessage)"/> and <see cref="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.RequestDocument(System.Func{MindTouch.Xml.XDoc,System.Boolean})"/>).
+            </summary>
+            <param name="request"></param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.RequestDocument(System.Func{MindTouch.Xml.XDoc,System.Boolean})">
+            <summary>
+            Register a callback function to perform custom expectation matching.
+            </summary>
+            <param name="requestCallback">Callback to determine whether the document matches expecations.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.RequestHeader(System.String,System.String)">
+            <summary>
+            Expect the presence of a given header.
+            </summary>
+            <param name="key">Header key.</param>
+            <param name="value">Header value.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.Response(MindTouch.Dream.DreamMessage)">
+            <summary>
+            Provide a response message on expectation match.
+            </summary>
+            <param name="response">Response message.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/>.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.IMockInvokeExpectationParameter.ResponseHeader(System.String,System.String)">
+            <summary>
+            Provide a response header on expectation match.
+            </summary>
+            <param name="key">Header key.</param>
+            <param name="value">Header value.</param>
+            <returns>Same instance of <see cref="T:MindTouch.Dream.Test.IMockInvokeExpectationParameter"/>.</returns>
+        </member>
+        <member name="T:MindTouch.Dream.Test.DreamTestHelper">
+            <summary>
+            A static helper class for creating <see cref="T:MindTouch.Dream.DreamHost"/> and services for testing.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamTestHelper.CreateRandomPortHost(MindTouch.Xml.XDoc,Autofac.IContainer)">
+            <summary>
+            Create a <see cref="T:MindTouch.Dream.DreamHost"/> at a random port (to avoid collisions in tests).
+            </summary>
+            <param name="config">Additional configuration for the host.</param>
+            <param name="container">IoC Container to use.</param>
+            <returns>A <see cref="T:MindTouch.Dream.Test.DreamHostInfo"/> instance for easy access to the host.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamTestHelper.CreateRandomPortHost(MindTouch.Xml.XDoc)">
+            <summary>
+            Create a <see cref="T:MindTouch.Dream.DreamHost"/> at a random port (to avoid collisions in tests).
+            </summary>
+            <param name="config">Additional configuration for the host.</param>
+            <returns>A <see cref="T:MindTouch.Dream.Test.DreamHostInfo"/> instance for easy access to the host.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamTestHelper.CreateRandomPortHost">
+            <summary>
+            Create a <see cref="T:MindTouch.Dream.DreamHost"/> at a random port (to avoid collisions in tests).
+            </summary>
+            <returns>A <see cref="T:MindTouch.Dream.Test.DreamHostInfo"/> instance for easy access to the host.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamTestHelper.CreateService``1(MindTouch.Dream.Test.DreamHostInfo,System.String,MindTouch.Xml.XDoc)">
+            <summary>
+            Create a <see cref="T:MindTouch.Dream.IDreamService"/> on a given <see cref="T:MindTouch.Dream.DreamHost"/>.
+            </summary>
+            <typeparam name="T">The <see cref="T:MindTouch.Dream.IDreamService"/> to create.</typeparam>
+            <param name="hostInfo">The info instance for the target <see cref="T:MindTouch.Dream.DreamHost"/>.</param>
+            <param name="pathPrefix">Path prefix to use for randomly generated path (primarily used to more easily recognize the service in logs).</param>
+            <param name="extraConfig">Additional configuration to use for service instantiation.</param>
+            <returns>An instance of <see cref="T:MindTouch.Dream.Test.DreamServiceInfo"/> for easy service access</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamTestHelper.CreateService``1(MindTouch.Dream.Test.DreamHostInfo,System.String)">
+            <summary>
+            Create a <see cref="T:MindTouch.Dream.IDreamService"/> on a given <see cref="T:MindTouch.Dream.DreamHost"/>.
+            </summary>
+            <typeparam name="T">The <see cref="T:MindTouch.Dream.IDreamService"/> to create.</typeparam>
+            <param name="hostInfo">The info instance for the target <see cref="T:MindTouch.Dream.DreamHost"/>.</param>
+            <param name="pathPrefix">Path prefix to use for randomly generated path (primarily used to more easily recognize the service in logs).</param>
+            <returns>An instance of <see cref="T:MindTouch.Dream.Test.DreamServiceInfo"/> for easy service access</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamTestHelper.CreateService(MindTouch.Dream.Test.DreamHostInfo,System.Type,System.String,MindTouch.Xml.XDoc)">
+            <summary>
+            Create a <see cref="T:MindTouch.Dream.IDreamService"/> on a given <see cref="T:MindTouch.Dream.DreamHost"/>.
+            </summary>
+            <param name="hostInfo">The info instance for the target <see cref="T:MindTouch.Dream.DreamHost"/>.</param>
+            <param name="serviceType">Type of the <see cref="T:MindTouch.Dream.IDreamService"/> to create.</param>
+            <param name="pathPrefix">Path prefix to use for randomly generated path (primarily used to more easily recognize the service in logs).</param>
+            <param name="extraConfig">Additional configuration to use for service instantiation.</param>
+            <returns>An instance of <see cref="T:MindTouch.Dream.Test.DreamServiceInfo"/> for easy service access</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamTestHelper.CreateService(MindTouch.Dream.Test.DreamHostInfo,System.String,System.String,MindTouch.Xml.XDoc)">
+            <summary>
+            Create a <see cref="T:MindTouch.Dream.IDreamService"/> on a given <see cref="T:MindTouch.Dream.DreamHost"/>.
+            </summary>
+            <param name="hostInfo">The info instance for the target <see cref="T:MindTouch.Dream.DreamHost"/>.</param>
+            <param name="sid">Service Identifier</param>
+            <param name="pathPrefix">Path prefix to use for randomly generated path (primarily used to more easily recognize the service in logs).</param>
+            <param name="extraConfig">Additional configuration to use for service instantiation.</param>
+            <returns>An instance of <see cref="T:MindTouch.Dream.Test.DreamServiceInfo"/> for easy service access</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamTestHelper.CreateService(MindTouch.Dream.Test.DreamHostInfo,System.Type,System.String)">
+            <summary>
+            Create a <see cref="T:MindTouch.Dream.IDreamService"/> on a given <see cref="T:MindTouch.Dream.DreamHost"/>.
+            </summary>
+            <param name="hostInfo">The info instance for the target <see cref="T:MindTouch.Dream.DreamHost"/>.</param>
+            <param name="serviceType">Type of the <see cref="T:MindTouch.Dream.IDreamService"/> to create.</param>
+            <param name="pathPrefix">Path prefix to use for randomly generated path (primarily used to more easily recognize the service in logs).</param>
+            <returns>An instance of <see cref="T:MindTouch.Dream.Test.DreamServiceInfo"/> for easy service access</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamTestHelper.CreateService(MindTouch.Dream.Test.DreamHostInfo,MindTouch.Xml.XDoc)">
+            <summary>
+            Create a <see cref="T:MindTouch.Dream.IDreamService"/> on a given <see cref="T:MindTouch.Dream.DreamHost"/>.
+            </summary>
+            <param name="hostInfo">The info instance for the target <see cref="T:MindTouch.Dream.DreamHost"/>.</param>
+            <param name="config">Configuration to use for service instantiation.</param>
+            <returns>An instance of <see cref="T:MindTouch.Dream.Test.DreamServiceInfo"/> for easy service access</returns>
+        </member>
+        <member name="T:MindTouch.Dream.Test.MockServiceInfo">
+            <summary>
+            Information about a Mock DreamService created by <see cref="M:MindTouch.Dream.Test.MockService.CreateMockService(MindTouch.Dream.Test.DreamHostInfo,MindTouch.Xml.XDoc)"/>.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.MockServiceInfo.AtLocalHost">
+            <summary>
+            A <see cref="T:MindTouch.Dream.Plug"/> for accessing the <see cref="T:MindTouch.Dream.Test.MockService"/> by it's network available uri.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.MockServiceInfo.AtLocalMachine">
+            <summary>
+            A <see cref="T:MindTouch.Dream.Plug"/> for accessing the <see cref="T:MindTouch.Dream.Test.MockService"/> by its Dream internal uri.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.MockServiceInfo.Service">
+            <summary>
+            The <see cref="T:MindTouch.Dream.Test.MockService"/> instance.
+            </summary>
+        </member>
+        <member name="T:MindTouch.Dream.Test.DreamHostInfo">
+            <summary>
+            Information about a <see cref="T:MindTouch.Dream.DreamHost"/> created by <see cref="M:MindTouch.Dream.Test.DreamTestHelper.CreateRandomPortHost(MindTouch.Xml.XDoc)"/>
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.DreamHostInfo.LocalHost">
+            <summary>
+            The network accessible local uri for the <see cref="T:MindTouch.Dream.DreamHost"/>.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.DreamHostInfo.Host">
+            <summary>
+            The <see cref="T:MindTouch.Dream.DreamHost"/> instance.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.DreamHostInfo.ApiKey">
+            <summary>
+            The apikey for accessing internal and private features of the <see cref="T:MindTouch.Dream.DreamHost"/>.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamHostInfo.Dispose">
+            <summary>
+            Dipose the host.
+            </summary>
+        </member>
+        <member name="T:MindTouch.Dream.Test.Mock.Times">
+            <summary>
+            Provides a utiltiy class for defining how often an event is expected to happen.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.Times.AtLeast(System.Int32)">
+            <summary>
+            Create an instance that expects at least a specified number of occurences.
+            </summary>
+            <param name="count">Occurence count.</param>
+            <returns>New instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.Times.AtLeastOnce">
+            <summary>
+            Create an instance that expects at least one occurence.
+            </summary>
+            <returns>New instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.Times.AtMost(System.Int32)">
+            <summary>
+            Create an instance that expects at most a specified number of occurences.
+            </summary>
+            <param name="count">Occurence count.</param>
+            <returns>New instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.Times.AtMostOnce">
+            <summary>
+            Create an instance that expects at most one occurence.
+            </summary>
+            <returns>New instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.Times.Never">
+            <summary>
+            Create an instance that expects no occurences.
+            </summary>
+            <returns>New instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.Times.Once">
+            <summary>
+            Create an instance that expects exactly one occurence.
+            </summary>
+            <returns>New instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.Times.Exactly(System.Int32)">
+            <summary>
+            Create an instance that expects a specific number of occurences.
+            </summary>
+            <param name="count">Occurence count.</param>
+            <returns>New instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.Times.Verify(System.Int32)">
+            <summary>
+            Verify the specified number of occurences against expectations.
+            </summary>
+            <param name="count">Occurence count.</param>
+            <returns>Verification result</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Mock.Times.Verify(System.Int32,System.TimeSpan)">
+            <summary>
+            Verify the specified number of occurences against expectations.
+            </summary>
+            <param name="count">Occurence count.</param>
+            <param name="timeout">Time to wait if expectations have not yet been met.</param>
+            <returns>Verification result</returns>
+        </member>
+        <member name="T:MindTouch.Dream.Test.Mock.Times.Result">
+            <summary>
+            Verification result.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.Mock.Times.Result.TooFew">
+            <summary>
+            <see cref="M:MindTouch.Dream.Test.Mock.Times.Verify(System.Int32)"/> was called with too few occurences.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.Mock.Times.Result.TooMany">
+            <summary>
+            <see cref="M:MindTouch.Dream.Test.Mock.Times.Verify(System.Int32)"/> was called with too many occurences.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.Mock.Times.Result.Ok">
+            <summary>
+            <see cref="M:MindTouch.Dream.Test.Mock.Times.Verify(System.Int32)"/> was called with the expected number of occurences.
+            </summary>
+        </member>
+        <member name="T:MindTouch.Dream.Test.DreamServiceInfo">
+            <summary>
+            Provides information about a service created via <see cref="M:MindTouch.Dream.Test.DreamTestHelper.CreateService(MindTouch.Dream.Test.DreamHostInfo,System.Type,System.String)"/> or one of its overrides.
+            </summary>
+            <remarks>
+            Services created and wrapped with <see cref="T:MindTouch.Dream.Test.DreamServiceInfo"/> are meant for testing purposes only.
+            </remarks>
+        </member>
+        <member name="F:MindTouch.Dream.Test.DreamServiceInfo.AtLocalHost">
+            <summary>
+            Public address of the service.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamServiceInfo.WithInternalKey">
+            <summary>
+            Get a new instance of the service info initialized with the service's internal key.
+            </summary>
+            <returns>A new instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamServiceInfo.WithPrivateKey">
+            <summary>
+            Get a new instance of the service info initialized with the service's private key.
+            </summary>
+            <returns>A new instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamServiceInfo.WithoutKeys">
+            <summary>
+            Get a new instance of the service info initialized without any the service keys.
+            </summary>
+            <returns>A new instance.</returns>
+        </member>
+        <member name="T:MindTouch.Dream.Test.AssertEx">
+            <summary>
+            Helper methods for Nunit assertions.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.AssertEx.AreEqual(System.TimeSpan,System.TimeSpan)">
+            <summary>
+            Compare two timespans with a minor degree of millisecond fuzzyness.
+            </summary>
+            <param name="expected">Expected timespan</param>
+            <param name="actual">Actual timespan</param>
+        </member>
+        <member name="M:MindTouch.Dream.Test.AssertEx.AreEqual(System.TimeSpan,System.TimeSpan,System.String)">
+            <summary>
+            Compare two timespans with a minor degree of millisecond fuzzyness.
+            </summary>
+            <param name="expected">Expected timespan</param>
+            <param name="actual">Actual timespan</param>
+            <param name="message">Error message to display should the assertion fail.</param>
+        </member>
+        <member name="T:MindTouch.Dream.Test.Mock.MockPlugException">
+            <summary>
+            Exception thrown by a <see cref="T:MindTouch.Dream.Test.MockPlug"/> failing verification.
+            </summary>
+        </member>
+        <member name="T:MindTouch.Dream.Test.DreamMessageEx">
+            <summary>
+            Extension methods for testing with <see cref="T:MindTouch.Dream.DreamMessage"/>.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.DreamMessageEx.GetErrorString(MindTouch.Dream.DreamMessage)">
+            <summary>
+            Extract the error string from a message.
+            </summary>
+            <param name="message">Message to examine.</param>
+            <returns>error string if one is contained in the message.</returns>
+        </member>
+        <member name="T:MindTouch.Dream.Test.Wait">
+            <summary>
+            A helper for waiting for certain conditions to occur during tests with asynchronous control flow. Should generally be used as an argument
+            for an NUnit Assert.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Wait.For``1(System.Func{MindTouch.Dream.Test.Wait.WaitResult{``0}},System.TimeSpan)">
+            <summary>
+            Repeatedly test a <b>condition</b> until the call times out or the condition indicates success.
+            </summary>
+            <typeparam name="T">The type of the result <see cref="T:MindTouch.Dream.Test.Wait.WaitResult`1"/> returned on success.</typeparam>
+            <param name="condition">Func to check whether wait condition has been met.</param>
+            <param name="timeout">The maximum time to keep testing the condition.</param>
+            <returns>The value produced by successful execution of the condition.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.Wait.For(System.Func{System.Boolean},System.TimeSpan)">
+            <summary>
+            Repeatedly test a <b>condition</b> until the call times out or the condition indicates success.
+            </summary>
+            <param name="condition">Func to check whether wait condition has been met.</param>
+            <param name="timeout">The maximum time to keep testing the condition.</param>
+            <returns></returns>
+        </member>
+        <member name="T:MindTouch.Dream.Test.Wait.WaitResult`1">
+            <summary>
+            Value handle for the wait condition used by <see cref="M:MindTouch.Dream.Test.Wait.For``1(System.Func{MindTouch.Dream.Test.Wait.WaitResult{``0}},System.TimeSpan)"/>. Used to allow the result to emit both a value and a success indicator.
+            </summary>
+            <typeparam name="T">Type of the result <see cref="P:MindTouch.Dream.Test.Wait.WaitResult`1.Value"/>.</typeparam>
+        </member>
+        <member name="F:MindTouch.Dream.Test.Wait.WaitResult`1.Success">
+            <summary>
+            Did <see cref="M:MindTouch.Dream.Test.Wait.For``1(System.Func{MindTouch.Dream.Test.Wait.WaitResult{``0}},System.TimeSpan)"/> succeed in the alloted time?
+            </summary>
+        </member>
+        <member name="P:MindTouch.Dream.Test.Wait.WaitResult`1.Value">
+            <summary>
+            Value returned by <see cref="M:MindTouch.Dream.Test.Wait.For(System.Func{System.Boolean},System.TimeSpan)"/> condition function.
+            </summary>
+        </member>
+        <member name="T:MindTouch.Dream.Test.MockService">
+            <summary>
+            Provides an <see cref="T:MindTouch.Dream.IDreamService"/> skeleton implemenation with static instance accessor and callback mechanism to externally
+            intercept service behavior.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockService.CreateMockService(MindTouch.Dream.Test.DreamHostInfo,MindTouch.Xml.XDoc)">
+            <summary>
+            Create a new mock service instance.
+            </summary>
+            <param name="hostInfo">Host info.</param>
+            <param name="extraConfig">Additional service configuration.</param>
+            <returns>New mock service info instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockService.CreateMockService(MindTouch.Dream.Test.DreamHostInfo,MindTouch.Xml.XDoc,System.Boolean)">
+            <summary>
+            Create a new mock service instance.
+            </summary>
+            <param name="hostInfo">Host info.</param>
+            <param name="extraConfig">Additional service configuration.</param>
+            <param name="privateStorage">Use private storage</param>
+            <returns>New mock service info instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockService.CreateMockServiceWithPrivateStorage(MindTouch.Dream.Test.DreamHostInfo)">
+            <summary>
+            Create a new mock service instance with private storage.
+            </summary>
+            <param name="hostInfo">Host info.</param>
+            <returns>New mock service info instance.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockService.CreateMockService(MindTouch.Dream.Test.DreamHostInfo)">
+            <summary>
+            Create a new mock service instance.
+            </summary>
+            <param name="hostInfo">Host info.</param>
+            <returns>New mock service info instance.</returns>
+        </member>
+        <member name="F:MindTouch.Dream.Test.MockService.CatchAllCallback">
+            <summary>
+            Synchronous catch all callback (mutually exclusive with <see cref="F:MindTouch.Dream.Test.MockService.CatchAllCallbackAsync"/>).
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.MockService.CatchAllCallbackAsync">
+            <summary>
+            Asynchronous catch all callback (mutually exclusive with <see cref="F:MindTouch.Dream.Test.MockService.CatchAllCallback"/>).
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.MockService.ServiceConfig">
+            <summary>
+            Service configuration.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockService.CatchAll(MindTouch.Dream.DreamContext,MindTouch.Dream.DreamMessage,MindTouch.Tasking.Result{MindTouch.Dream.DreamMessage})">
+            <summary>
+            Catch all feature.
+            </summary>
+            <param name="context"></param>
+            <param name="request"></param>
+            <param name="response"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.MockService.Start(MindTouch.Xml.XDoc,MindTouch.Tasking.Result)">
+            <summary>
+            Mock start.
+            </summary>
+            <param name="config"></param>
+            <param name="result"></param>
+            <returns></returns>
+        </member>
+        <member name="T:MindTouch.Dream.Test.MockServiceWithPrivateStorage">
+            <summary>
+            Provides an <see cref="T:MindTouch.Dream.IDreamService"/> skeleton implemenation with static instance accessor and callback mechanism to externally
+            intercept service behavior and private storage
+            </summary>
+        </member>
+        <member name="T:MindTouch.Dream.Test.Mock.MockPlugInvocation">
+            <summary>
+            Provides access to <see cref="T:MindTouch.Dream.Test.MockPlug"/> invocation values, used in defining the <see cref="!:MockPlug.Returns(System.Func&lt;MindTouch.Dream.Test.Mock.MockPlugInvocation,MindTouch.Dream.DreamMessage&gt;)"/> callback.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.Mock.MockPlugInvocation.Verb">
+            <summary>
+            Mock invocation verb.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.Mock.MockPlugInvocation.Uri">
+            <summary>
+            Mock invocation  uri.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.Mock.MockPlugInvocation.Request">
+            <summary>
+            Mock invocation request message.
+            </summary>
+        </member>
+        <member name="F:MindTouch.Dream.Test.Mock.MockPlugInvocation.ResponseHeaders">
+            <summary>
+            Headers the mock will attach to the returned message.
+            </summary>
+        </member>
+        <member name="T:MindTouch.Dream.Test.ResultTestEx">
+            <summary>
+            Provides extension methods for writing mock objects returning <see cref="T:MindTouch.Tasking.Result"/> instances easier.
+            </summary>
+        </member>
+        <member name="M:MindTouch.Dream.Test.ResultTestEx.WithReturn(MindTouch.Tasking.Result)">
+            <summary>
+            Set <see cref="M:MindTouch.Tasking.Result.Return"/> on a result instance, returning the instance.
+            </summary>
+            <param name="result">Result instance extension method is called on.</param>
+            <returns>Same result instance extension method was called on.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.ResultTestEx.WithReturn``1(MindTouch.Tasking.Result{``0},``0)">
+            <summary>
+            Set a value via <see cref="M:MindTouch.Tasking.Result`1.Return(`0)"/> on a result instance, returning the instance.
+            </summary>
+            <typeparam name="T">Type of value to set on result.</typeparam>
+            <param name="result">Result instance extension method is called on.</param>
+            <param name="value">Value to set on result</param>
+            <returns>Same result instance extension method was called on.</returns>
+        </member>
+        <member name="M:MindTouch.Dream.Test.ResultTestEx.AsResult``1(``0)">
+            <summary>
+            Convert a value into a <see cref="T:MindTouch.Tasking.Result`1"/> instance containing that value.
+            </summary>
+            <typeparam name="T">Type of value.</typeparam>
+            <param name="value">Value instance.</param>
+            <returns>New result instance.</returns>
+        </member>
+    </members>
+</doc>

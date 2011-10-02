@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using FoireMuses.Core.Interfaces;
 using MindTouch.Tasking;
-using LoveSeat;
+using DreamSeat;
 using FoireMuses.Core.Utils;
 using FoireMuses.Core.Business;
 using Newtonsoft.Json.Linq;
@@ -90,19 +90,6 @@ if(doc.otype && doc.otype=='source' && doc.name)
 			d.Rev = rev;
 
 			CouchDatabase.DeleteDocument(d, new Result<JObject>()).WhenDone(
-				a =>
-				{
-					aResult.Return(true);
-				},
-				aResult.Throw
-				);
-			return aResult;
-		}
-
-		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)
-		{
-
-			CouchDatabase.AddAttachment(id, file, fileName, new Result<JObject>()).WhenDone(
 				a =>
 				{
 					aResult.Return(true);

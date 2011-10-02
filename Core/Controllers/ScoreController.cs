@@ -160,9 +160,9 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)
+		public Result<bool> AddAttachment(string id, Stream file, long anAttachmentLength, string fileName, Result<bool> aResult)
 		{
-			theScoreDataMapper.AddAttachment(id, file, fileName, new Result<bool>()).WhenDone(
+			theScoreDataMapper.AddAttachment(id, file,anAttachmentLength, fileName, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -313,9 +313,31 @@ namespace FoireMuses.Core.Controllers
 
 		private Yield AttachMusicXmlHelper(IScore aScore, XDoc aMusicXmlDoc, bool overwriteMusicXmlValues, Result<IScore> aResult)
 		{
+			XScore musicXml = new XScore(aMusicXmlDoc);
+			bool hasNotes = false;
+			foreach (var p in musicXml.Parts)
+			{
+				foreach (var m in p.Measures)
+				{
+					if (m.Notes.Count() > 0)
+					{
+						hasNotes = true;
+						break;
+					}
+				}
+				if(hasNotes)
+					break;
+			}
+
+			if(!hasNotes)
+			{
+				aResult.Return(aScore);
+				yield break;
+			}
+
+
 			if (overwriteMusicXmlValues)
 			{
-				XScore musicXml = new XScore(aMusicXmlDoc);
 				aScore.CodageMelodiqueRISM = musicXml.GetCodageMelodiqueRISM();
 				aScore.CodageParIntervalles = musicXml.GetCodageParIntervalle();
 				aScore.Title = musicXml.MovementTitle;
@@ -333,8 +355,8 @@ namespace FoireMuses.Core.Controllers
 				yield return Insert(aScore, result);
 			}
 
-			using(TemporaryFile inputFile = new TemporaryFile())
-			using(TemporaryFile outputFile = new TemporaryFile())
+			using(TemporaryFile inputFile = new TemporaryFile(".xml",false))
+			using(TemporaryFile outputFile = new TemporaryFile(".png",false))
 			{
 				theLogger.Info("Saving xdoc to " + inputFile.Path);
 				File.Delete(inputFile.Path);
@@ -346,14 +368,19 @@ namespace FoireMuses.Core.Controllers
 				int i = 1;
 				foreach (string pngFile in pngsFilePath)
 				{
-					yield return AddAttachment(result.Value.Id, File.OpenRead(pngFile), "$partition" + i + ".png", new Result<bool>());
+					using(Stream pngStream = File.OpenRead(pngFile))
+					{
+						yield return AddAttachment(result.Value.Id, pngStream,pngStream.Length, "$partition" + i + ".png", new Result<bool>());
+					}
 					File.Delete(pngFile);
 					i++;
 				}
 			}
 			//attach music xml to the created /updated score
-			Stream stream = new MemoryStream(aMusicXmlDoc.ToBytes());
-			yield return AddAttachment(result.Value.Id, stream, "$musicxml.xml", new Result<bool>());
+			using(Stream stream = new MemoryStream(aMusicXmlDoc.ToBytes()))
+			{
+				yield return AddAttachment(result.Value.Id, stream,stream.Length, "$musicxml.xml", new Result<bool>());
+			}
 			aResult.Return(result.Value);
 		}
 	}

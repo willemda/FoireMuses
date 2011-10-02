@@ -5,8 +5,8 @@ using System.Text;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Loveseat.Business;
 using FoireMuses.Core.Interfaces;
-using LoveSeat;
-using LoveSeat.Interfaces;
+using DreamSeat;
+using DreamSeat.Interfaces;
 using FoireMuses.Core.Helpers;
 
 namespace FoireMuses.Core.Business

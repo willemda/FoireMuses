@@ -98,10 +98,11 @@ namespace FoireMuses.Core.Interfaces
 		/// </summary>
 		/// <param name="aDocumentId">id of the document</param>
 		/// <param name="aStream">Stream to the file to attach</param>
+		/// <param name="anAttachmentLength">Attachment length</param>
 		/// <param name="aFileName">File Name</param>
 		/// <param name="aResult">a Result</param>
 		/// <returns></returns>
-		Result<bool> AddAttachment(string aDocumentId, Stream aStream, string aFileName, Result<bool> aResult);
+		Result<bool> AddAttachment(string aDocumentId, Stream aStream, long anAttachmentLength, string aFileName, Result<bool> aResult);
 
 		/// <summary>
 		/// Retrieve an attachment

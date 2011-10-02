@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using LoveSeat;
+using DreamSeat;
 using MindTouch.Tasking;
 using System.IO;
 using Newtonsoft.Json.Linq;
@@ -38,9 +38,9 @@ namespace FoireMuses.Core.Loveseat
 			return anObject.ToString();
 		}
 
-		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)
+		public Result<bool> AddAttachment(string id, Stream file, long anAttachmentLength, string fileName, Result<bool> aResult)
 		{
-			CouchDatabase.AddAttachment(id, file, fileName, new Result<JObject>()).WhenDone(
+			CouchDatabase.AddAttachment(id, file, anAttachmentLength, fileName, new Result<JObject>()).WhenDone(
 				a => aResult.Return(true),
 				aResult.Throw
 				);

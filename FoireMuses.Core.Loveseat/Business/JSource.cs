@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using LoveSeat;
+using DreamSeat;
 using Newtonsoft.Json.Linq;
 using FoireMuses.Core.Interfaces;
-using LoveSeat.Interfaces;
+using DreamSeat.Interfaces;
 using FoireMuses.Core.Loveseat.Business;
 using FoireMuses.Core.Helpers;
 

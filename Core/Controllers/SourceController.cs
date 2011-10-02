@@ -63,9 +63,9 @@ namespace FoireMuses.Core.Controllers
 				);
 			return aResult;
 		}
-		public Result<bool> AddAttachment(string id, Stream file, string fileName, Result<bool> aResult)
+		public Result<bool> AddAttachment(string id, Stream file,long anAttachmentLength, string fileName, Result<bool> aResult)
 		{
-			theSourceDataMapper.AddAttachment(id, file, fileName, new Result<bool>()).WhenDone(
+			theSourceDataMapper.AddAttachment(id, file, anAttachmentLength, fileName, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);

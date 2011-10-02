@@ -68,9 +68,9 @@ namespace FoireMuses.Core.Controllers
 				);
 			return aResult;
 		}
-		public Result<bool> AddAttachment(string aSourcePageId, Stream aFile, string aFileName, Result<bool> aResult)
+		public Result<bool> AddAttachment(string aSourcePageId, Stream aFile, long anAttachmentLength, string aFileName, Result<bool> aResult)
 		{
-			theSourcePageDataMapper.AddAttachment(aSourcePageId, aFile, aFileName, new Result<bool>()).WhenDone(
+			theSourcePageDataMapper.AddAttachment(aSourcePageId, aFile, anAttachmentLength, aFileName, new Result<bool>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);
@@ -143,12 +143,12 @@ namespace FoireMuses.Core.Controllers
 
 			return aResult;
 		}
-		public Result<bool> AddFascimile(string aSourcePageId, Stream aFile, Result<bool> aResult)
+		public Result<bool> AddFascimile(string aSourcePageId, Stream aFile, long anAttachmentLength, Result<bool> aResult)
 		{
 			this.Retrieve(aSourcePageId, new Result<ISourcePage>()).WhenDone(
 				a =>
 				{
-					this.AddAttachment(aSourcePageId, aFile, "$fascimile_" + a.PageNumber, new Result<bool>()).WhenDone(
+					this.AddAttachment(aSourcePageId, aFile,anAttachmentLength,  "$fascimile_" + a.PageNumber, new Result<bool>()).WhenDone(
 						aResult.Return,
 						aResult.Throw
 						);
@@ -184,10 +184,12 @@ namespace FoireMuses.Core.Controllers
 					page.DisplayPageNumber = int.Parse(number);
 					page.SourceId = aSourcePageId;
 					page = Context.Current.Instance.SourcePageController.Insert(page, new Result<ISourcePage>()).Wait();
-					Stream fasc = new MemoryStream();
-					zis.CopyTo(fasc, zis.Length);
-					fasc.Position = 0;
-					Context.Current.Instance.SourcePageController.AddFascimile(page.Id, fasc, new Result<bool>()).Wait();
+					using (Stream fasc = new MemoryStream())
+					{
+						zis.CopyTo(fasc, zis.Length);
+						fasc.Position = 0;
+						Context.Current.Instance.SourcePageController.AddFascimile(page.Id, fasc,fasc.Length, new Result<bool>()).Wait();
+					}
 				}
 			}
 			aResult.Return(true);

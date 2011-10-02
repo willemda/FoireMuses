@@ -34,7 +34,7 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		public Result<bool> AddAttachment(string aDocumentId, Stream aStream, string aFileName, Result<bool> aResult)
+		public Result<bool> AddAttachment(string aDocumentId, Stream aStream, long anAttachmentLength, string aFileName, Result<bool> aResult)
 		{
 			throw new NotImplementedException();
 		}
