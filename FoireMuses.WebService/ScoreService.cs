@@ -189,12 +189,12 @@ namespace FoireMuses.WebService
 		}
 
 		[DreamFeature("POST:scores/{id}/attachments/{filename}", "Add an file to the source")]
-		public Yield AddAttachment(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+		public Yield AddAttachment(DreamContext aContext, DreamMessage aRequest, Result<DreamMessage> aResponse)
 		{
-			Stream file = request.ToStream();
+			Stream file = aRequest.ToStream();
 			Result<bool> result;
-			yield return result = Context.Current.Instance.ScoreController.AddAttachment(context.GetParam("id"), file,request.ContentLength, context.GetParam("filename"), new Result<bool>());
-			response.Return(DreamMessage.Ok());
+			yield return result = Context.Current.Instance.ScoreController.AddAttachment(aContext.GetParam("id"), file,aRequest.ContentLength, aContext.GetParam("filename"), new Result<bool>());
+			aResponse.Return(DreamMessage.Ok());
 		}
 
 		[DreamFeature("DELETE:scores/{id}", "Delete a score")]

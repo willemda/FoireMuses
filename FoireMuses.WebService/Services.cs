@@ -7,32 +7,31 @@ using MindTouch.Xml;
 using FoireMuses.Core;
 using MindTouch.Tasking;
 using Autofac;
+using FoireMuses.Core.Interfaces;
+using MindTouch.Web;
 
 namespace FoireMuses.WebService
 {
+	using Yield = IEnumerator<IYield>;
 
-	using Yield = System.Collections.Generic.IEnumerator<MindTouch.Tasking.IYield>;
-	using FoireMuses.Core.Interfaces;
-	using MindTouch.Web;
-
-	[DreamService("Foire Muses", "Foire Muses",
-		Info = "foire muses",
+	[DreamService("Foiremuses", "Foiremuses",
+		Info = "Foiremuses service",
 		SID = new string[] { "http://foiremuses.org/service" }
 	)]
 	public partial class Services : DreamService
 	{
-
-		private InstanceFactory theFactory;
-
 		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(Services));
 
+		private InstanceFactory theFactory;
+		private  const string FOIREMUSES_IMPERSONATE_HEADER = "FoireMusesImpersonate";
+
 		[DreamFeature("GET:info", "Information about the service")]
-		public Yield GetInfo(DreamContext context, DreamMessage request, Result<DreamMessage> response)
+		public Yield GetInfo(DreamContext aContext, DreamMessage aRequest, Result<DreamMessage> aResponse)
 		{
 			XDoc xmlInfo = new XDoc("info");
 			xmlInfo.Elem("User", Context.Current.User);
-			xmlInfo.Elem("About", "Foire muses web service @ 2011");
-			response.Return(DreamMessage.Ok(MimeType.XML, xmlInfo));
+			xmlInfo.Elem("About", "Foiremuses web service (c) 2011 Vincent DARON / Danny WILLEM");
+			aResponse.Return(DreamMessage.Ok(MimeType.XML, xmlInfo));
 			yield break;
 		}
 
@@ -46,58 +45,54 @@ namespace FoireMuses.WebService
 			}
 		}
 
-
-		protected override Yield Start(XDoc config, IContainer container, Result result)
+		protected override Yield Start(XDoc aConfig, IContainer aContainer, Result aResult)
 		{
 			Result res;
-			yield return res = Coroutine.Invoke(base.Start, config, new Result());
+			yield return res = Coroutine.Invoke(base.Start, aConfig, new Result());
 			res.Confirm();
 
-			theFactory = new InstanceFactory(container, config);
-			result.Return();
+			theFactory = new InstanceFactory(aContainer, aConfig);
+			aResult.Return();
 		}
 
-		private Yield SetContext(DreamContext context, DreamMessage request, Result<DreamMessage> response)	
+		private Yield SetContext(DreamContext aContext, DreamMessage aRequest, Result<DreamMessage> aResponse)
 		{
-			Context ctx = new Context(theFactory.GetInstance(context, request));
+			Context ctx = new Context(theFactory.GetInstance(aContext, aRequest));
 
-			//todo: fix this, find real auth
-			Result<IUser> result = new Result<IUser>();
+			//TODO: fix this, find real auth
 			string username, password;
-			if (!HttpUtil.GetAuthentication(context.Uri, request.Headers, out username, out password))
+			if (!HttpUtil.GetAuthentication(aContext.Uri, aRequest.Headers, out username, out password))
 			{
-				response.Return(DreamMessage.AccessDenied("foire muses api", "no auth"));
+				aResponse.Return(DreamMessage.AccessDenied("foiremuses api", "no auth"));
 				yield break;
 			}
-			else
+
+			Result<IUser> user;
+			yield return user = ctx.Instance.UserController.Retrieve(username, new Result<IUser>());
+			if (user.Value == null)
 			{
-				Result<IUser> user;
-				yield return user = ctx.Instance.UserController.Retrieve(username, new Result<IUser>());
-				if (user.Value == null)
+				aResponse.Return(DreamMessage.AccessDenied("foiremuses api", "no auth"));
+				yield break;
+			}
+			if (user.Value.IsAdmin)
+			{
+				if (aRequest.Headers[FOIREMUSES_IMPERSONATE_HEADER] != null)
 				{
-					response.Return(DreamMessage.AccessDenied("foire muses api", "no auth"));
-					yield break;
-				}
-				if (user.Value.IsAdmin)
-				{
-					if (request.Headers["FoireMusesImpersonate"] != null)
-					{
-						//act like real user
-						ctx.User = ctx.Instance.UserController.Retrieve(request.Headers["FoireMusesImpersonate"], new Result<IUser>()).Wait();
-					}
-					else
-					{
-						ctx.User = user.Value;
-					}
+					//act like real user
+					ctx.User = ctx.Instance.UserController.Retrieve(aRequest.Headers[FOIREMUSES_IMPERSONATE_HEADER], new Result<IUser>()).Wait();
 				}
 				else
 				{
 					ctx.User = user.Value;
 				}
 			}
+			else
+			{
+				ctx.User = user.Value;
+			}
 			ctx.AttachToCurrentTaskEnv();
 			//create context and attach
-			response.Return(request);
+			aResponse.Return(aRequest);
 			yield break;
 		}
 	}

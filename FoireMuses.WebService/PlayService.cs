@@ -68,13 +68,17 @@ namespace FoireMuses.WebService
 		[DreamFeatureParam("{rev}", "String", "Play revision id")]
 		public Yield UpdatePlay(DreamContext context, DreamMessage request, Result<DreamMessage> response)
 		{
+			string playId = context.GetParam("id");
+			string playRev = context.GetParam("rev");
+
 			IPlay play = Context.Current.Instance.PlayController.FromJson(request.ToText());
+
 			Result<IPlay> result = new Result<IPlay>();
-			yield return Context.Current.Instance.PlayController.Update(context.GetParam("id"), context.GetParam("rev"), play, result);
+
+			yield return Context.Current.Instance.PlayController.Update(playId,playRev, play, result);
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, Context.Current.Instance.PlayController.ToJson(result.Value)));
 		}
-
 
 		[DreamFeature("DELETE:plays/{id}", "Delete a play")]
 		[DreamFeatureParam("{id}", "String", "play id")]
@@ -86,8 +90,5 @@ namespace FoireMuses.WebService
 
 			response.Return(DreamMessage.Ok(MimeType.JSON, result.Value.ToString()));
 		}
-
 	}
-
-
 }
