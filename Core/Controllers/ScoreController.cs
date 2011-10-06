@@ -340,8 +340,8 @@ namespace FoireMuses.Core.Controllers
 			{
 				aScore.CodageMelodiqueRISM = musicXml.GetCodageMelodiqueRISM();
 				aScore.CodageParIntervalles = musicXml.GetCodageParIntervalle();
-				aScore.Title = musicXml.MovementTitle;
-				aScore.Composer = musicXml.Identification.Composer;
+				//aScore.Title = musicXml.MovementTitle;
+				//aScore.Composer = musicXml.Identification.Composer;
 				aScore.Verses = musicXml.GetText();
 			}
 
