@@ -19,5 +19,6 @@ namespace FoireMuses.Core.Interfaces
 		string ToJson<T>(SearchResult<T> aSearchResult)where T : ISearchResultItem;
 		string LilyToCodageMelodiqueRISM(string lily);
 		string LilyToCodageParIntervalles(string lily);
+		Instance Instance { get; set; }
 	}
 }

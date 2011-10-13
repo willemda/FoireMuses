@@ -83,6 +83,7 @@ namespace FoireMuses.Core
 			PlayController = container.Resolve<IPlayController>();
 			ConverterFactory = container.Resolve<IConverterFactory>();
 			IndexController = container.Resolve<IIndexController>();
+			IndexController.Instance = this;
 			SourcePageController = container.Resolve<ISourcePageController>();
 		}
 	}

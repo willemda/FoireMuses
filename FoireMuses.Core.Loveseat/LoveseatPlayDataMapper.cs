@@ -103,7 +103,7 @@ function(doc){
 		{
 			aDocument.Id = aDocumentId;
 			aDocument.Rev = aRev;
-			CouchDatabase.CreateDocument<JPlay>(aDocument as JPlay, new Result<JPlay>()).WhenDone(
+			CouchDatabase.UpdateDocument<JPlay>(aDocument as JPlay, new Result<JPlay>()).WhenDone(
 				aResult.Return,
 				aResult.Throw
 				);

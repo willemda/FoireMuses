@@ -33,6 +33,7 @@ using MusicXml;
 namespace FoireMuses.Core.Controllers
 {
 	using Yield = IEnumerator<IYield>;
+using System.Text;
 
 	public class ScoreController : IScoreController
 	{
@@ -60,7 +61,7 @@ namespace FoireMuses.Core.Controllers
 		{
 			ArgCheck.NotNull("aScore", aScore);
 			ArgCheck.NotNull("aResult", aResult);
-
+			
 			Coroutine.Invoke(CreateHelper, aScore, new Result<IScore>()).WhenDone(
 				aResult.Return,
 				aResult.Throw

@@ -29,7 +29,7 @@ namespace FoireMuses.Core.Loveseat.Business
 		{
 			get
 			{
-				return this["air"].Value<int>();
+				return this["air"].Value<int?>();
 			}
 			set
 			{
@@ -98,7 +98,7 @@ namespace FoireMuses.Core.Loveseat.Business
 		{
 			get
 			{
-				return this["tome"].Value<int?>();
+				return this["tome"] != null ? this["tome"].Value<int?>() : default(int?);
 			}
 			set
 			{
@@ -110,7 +110,7 @@ namespace FoireMuses.Core.Loveseat.Business
 		{
 			get
 			{
-				return this["volume"].Value<int?>();
+				return this["volume"] != null ? this["volume"].Value<int?>() : default(int?);
 			}
 			set
 			{

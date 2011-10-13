@@ -10,8 +10,9 @@ namespace FoireMuses.Core.Interfaces
 		string Id { get; set; }
 		string Title { get; set; }
 		string Editor { get; set; }
-		string Music { get; set; }
 		string Verses { get; set; }
 		string Composer { get; set; }
+		string MusicalSourceReferenceText { get; set; }
+		string TextualSourceReferenceText { get; set; }
 	}
 }

@@ -23,8 +23,7 @@ namespace FoireMuses.Core.Loveseat
 
 		public event EventHandler<EventArgs<ISourcePage>> SourcePageChanged;
 
-		private CouchContinuousChanges<JDocument> Changes;
-		private ChangeOptions theOptions;
+		private readonly ChangeOptions theOptions;
 		private readonly CouchDatabase theCouchDatabase;
 		private readonly CouchClient theCouchClient;
 
@@ -43,6 +42,7 @@ namespace FoireMuses.Core.Loveseat
 		private void OnChanged(object sender, CouchChangeResult<JDocument> aChange){
 			SetSequence(aChange.Sequence);
 			JToken jtoken;
+
 			aChange.Doc.TryGetValue("otype", out jtoken);
 			if(jtoken == null)
 				return;

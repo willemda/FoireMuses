@@ -15,7 +15,9 @@ namespace FoireMuses.Core
 		public string Composer { get; set; }
 		public string Editor { get; set; }
 		public string Verses { get; set; }
-		public string Music { get; set; }
+		public string MusicalSourceReferenceText { get; set; }
+		public string TextualSourceReferenceText { get; set; }
+
 		public string ToJson()
 		{
 			JObject jobject = new JObject();
@@ -24,7 +26,8 @@ namespace FoireMuses.Core
 			jobject.AddCheck("composer", Composer);
 			jobject.AddCheck("editor", Editor);
 			jobject.AddCheck("verses", Verses);
-			jobject.AddCheck("music", Music);
+			jobject.AddCheck("musicalSourceReferenceText", MusicalSourceReferenceText);
+			jobject.AddCheck("textualSourceReferenceText", TextualSourceReferenceText);
 			return jobject.ToString();
 		}
 	}

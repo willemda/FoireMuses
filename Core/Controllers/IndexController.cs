@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FoireMuses.Core.Utils;
 using Lucene.Net.Store;
 using Lucene.Net.Index;
 using Lucene.Net.Analysis.Standard;
@@ -20,29 +21,34 @@ namespace FoireMuses.Core.Controllers
 {
 	public class IndexController : IIndexController
 	{
-		private Directory directory;
-		private IndexWriter writer;
-		private PerFieldAnalyzerWrapper perFieldAnalyzer;
-		private INotificationManager theNotificationManager;
 		private static readonly log4net.ILog theLogger = log4net.LogManager.GetLogger(typeof(IndexController));
+		private static readonly string[] thePitches = new[] { "c", "ces", "cis", "d", "des", "dis", "e", "f", "fes", "fis", "g", "ges", "gis", "a", "aes", "ais", "b" };
+		private static readonly int[] thePitchesValue = new[] { 0, 1, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 8, 9, 10, 10, 11 };
 
-		public IndexController(INotificationManager notif)
+		private readonly Directory theDirectory;
+		private readonly IndexWriter theWriter;
+		private readonly PerFieldAnalyzerWrapper thePerFieldAnalyzer;
+		private readonly INotificationManager theNotificationManager;
+
+		public Instance Instance { get; set; }
+
+		public IndexController(INotificationManager aNotificationManager)
 		{
 			theLogger.Info("Creation of the IndexController");
-			theNotificationManager = notif;
-			directory = FSDirectory.Open(new System.IO.DirectoryInfo(System.IO.Path.Combine(Environment.CurrentDirectory,"LuceneIndex")));
+			theNotificationManager = aNotificationManager;
+			theDirectory = FSDirectory.Open(new System.IO.DirectoryInfo(System.IO.Path.Combine(Environment.CurrentDirectory,"LuceneIndex")));
 			Analyzer whiteSpaceAnalyzer = new WhitespaceAnalyzer();
 			Analyzer standardAnalyzer = new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29);
 			Analyzer keywordAnalyzer = new KeywordAnalyzer();
-			perFieldAnalyzer = new PerFieldAnalyzerWrapper(standardAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("codageRythmique", whiteSpaceAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("codageMelodiqueRISM", whiteSpaceAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("codageParIntervalles", whiteSpaceAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("otype", keywordAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("sourceId", keywordAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("id", keywordAnalyzer);
-			perFieldAnalyzer.AddAnalyzer("rev", keywordAnalyzer);
-			writer = new IndexWriter(directory, perFieldAnalyzer, !IndexReader.IndexExists(directory), IndexWriter.MaxFieldLength.LIMITED);
+			thePerFieldAnalyzer = new PerFieldAnalyzerWrapper(standardAnalyzer);
+			thePerFieldAnalyzer.AddAnalyzer("codageRythmique", whiteSpaceAnalyzer);
+			thePerFieldAnalyzer.AddAnalyzer("codageMelodiqueRISM", whiteSpaceAnalyzer);
+			thePerFieldAnalyzer.AddAnalyzer("codageParIntervalles", whiteSpaceAnalyzer);
+			thePerFieldAnalyzer.AddAnalyzer("otype", keywordAnalyzer);
+			thePerFieldAnalyzer.AddAnalyzer("sourceId", keywordAnalyzer);
+			thePerFieldAnalyzer.AddAnalyzer("id", keywordAnalyzer);
+			thePerFieldAnalyzer.AddAnalyzer("rev", keywordAnalyzer);
+			theWriter = new IndexWriter(theDirectory, thePerFieldAnalyzer, !IndexReader.IndexExists(theDirectory), IndexWriter.MaxFieldLength.LIMITED);
 			theNotificationManager.ScoreChanged += theNotificationManager_ScoreChanged;
 			theNotificationManager.PlayChanged += theNotificationManager_PlayChanged;
 			theNotificationManager.SourceChanged += theNotificationManager_SourceChanged;
@@ -51,31 +57,29 @@ namespace FoireMuses.Core.Controllers
 			theLogger.Info("IndexController created");
 		}
 
-		void theNotificationManager_SourcePageChanged(object sender, EventArgs<ISourcePage> e)
+		private void theNotificationManager_SourcePageChanged(object sender, EventArgs<ISourcePage> e)
 		{
 			theLogger.Info("Source Page Changed - updating index");
 			UpdateSourcePage(e.Item, new Result()).Wait();
 		}
 
-		void theNotificationManager_SourceChanged(object sender, EventArgs<ISource> e)
+		private void theNotificationManager_SourceChanged(object sender, EventArgs<ISource> e)
 		{
 			theLogger.Info("Source Changed - updating index");
 			UpdateSource(e.Item, new Result()).Wait();
 		}
 
-		void theNotificationManager_PlayChanged(object sender, EventArgs<IPlay> e)
+		private void theNotificationManager_PlayChanged(object sender, EventArgs<IPlay> e)
 		{
 			theLogger.Info("Play Changed - updating index");
 			//throw new NotImplementedException();
 		}
 
-		void theNotificationManager_ScoreChanged(object sender, EventArgs<IScore> e)
+		private void theNotificationManager_ScoreChanged(object sender, EventArgs<IScore> e)
 		{
 			theLogger.Info("Score Changed - updating index");
 			UpdateScore(e.Item, new Result()).Wait();
 		}
-
-
 
 		public Result AddScore(IScore score, Result aResult)
 		{
@@ -100,44 +104,39 @@ namespace FoireMuses.Core.Controllers
 			if (score.Title != null)
 			{
 				string[] titleParts = score.Title.Split(new char[] { ' ' });
-				string titleWithoutSpaces = "";
-				foreach (string part in titleParts)
-				{
-					titleWithoutSpaces += part;
-				}
+				string titleWithoutSpaces = titleParts.Aggregate("", (current, part) => current + part);
 				d.AddCheck("titleWithoutSpaces", titleWithoutSpaces, Field.Store.YES, Field.Index.ANALYZED);
 			}
 			d.AddCheck("strophe", score.Stanza, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("coirault", score.Coirault, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("delarue", score.Delarue, Field.Store.NO, Field.Index.ANALYZED);
+
+			d.AddCheck("musicalSourceReferenceText", GetMusicalSourceText(score.MusicalSource),Field.Store.YES,Field.Index.NO);
+			d.AddCheck("textualSourceReferenceText", GetTextualSourceText(score.TextualSource), Field.Store.YES, Field.Index.NO);
+
 			string tags = "";
 			if (score.Tags != null)
 			{
-				foreach (string tag in score.Tags)
-				{
-					tags += tag + " ";
-				}
+				tags = score.Tags.Aggregate(tags, (current, tag) => current + (tag + " "));
 				d.AddCheck("tags", tags, Field.Store.YES, Field.Index.ANALYZED);
 			}
-			lock (writer)
+			lock (theWriter)
 			{
-				writer.AddDocument(d, perFieldAnalyzer);
-				writer.Commit();
+				theWriter.AddDocument(d, thePerFieldAnalyzer);
+				theWriter.Commit();
 			}
 			aResult.Return();
 			return aResult;
 		}
-
 
 		public Result DeleteScore(string id, Result aResult)
 		{
-			QueryParser queryParser = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "id", perFieldAnalyzer);
+			QueryParser queryParser = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "id", thePerFieldAnalyzer);
 			Query query = queryParser.Parse(id);
-			writer.DeleteDocuments(query);
+			theWriter.DeleteDocuments(query);
 			aResult.Return();
 			return aResult;
 		}
-
 
 		public Result UpdateScore(IScore score, Result aResult)
 		{
@@ -169,25 +168,23 @@ namespace FoireMuses.Core.Controllers
 				}
 				d.AddCheck("tags", tags, Field.Store.YES, Field.Index.ANALYZED);
 			}
-			lock (writer)
+			lock (theWriter)
 			{
-				writer.AddDocument(d, perFieldAnalyzer);
-				writer.Commit();
+				theWriter.AddDocument(d, thePerFieldAnalyzer);
+				theWriter.Commit();
 			}
 			aResult.Return();
 			return aResult;
 		}
 
-
 		public Result DeleteSource(string id, Result aResult)
 		{
-			QueryParser queryParser = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "id", perFieldAnalyzer);
+			QueryParser queryParser = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "id", thePerFieldAnalyzer);
 			Query query = queryParser.Parse(id);
-			writer.DeleteDocuments(query);
+			theWriter.DeleteDocuments(query);
 			aResult.Return();
 			return aResult;
 		}
-
 
 		public Result UpdateSource(ISource source, Result aResult)
 		{
@@ -208,25 +205,23 @@ namespace FoireMuses.Core.Controllers
 			d.AddCheck("textContent", source.TextContent, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("sourceId", source.SourceId, Field.Store.YES, Field.Index.ANALYZED);
 			d.AddCheck("creatorId", source.CreatorId, Field.Store.YES, Field.Index.NOT_ANALYZED);
-			lock (writer)
+			lock (theWriter)
 			{
-				writer.AddDocument(d, perFieldAnalyzer);
-				writer.Commit();
+				theWriter.AddDocument(d, thePerFieldAnalyzer);
+				theWriter.Commit();
 			}
 			aResult.Return();
 			return aResult;
 		}
 
-
 		public Result DeleteSourcePage(string id, Result aResult)
 		{
-			QueryParser queryParser = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "id", perFieldAnalyzer);
+			QueryParser queryParser = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "id", thePerFieldAnalyzer);
 			Query query = queryParser.Parse(id);
-			writer.DeleteDocuments(query);
+			theWriter.DeleteDocuments(query);
 			aResult.Return();
 			return aResult;
 		}
-
 
 		public Result UpdateSourcePage(ISourcePage aSourcePage, Result aResult)
 		{
@@ -235,7 +230,6 @@ namespace FoireMuses.Core.Controllers
 			aResult.Return();
 			return aResult;
 		}
-
 
 		public string ToJson<T>(SearchResult<T> aSearchResult) where T : ISearchResultItem
 		{
@@ -252,14 +246,13 @@ namespace FoireMuses.Core.Controllers
 			return jo.ToString();
 		}
 
-
 		public Result<SearchResult<IScoreSearchResult>> ScoreSearch(int max, int offset, string aLuceneQuery, Result<SearchResult<IScoreSearchResult>> aResult)
 		{
-			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "title", perFieldAnalyzer);
+			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "title", thePerFieldAnalyzer);
 			Query q = qp.Parse(aLuceneQuery);
 			string toto = q.ToString();
 
-			IndexReader reader = IndexReader.Open(directory, true);
+			IndexReader reader = IndexReader.Open(theDirectory, true);
 			Searcher indexSearch = new IndexSearcher(reader);
 
 			TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
@@ -270,13 +263,7 @@ namespace FoireMuses.Core.Controllers
 			for (int i = offset; i < ToGo; i++)
 			{
 				Document d = reader.Document(topDocs.scoreDocs[i].doc);
-				ScoreSearchResult score = new ScoreSearchResult();
-				score.Id = d.ExtractValue("Id");
-				score.Title = d.ExtractValue("Title");
-				score.Composer = d.ExtractValue("Composer");
-				score.Editor = d.ExtractValue("Editor");
-				score.Verses = d.ExtractValue("Verses");
-				score.Music = d.ExtractValue("Music");
+				ScoreSearchResult score = GetScoreSearchResultFromDocument(d);
 				results.Add(score);
 			}
 			SearchResult<IScoreSearchResult> searchResult = new SearchResult<IScoreSearchResult>(results, offset, max, topDocs.totalHits);
@@ -284,10 +271,23 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
+		private ScoreSearchResult GetScoreSearchResultFromDocument(Document d)
+		{
+			ScoreSearchResult score = new ScoreSearchResult();
+			score.Id = d.ExtractValue("id");
+			score.Title = d.ExtractValue("title");
+			score.Composer = d.ExtractValue("composer");
+			score.Editor = d.ExtractValue("editor");
+			score.Verses = d.ExtractValue("verses");
+			score.MusicalSourceReferenceText = d.ExtractValue("musicalSourceReferenceText");
+			score.TextualSourceReferenceText = d.ExtractValue("textualSourceReferenceText");
+			return score;
+		}
+
 		public Result<SearchResult<IScoreSearchResult>> SearchScore(ScoreQuery aQuery, Result<SearchResult<IScoreSearchResult>> aResult)
 		{
 			theLogger.Info("Searching Score");
-			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "title", perFieldAnalyzer);
+			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "title", thePerFieldAnalyzer);
 
 			StringBuilder queryString = new StringBuilder();
 			queryString.Append("+otype:score ");
@@ -336,7 +336,7 @@ namespace FoireMuses.Core.Controllers
 			Query q = qp.Parse(queryString.ToString());
 			string toto = q.ToString();
 
-			IndexReader reader = IndexReader.Open(directory, true);
+			IndexReader reader = IndexReader.Open(theDirectory, true);
 			Searcher indexSearch = new IndexSearcher(reader);
 
 			TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
@@ -349,13 +349,7 @@ namespace FoireMuses.Core.Controllers
 			for (int i = aQuery.Offset; i < ToGo; i++)
 			{
 				Document d = reader.Document(topDocs.scoreDocs[i].doc);
-				ScoreSearchResult score = new ScoreSearchResult();
-				score.Id = d.ExtractValue("id");
-				score.Title = d.ExtractValue("title");
-				score.Composer = d.ExtractValue("composer");
-				score.Editor = d.ExtractValue("editor");
-				score.Verses = d.ExtractValue("verses");
-				score.Music = d.ExtractValue("music");
+				ScoreSearchResult score = GetScoreSearchResultFromDocument(d);
 				results.Add(score);
 			}
 			SearchResult<IScoreSearchResult> searchResult = new SearchResult<IScoreSearchResult>(results, aQuery.Offset, aQuery.Max, topDocs.totalHits);
@@ -365,16 +359,15 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-
 		public Result<SearchResult<IScoreSearchResult>> GetAllScores(int max, int offset, Result<SearchResult<IScoreSearchResult>> aResult)
 		{
-			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "title", perFieldAnalyzer);
+			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "title", thePerFieldAnalyzer);
 			StringBuilder queryString = new StringBuilder();
 			queryString.Append("+otype:score ");
 			Query q = qp.Parse(queryString.ToString());
 			string toto = q.ToString();
 
-			IndexReader reader = IndexReader.Open(directory, true);
+			IndexReader reader = IndexReader.Open(theDirectory, true);
 			if (reader.NumDocs() == 0)
 			{
 				aResult.Return(new SearchResult<IScoreSearchResult>(new List<IScoreSearchResult>(), 0, 0, 0));
@@ -392,13 +385,7 @@ namespace FoireMuses.Core.Controllers
 				for (int i = offset; i < ToGo; i++)
 				{
 					Document d = reader.Document(topDocs.scoreDocs[i].doc);
-					ScoreSearchResult score = new ScoreSearchResult();
-					score.Id = d.ExtractValue("id");
-					score.Title = d.ExtractValue("title");
-					score.Composer = d.ExtractValue("composer");
-					score.Editor = d.ExtractValue("editor");
-					score.Verses = d.ExtractValue("verses");
-					score.Music = d.ExtractValue("music");
+					ScoreSearchResult score = GetScoreSearchResultFromDocument(d);
 					results.Add(score);
 				}
 				SearchResult<IScoreSearchResult> searchResult = new SearchResult<IScoreSearchResult>(results, offset, max, topDocs.totalHits);
@@ -409,16 +396,15 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-
 		public Result<SearchResult<ISourceSearchResult>> GetAllSources(int max, int offset, Result<SearchResult<ISourceSearchResult>> aResult)
 		{
-			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "title", perFieldAnalyzer);
+			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "title", thePerFieldAnalyzer);
 			StringBuilder queryString = new StringBuilder();
 			queryString.Append("+otype:source ");
 			Query q = qp.Parse(queryString.ToString());
 			string toto = q.ToString();
 
-			IndexReader reader = IndexReader.Open(directory, true);
+			IndexReader reader = IndexReader.Open(theDirectory, true);
 			if (reader.NumDocs() == 0)
 			{
 				aResult.Return(new SearchResult<ISourceSearchResult>(new List<ISourceSearchResult>(), 0, 0, 0));
@@ -451,16 +437,15 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-
 		public Result<SearchResult<ISourcePageSearchResult>> GetAllPagesFromSource(string sourceId, int max, int offset, Result<SearchResult<ISourcePageSearchResult>> aResult)
 		{
-			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "title", perFieldAnalyzer);
+			QueryParser qp = new QueryParser(Lucene.Net.Util.Version.LUCENE_29, "title", thePerFieldAnalyzer);
 			StringBuilder queryString = new StringBuilder();
 			queryString.AppendFormat("+otype:sourcePage +sourceId:{0}", sourceId);
 			Query q = qp.Parse(queryString.ToString());
 			string toto = q.ToString();
 
-			IndexReader reader = IndexReader.Open(directory, true);
+			IndexReader reader = IndexReader.Open(theDirectory, true);
 			if (reader.NumDocs() == 0)
 			{
 				aResult.Return(new SearchResult<ISourcePageSearchResult>(new List<ISourcePageSearchResult>(), 0, 0, 0));
@@ -494,15 +479,9 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-
-		private string[] pitches = new string[] { "c", "ces", "cis", "d", "des", "dis", "e", "f", "fes", "fis", "g", "ges", "gis", "a", "aes", "ais", "b" };
-		private int[] pitchesValue = new int[] { 0, 1, 1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 8, 9, 10, 10, 11 };
-
-
-
 		public string LilyToCodageParIntervalles(string lily)
 		{
-			string cpi = "";
+			StringBuilder result = new StringBuilder();
 			string[] notes = lily.Split(new char[] { ' ' });
 			int lastNoteValue = -1;
 			foreach (string note in notes)
@@ -520,31 +499,30 @@ namespace FoireMuses.Core.Controllers
 				}
 				if (maNote == "r")
 					break;
-				for (int i = 0; i < pitches.Length; i++)
+				for (int i = 0; i < thePitches.Length; i++)
 				{
-					if (pitches[i] == maNote)
+					if (thePitches[i] == maNote)
 					{
-						valeur += pitchesValue[i];
+						valeur += thePitchesValue[i];
 						if (lastNoteValue == -1)
 						{
 							lastNoteValue = valeur;
 						}
 						else
 						{
-							cpi += " ";
-							cpi += valeur - lastNoteValue;
+							result.AppendFormat(" {0}", valeur - lastNoteValue);
 							lastNoteValue = valeur;
 						}
 						break;
 					}
 				}
 			}
-			return cpi;
+			return result.ToString();
 		}
 
 		public string LilyToCodageMelodiqueRISM(string lily)
 		{
-			string cpi = "0";
+			StringBuilder result = new StringBuilder("0");
 			string[] notes = lily.Split(new char[] { ' ' });
 			int lastNoteValue = -1;
 			foreach (string note in notes)
@@ -562,27 +540,126 @@ namespace FoireMuses.Core.Controllers
 				}
 				if (maNote == "r")
 					break;
-				for (int i = 0; i < pitches.Length; i++)
+				for (int i = 0; i < thePitches.Length; i++)
 				{
-					if (pitches[i] == maNote)
+					if (thePitches[i] == maNote)
 					{
-						valeur += pitchesValue[i];
+						valeur += thePitchesValue[i];
 						if (lastNoteValue == -1)
 						{
 							lastNoteValue = valeur;
 						}
 						else
 						{
-							cpi += " ";
-							cpi += valeur - lastNoteValue;
+							result.AppendFormat(" {0}", valeur - lastNoteValue);
 						}
 						break;
 					}
 				}
 			}
-			return cpi;
+			return result.ToString();
 		}
 
+		private string GetMusicalSourceText(IMusicalSource aMusicalSourceReference)
+		{
+			if ((aMusicalSourceReference != null) && (!String.IsNullOrEmpty(aMusicalSourceReference.SourceId)))
+			{
+				ISource source = Instance.SourceController.Retrieve(aMusicalSourceReference.SourceId, new Result<ISource>()).Wait();
+				if (source != null)
+				{
+					return GetMusicalSourceText(aMusicalSourceReference, source);
+				}
+			}
+			return null;
+		}
+		private string GetTextualSourceText(ITextualSource aTextualSourceReference)
+		{
+			if ((aTextualSourceReference != null) && (!String.IsNullOrEmpty(aTextualSourceReference.SourceId)))
+			{
+				ISource source = Instance.SourceController.Retrieve(aTextualSourceReference.SourceId, new Result<ISource>()).Wait();
+
+				IPlay play = null;
+				if (!String.IsNullOrEmpty(aTextualSourceReference.PieceId))
+				{
+					play = Instance.PlayController.Retrieve(aTextualSourceReference.PieceId, new Result<IPlay>()).Wait();
+				}
+
+				return GetTextualSourceText(aTextualSourceReference, source, play);
+			}
+			return null;
+		}
+		private static string GetMusicalSourceText(IMusicalSource aMusicalSourceReference, ISource aSource)
+		{
+			if (aMusicalSourceReference == null)
+				throw new ArgumentNullException("aMusicalSourceReference");
+			if (aSource == null)
+				return String.Empty;
+
+			StringBuilder result = new StringBuilder(GetSourceReferenceText(aMusicalSourceReference, aSource));
+
+			if (aMusicalSourceReference.IsSuggested && aMusicalSourceReference.IsSuggested)
+			{
+				result.Append(" (Suggestion)");
+			}
+
+			return result.ToString();
+		}
+		private static string GetTextualSourceText(ITextualSource aTextualSource, ISource aSource, IPlay aPlay)
+		{
+			if (aTextualSource == null)
+				throw new ArgumentNullException("aTextualSource");
+			if (aSource == null)
+				return String.Empty;
+
+			StringBuilder result = new StringBuilder(GetSourceReferenceText(aTextualSource, aSource));
+
+			if (aPlay != null)
+			{
+				result.Append(aPlay.Title);
+				if (aTextualSource.ActNumber.HasValue)
+				{
+					result.AppendFormat(", Act {0}", RomanNumber.ToRoman(aTextualSource.ActNumber.Value));
+				}
+				if (aTextualSource.SceneNumber.HasValue)
+				{
+					result.AppendFormat(", Scene {0}", aTextualSource.SceneNumber);
+				}
+			}
+
+			return result.ToString();
+		}
+		private static string GetSourceReferenceText(ISourceReference aSourceReference, ISource aSource)
+		{
+			if (aSourceReference == null)
+				throw new ArgumentNullException("aSourceReference");
+			if (aSource == null)
+				return String.Empty;
+
+			StringBuilder result = new StringBuilder(aSource.Name);
+
+			if (aSource.DateFrom.HasValue)
+			{
+				result.AppendFormat(" {0}", aSource.DateFrom.Value);
+			}
+			if (!String.IsNullOrEmpty(aSourceReference.Page))
+			{
+				result.AppendFormat(", Page {0}", aSourceReference.Page);
+			}
+			if (aSourceReference.AirNumber.HasValue)
+			{
+				result.AppendFormat(", Air {0}", aSourceReference.AirNumber.Value);
+			}
+			if (aSourceReference.Tome.HasValue)
+			{
+				result.AppendFormat(", Tome {0}", RomanNumber.ToRoman(aSourceReference.Tome.Value));
+			}
+			if (aSourceReference.Volume.HasValue)
+			{
+				result.AppendFormat(", Volume {0}", RomanNumber.ToRoman(aSourceReference.Volume.Value));
+			}
+
+			return result.ToString();
+		}
 	}
 
 	public static class DocumentHelper

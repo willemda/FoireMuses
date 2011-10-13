@@ -88,6 +88,7 @@
     <Compile Include="Instance.cs" />
     <Compile Include="InstanceFactory.cs" />
     <Compile Include="Interfaces\ISourcePageSearchResult.cs" />
+    <Compile Include="Interfaces\ISourceReference.cs" />
     <Compile Include="Interfaces\ISourceSearchResult.cs" />
     <Compile Include="Interfaces\ISourcePageController.cs" />
     <Compile Include="Interfaces\IBaseController.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="Interfaces\IScoreController.cs" />
     <Compile Include="Interfaces\ISourceController.cs" />
     <Compile Include="Utils\Constants.cs" />
+    <Compile Include="Utils\RomanNumber.cs" />
     <Compile Include="Utils\TemporaryFile.cs" />
     <Compile Include="Utils\XScoreHelper.cs" />
   </ItemGroup>
