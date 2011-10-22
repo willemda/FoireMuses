@@ -69,6 +69,7 @@
     <Compile Include="Business\JScore.cs" />
     <Compile Include="Business\JSource.cs" />
     <Compile Include="Business\JSourcePage.cs" />
+    <Compile Include="Business\JSourceReference.cs" />
     <Compile Include="Business\JTextualSource.cs" />
     <Compile Include="Business\JUser.cs" />
     <Compile Include="LoveseatSourcePageDataMapper.cs" />
