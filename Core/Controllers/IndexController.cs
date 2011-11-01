@@ -16,6 +16,7 @@ using FoireMuses.Core.Querys;
 using System.Collections;
 using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace FoireMuses.Core.Controllers
 {
@@ -29,13 +30,16 @@ namespace FoireMuses.Core.Controllers
 		private readonly IndexWriter theWriter;
 		private readonly PerFieldAnalyzerWrapper thePerFieldAnalyzer;
 		private readonly INotificationManager theNotificationManager;
+		private readonly IScoreDataMapper theScoreDataMapper;
 
 		public Instance Instance { get; set; }
 
-		public IndexController(INotificationManager aNotificationManager)
+		public IndexController(INotificationManager aNotificationManager, IScoreDataMapper aScoreDataMapper)
 		{
 			theLogger.Info("Creation of the IndexController");
 			theNotificationManager = aNotificationManager;
+			theScoreDataMapper = aScoreDataMapper;
+
 			theDirectory = FSDirectory.Open(new System.IO.DirectoryInfo(System.IO.Path.Combine(Environment.CurrentDirectory,"LuceneIndex")));
 			Analyzer whiteSpaceAnalyzer = new WhitespaceAnalyzer();
 			Analyzer standardAnalyzer = new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29);
@@ -111,8 +115,8 @@ namespace FoireMuses.Core.Controllers
 			d.AddCheck("coirault", score.Coirault, Field.Store.NO, Field.Index.ANALYZED);
 			d.AddCheck("delarue", score.Delarue, Field.Store.NO, Field.Index.ANALYZED);
 
-			d.AddCheck("musicalSourceReferenceText", GetMusicalSourceText(score.MusicalSource),Field.Store.YES,Field.Index.NO);
-			d.AddCheck("textualSourceReferenceText", GetTextualSourceText(score.TextualSource), Field.Store.YES, Field.Index.NO);
+			d.AddCheck("musicalSourceReference", GetMusicalSourceText(score),Field.Store.YES,Field.Index.NO);
+			d.AddCheck("textualSourceReference", GetTextualSourceText(score), Field.Store.YES, Field.Index.NO);
 
 			string tags = "";
 			if (score.Tags != null)
@@ -140,8 +144,8 @@ namespace FoireMuses.Core.Controllers
 
 		public Result UpdateScore(IScore score, Result aResult)
 		{
-			this.DeleteScore(score.Id, new Result());
-			this.AddScore(score, new Result());
+			DeleteScore(score.Id, new Result());
+			AddScore(score, new Result());
 			aResult.Return();
 			return aResult;
 		}
@@ -271,7 +275,7 @@ namespace FoireMuses.Core.Controllers
 			return aResult;
 		}
 
-		private ScoreSearchResult GetScoreSearchResultFromDocument(Document d)
+		private static ScoreSearchResult GetScoreSearchResultFromDocument(Document d)
 		{
 			ScoreSearchResult score = new ScoreSearchResult();
 			score.Id = d.ExtractValue("id");
@@ -279,8 +283,13 @@ namespace FoireMuses.Core.Controllers
 			score.Composer = d.ExtractValue("composer");
 			score.Editor = d.ExtractValue("editor");
 			score.Verses = d.ExtractValue("verses");
-			score.MusicalSourceReferenceText = d.ExtractValue("musicalSourceReferenceText");
-			score.TextualSourceReferenceText = d.ExtractValue("textualSourceReferenceText");
+
+			string json = d.ExtractValue("musicalSourceReference");
+			score.MusicalSourceReference = String.IsNullOrEmpty(json) ? null : JObject.Parse(json);
+
+			json = d.ExtractValue("textualSourceReference");
+			score.TextualSourceReference = String.IsNullOrEmpty(json) ? null : JObject.Parse(json);
+
 			return score;
 		}
 
@@ -294,11 +303,7 @@ namespace FoireMuses.Core.Controllers
 			if (!String.IsNullOrEmpty(aQuery.TitleWild))
 			{
 				string[] titleParts = aQuery.TitleWild.Split(new[] { ' ' });
-				string titleWithoutSpaces = "";
-				foreach (string part in titleParts)
-				{
-					titleWithoutSpaces += part;
-				}
+				string titleWithoutSpaces = titleParts.Aggregate(String.Empty, (aCurrent, aPart) => aCurrent + aPart);
 				queryString.AppendFormat("+titleWithoutSpaces:{0} ", titleWithoutSpaces + "*");
 			}
 			if (!String.IsNullOrEmpty(aQuery.Title))
@@ -560,105 +565,100 @@ namespace FoireMuses.Core.Controllers
 			return result.ToString();
 		}
 
-		private string GetMusicalSourceText(IMusicalSource aMusicalSourceReference)
+		private string GetMusicalSourceText(IScore aScore)
 		{
-			if ((aMusicalSourceReference != null) && (!String.IsNullOrEmpty(aMusicalSourceReference.SourceId)))
+			if (aScore.MusicalSource != null)
 			{
-				ISource source = Instance.SourceController.Retrieve(aMusicalSourceReference.SourceId, new Result<ISource>()).Wait();
-				if (source != null)
-				{
-					return GetMusicalSourceText(aMusicalSourceReference, source);
-				}
+				JObject json = JObject.Parse(theScoreDataMapper.ToJson(aScore));
+				return json["musicalSource"].ToString();
 			}
 			return null;
 		}
-		private string GetTextualSourceText(ITextualSource aTextualSourceReference)
+		private string GetTextualSourceText(IScore aScore)
 		{
-			if ((aTextualSourceReference != null) && (!String.IsNullOrEmpty(aTextualSourceReference.SourceId)))
+			if (aScore.MusicalSource != null)
 			{
-				ISource source = Instance.SourceController.Retrieve(aTextualSourceReference.SourceId, new Result<ISource>()).Wait();
-
-				IPlay play = null;
-				if (!String.IsNullOrEmpty(aTextualSourceReference.PieceId))
-				{
-					play = Instance.PlayController.Retrieve(aTextualSourceReference.PieceId, new Result<IPlay>()).Wait();
-				}
-
-				return GetTextualSourceText(aTextualSourceReference, source, play);
+				JObject json = JObject.Parse(theScoreDataMapper.ToJson(aScore));
+				return json["textualSource"].ToString();
 			}
 			return null;
 		}
-		private static string GetMusicalSourceText(IMusicalSource aMusicalSourceReference, ISource aSource)
+		private static JObject GetMusicalSourceText(IMusicalSource aMusicalSourceReference, ISource aSource)
 		{
 			if (aMusicalSourceReference == null)
 				throw new ArgumentNullException("aMusicalSourceReference");
-			if (aSource == null)
-				return String.Empty;
-
-			StringBuilder result = new StringBuilder(GetSourceReferenceText(aMusicalSourceReference, aSource));
-
-			if (aMusicalSourceReference.IsSuggested && aMusicalSourceReference.IsSuggested)
+			
+			JObject result = new JObject();
+			if (aSource != null)
 			{
-				result.Append(" (Suggestion)");
+				result = GetSourceReferenceText(aMusicalSourceReference, aSource);
+				if (aMusicalSourceReference.IsSuggested && aMusicalSourceReference.IsSuggested)
+				{
+					result.Add("suggested",true);
+				}
 			}
-
-			return result.ToString();
+			return result;
 		}
-		private static string GetTextualSourceText(ITextualSource aTextualSource, ISource aSource, IPlay aPlay)
+		private static JObject GetTextualSourceText(ITextualSource aTextualSource, ISource aSource, IPlay aPlay)
 		{
 			if (aTextualSource == null)
 				throw new ArgumentNullException("aTextualSource");
-			if (aSource == null)
-				return String.Empty;
 
-			StringBuilder result = new StringBuilder(GetSourceReferenceText(aTextualSource, aSource));
-
-			if (aPlay != null)
+			JObject result = new JObject();
+			if (aSource != null)
 			{
-				result.Append(aPlay.Title);
-				if (aTextualSource.ActNumber.HasValue)
+				result = GetSourceReferenceText(aTextualSource, aSource);
+
+				if (aPlay != null)
 				{
-					result.AppendFormat(", Act {0}", RomanNumber.ToRoman(aTextualSource.ActNumber.Value));
-				}
-				if (aTextualSource.SceneNumber.HasValue)
-				{
-					result.AppendFormat(", Scene {0}", aTextualSource.SceneNumber);
+					result.Add("playTitle",aPlay.Title);
+					if (aTextualSource.ActNumber.HasValue)
+					{
+						result.Add("act",aTextualSource.ActNumber.Value);
+					}
+					if (aTextualSource.SceneNumber.HasValue)
+					{
+						result.Add("scene", aTextualSource.SceneNumber.Value);
+					}
 				}
 			}
 
-			return result.ToString();
+			return result;
 		}
-		private static string GetSourceReferenceText(ISourceReference aSourceReference, ISource aSource)
+		private static JObject GetSourceReferenceText(ISourceReference aSourceReference, ISource aSource)
 		{
 			if (aSourceReference == null)
 				throw new ArgumentNullException("aSourceReference");
-			if (aSource == null)
-				return String.Empty;
 
-			StringBuilder result = new StringBuilder(aSource.Name);
+			JObject result = new JObject();
 
-			if (aSource.DateFrom.HasValue)
+			if (aSource != null)
 			{
-				result.AppendFormat(" {0}", aSource.DateFrom.Value);
-			}
-			if (!String.IsNullOrEmpty(aSourceReference.Page))
-			{
-				result.AppendFormat(", Page {0}", aSourceReference.Page);
-			}
-			if (aSourceReference.AirNumber.HasValue)
-			{
-				result.AppendFormat(", Air {0}", aSourceReference.AirNumber.Value);
-			}
-			if (aSourceReference.Tome.HasValue)
-			{
-				result.AppendFormat(", Tome {0}", RomanNumber.ToRoman(aSourceReference.Tome.Value));
-			}
-			if (aSourceReference.Volume.HasValue)
-			{
-				result.AppendFormat(", Volume {0}", RomanNumber.ToRoman(aSourceReference.Volume.Value));
+				result.Add("title",aSource.Name);
+
+				if (aSource.DateFrom.HasValue)
+				{
+					result.Add("dateFrom",aSource.DateFrom.Value);
+				}
+				if (!String.IsNullOrEmpty(aSourceReference.Page))
+				{
+					result.Add("page", aSourceReference.Page);
+				}
+				if (aSourceReference.AirNumber.HasValue)
+				{
+					result.Add("air",aSourceReference.AirNumber.Value);
+				}
+				if (aSourceReference.Tome.HasValue)
+				{
+					result.Add("tome", aSourceReference.Tome.Value);
+				}
+				if (aSourceReference.Volume.HasValue)
+				{
+					result.Add("volume", aSourceReference.Volume.Value);
+				}
 			}
 
-			return result.ToString();
+			return result;
 		}
 	}
 

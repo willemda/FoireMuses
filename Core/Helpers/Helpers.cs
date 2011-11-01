@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using MindTouch.Dream;
+using FoireMuses.Core.Interfaces;
 
 namespace FoireMuses.Core.Helpers
 {
@@ -38,7 +39,6 @@ namespace FoireMuses.Core.Helpers
 		{
 			jo[fieldName] = fieldValue;
 		}
-
 
 		public static string RetrieveStringCheck(this JObject jo, string fieldName)
 		{

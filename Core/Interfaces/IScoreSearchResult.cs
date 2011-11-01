@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace FoireMuses.Core.Interfaces
 {
@@ -12,7 +13,7 @@ namespace FoireMuses.Core.Interfaces
 		string Editor { get; set; }
 		string Verses { get; set; }
 		string Composer { get; set; }
-		string MusicalSourceReferenceText { get; set; }
-		string TextualSourceReferenceText { get; set; }
+		JObject MusicalSourceReference { get; set; }
+		JObject TextualSourceReference { get; set; }
 	}
 }
