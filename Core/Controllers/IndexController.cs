@@ -370,7 +370,6 @@ namespace FoireMuses.Core.Controllers
 			StringBuilder queryString = new StringBuilder();
 			queryString.Append("+otype:score ");
 			Query q = qp.Parse(queryString.ToString());
-			string toto = q.ToString();
 
 			IndexReader reader = IndexReader.Open(theDirectory, true);
 			if (reader.NumDocs() == 0)
@@ -382,12 +381,15 @@ namespace FoireMuses.Core.Controllers
 				Searcher indexSearch = new IndexSearcher(reader);
 				TopDocs topDocs = indexSearch.Search(q, reader.MaxDoc());
 				IList<IScoreSearchResult> results = new List<IScoreSearchResult>();
-				if (offset < 0 || offset > topDocs.totalHits)
-					throw new Exception();
-				int ToGo = (offset + max) > topDocs.totalHits ? topDocs.totalHits : (offset + max);
+				if (offset < 0)
+				{
+					offset = 0;
+				}
+
+				int maxIndex = (offset + max) > topDocs.totalHits ? topDocs.totalHits : (offset + max);
 				if (max == 0)
-					ToGo = topDocs.totalHits;
-				for (int i = offset; i < ToGo; i++)
+					maxIndex = topDocs.totalHits;
+				for (int i = offset; i < maxIndex; i++)
 				{
 					Document d = reader.Document(topDocs.scoreDocs[i].doc);
 					ScoreSearchResult score = GetScoreSearchResultFromDocument(d);
